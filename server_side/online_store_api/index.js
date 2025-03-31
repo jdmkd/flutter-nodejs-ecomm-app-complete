@@ -22,18 +22,18 @@ db.on('error', (error) => console.error(error));
 db.once('open', () => console.log('Connected to Database'));
 
 // Routes
-app.use('/categories', require('./routes/category'));
-app.use('/subCategories', require('./routes/subCategory'));
-app.use('/brands', require('./routes/brand'));
-app.use('/variantTypes', require('./routes/variantType'));
-app.use('/variants', require('./routes/variant'));
-app.use('/products', require('./routes/product'));
-app.use('/couponCodes', require('./routes/couponCode'));
-app.use('/posters', require('./routes/poster'));
-app.use('/users', require('./routes/user'));
-app.use('/orders', require('./routes/order'));
-app.use('/payment', require('./routes/payment'));
-app.use('/notification', require('./routes/notification'));
+app.use('/categories', require('./routes/categoryRoutes'));
+app.use('/subCategories', require('./routes/subCategoryRoutes'));
+app.use('/brands', require('./routes/brandRoutes'));
+app.use('/variantTypes', require('./routes/variantTypeRoutes'));
+app.use('/variants', require('./routes/variantRoutes'));
+app.use('/products', require('./routes/productRoutes'));
+app.use('/couponCodes', require('./routes/couponCodeRoutes'));
+app.use('/posters', require('./routes/posterRoutes'));
+app.use('/users', require('./routes/userRoutes'));
+app.use('/orders', require('./routes/orderRoutes'));
+app.use('/payment', require('./routes/paymentRoutes'));
+app.use('/notification', require('./routes/notificationRoutes'));
 
 
 // Example route using asyncHandler directly in app.js
