@@ -13,7 +13,7 @@ class PosterSection extends StatelessWidget {
       child: Consumer<DataProvider>(
         builder: (context, dataProvider, child) {
           return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
             shrinkWrap: true,
             scrollDirection: Axis.horizontal,
             itemCount: dataProvider.posters.length,
@@ -99,7 +99,7 @@ class PosterSection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Image.network(
-                            '${dataProvider.posters[index].imageUrl?.replaceAll('localhost', '192.168.141.74')}',
+                            '${dataProvider.posters[index].imageUrl?.replaceAll('localhost', '192.168.1.3')}',
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                             loadingBuilder: (context, child, loadingProgress) {

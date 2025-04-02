@@ -1,5 +1,5 @@
+import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
-import '../login_screen.dart'; // Ensure this points to your LoginScreen file
 
 class PasswordResetScreen extends StatefulWidget {
   @override
@@ -28,6 +28,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
           children: [
@@ -56,7 +57,8 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     SizedBox(height: 20),
                     Text(
                       'Forgot your password?',
-                      style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -73,7 +75,8 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         hintText: 'you@example.com',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.email),
-                        contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -84,11 +87,15 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         onPressed: _resetPassword,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Text(
                           'Send Reset Link',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ),

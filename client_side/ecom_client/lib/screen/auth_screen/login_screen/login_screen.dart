@@ -2,10 +2,11 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../home_screen.dart';
+import '../../home_screen.dart';
 import 'provider/user_provider.dart'; // Ensure this path is correct
 import 'register_screen.dart';
-import './auth/password_reset_screen.dart';
+import 'password_reset_screen.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -17,6 +18,12 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _isLoading = false;
   bool _isPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
 
   @override
   void dispose() {
@@ -47,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
     if (errorMessage == null) {
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(builder: (context) => HomeScreen()),
-            (route) => false,
+        (route) => false,
       );
     } else {
       log("errorMessage ==>" + errorMessage);
@@ -59,6 +66,11 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+    
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -100,7 +112,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 obscureText: !_isPasswordVisible,
                 suffixIcon: IconButton(
                   icon: Icon(
-                    _isPasswordVisible ? Icons.visibility : Icons.visibility_off,
+                    _isPasswordVisible
+                        ? Icons.visibility
+                        : Icons.visibility_off,
                     color: Colors.blueAccent,
                   ),
                   onPressed: () {
@@ -115,7 +129,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 child: TextButton(
                   onPressed: () {
                     Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => PasswordResetScreen()),
+                      MaterialPageRoute(
+                          builder: (context) => PasswordResetScreen()),
                     );
                   },
                   child: Text(
@@ -137,13 +152,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: _isLoading
                       ? CircularProgressIndicator(color: Colors.white)
                       : Text(
-                    'Log In',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                          'Log In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),

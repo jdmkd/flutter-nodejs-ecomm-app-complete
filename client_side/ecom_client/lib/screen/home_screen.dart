@@ -29,6 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return PageWrapper(
       child: Scaffold(
+        backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavyBar(
           itemCornerRadius: 10,
           selectedIndex: newIndex,
@@ -36,20 +37,21 @@ class _HomeScreenState extends State<HomeScreen> {
           backgroundColor: Colors.white,
           curve: Curves.easeInOut,
           items: AppData.bottomNavyBarItems.map(
-                (item) {
+            (item) {
               return BottomNavyBarItem(
                 icon: Padding(
-                  padding: const EdgeInsets.all(0), // Space between icon and title
+                  padding:
+                      const EdgeInsets.all(0), // Space between icon and title
 
                   child: Icon(
                     item.icon.icon,
                     size: 28, // Fixed size for icon
                     color: newIndex == AppData.bottomNavyBarItems.indexOf(item)
                         ? item.activeColor // Active color when selected
-                        : item.inactiveColor, // Inactive color when not selected
+                        : item
+                            .inactiveColor, // Inactive color when not selected
                   ),
                 ),
-
                 title: Text(
                   item.title,
                   style: TextStyle(
@@ -74,10 +76,10 @@ class _HomeScreenState extends State<HomeScreen> {
         body: PageTransitionSwitcher(
           duration: const Duration(seconds: 1),
           transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-              ) {
+            Widget child,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+          ) {
             return FadeThroughTransition(
               animation: animation,
               secondaryAnimation: secondaryAnimation,

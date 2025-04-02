@@ -2,7 +2,7 @@ import 'dart:developer';
 import '../../../utility/utility_extention.dart';
 
 import '../../../models/coupon.dart';
-import '../../login_screen/provider/user_provider.dart';
+import '../../auth_screen/login_screen/provider/user_provider.dart';
 import '../../../services/http_services.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cart/flutter_cart.dart';

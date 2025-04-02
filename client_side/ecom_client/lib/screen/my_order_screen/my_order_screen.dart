@@ -38,11 +38,11 @@ class MyOrderScreen extends StatelessWidget {
                 // Profile Picture
                 CircleAvatar(
                   radius: 60,
-                  backgroundImage: NetworkImage(
-                    'https://www.example.com/default-profile.png', // Replace with actual URL
-                  ),
+                  backgroundImage:
+                      const AssetImage('assets/images/profile_pic.png'),
                   backgroundColor: Colors.grey[300],
                 ),
+
                 SizedBox(height: 16),
 
                 // User's Name

@@ -20,8 +20,7 @@ class CategorySelector extends StatelessWidget {
         itemCount: categories.length,
         itemBuilder: (context, index) {
           final category = categories[index];
-          print("category==>");
-          print(category);
+
           return Container(
             margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
             child: OpenContainerWrapper(

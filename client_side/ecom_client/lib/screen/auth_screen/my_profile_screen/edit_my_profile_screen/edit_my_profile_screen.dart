@@ -24,8 +24,9 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
   void initState() {
     super.initState();
     // Assuming the user data is already set, populate fields with existing values.
-    _nameController.text = 'Dj';  // Replace with actual user data
-    _emailController.text = 'dj@example.com';  // Replace with actual user data
+    _nameController.text = 'Dj'; // Replace with actual user data
+    _emailController.text =
+        'djkumarr9@gmail.com'; // Replace with actual user data
     _phoneNoController.text = '9898989898';
     _profileImageUrl = 'assets/images/profile_pic.png';
   }
@@ -54,15 +55,14 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-            "Edit Profile",
+        title: const Text("Edit Profile",
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
               fontWeight: FontWeight.bold,
-            )
-        ),
-        backgroundColor: Colors.blueAccent,  // Customize based on your app's theme
+            )),
+        backgroundColor:
+            Colors.blueAccent, // Customize based on your app's theme
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -76,7 +76,8 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                   // onTap: _pickImage,
                   child: CircleAvatar(
                     radius: 60,
-                    backgroundImage:AssetImage('assets/images/profile_pic.png'),
+                    backgroundImage:
+                        AssetImage('assets/images/profile_pic.png'),
                     // backgroundImage: _profileImageUrl != null
                     //     ? FileImage(File(_profileImageUrl!)) // Use FileImage for local image paths
                     //     : Image.asset('assets/images/profile_pic.png') as ImageProvider,  // Default image if none selected
@@ -123,7 +124,9 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                       validator: (value) {
                         if (value == null || value.isEmpty) {
                           return 'Please enter your email';
-                        } else if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$").hasMatch(value)) {
+                        } else if (!RegExp(
+                                r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+                            .hasMatch(value)) {
                           return 'Please enter a valid email';
                         }
                         return null;
@@ -156,7 +159,8 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                       child: ElevatedButton(
                         onPressed: _submit,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green, // Customize button color
+                          backgroundColor:
+                              Colors.green, // Customize button color
                           padding: EdgeInsets.symmetric(vertical: 16),
                           textStyle: TextStyle(fontSize: 16),
                           shape: RoundedRectangleBorder(

@@ -17,7 +17,7 @@ class NavigationTile extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 5),
       child: Material(
-        color: AppColor.lightGrey,
+        color: Colors.amber,
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
@@ -35,7 +35,10 @@ class NavigationTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: Colors.black87),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black87),
                 ),
               ),
               const Icon(Icons.arrow_forward_ios, color: Colors.black87),

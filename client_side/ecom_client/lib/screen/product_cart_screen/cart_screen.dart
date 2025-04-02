@@ -1,3 +1,5 @@
+import 'package:flutter/services.dart';
+
 import 'provider/cart_provider.dart';
 import '../../utility/extensions.dart';
 import 'package:flutter/material.dart';
@@ -13,11 +15,23 @@ class CartScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure status bar is visible
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Change color if needed
+      statusBarIconBrightness: Brightness.dark, // Light or dark icons
+    ));
+
     Future.delayed(Duration.zero, () {
       context.cartProvider.getCartItems();
     });
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
         title: const Text(
           "My Cart",
           style: TextStyle(

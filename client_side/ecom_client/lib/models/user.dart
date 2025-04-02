@@ -1,36 +1,53 @@
 class User {
   String? sId;
   String? name;
-  String? password;
+  String? email;
+  String? phone;
+  String? image;
+  int? role;
+  String? status;
   String? createdAt;
   String? updatedAt;
-  int? iV;
 
-  User(
-      {this.sId,
-        this.name,
-        this.password,
-        this.createdAt,
-        this.updatedAt,
-        this.iV});
+  User({
+    this.sId,
+    this.name,
+    this.email,
+    this.phone,
+    this.image,
+    this.role,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+  });
 
-  User.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    password = json['password'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    iV = json['__v'];
+  /// Factory method to create a `User` object from JSON
+  factory User.fromJson(Map<String, dynamic> json) {
+    return User(
+      sId: json['_id'],
+      name: json['name'],
+      email: json['email'],
+      phone: json['phone'],
+      image: json['image'],
+      role: json['role'],
+      status: json['status'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
   }
 
+  /// Converts the `User` object to JSON format
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['name'] = this.name;
-    data['password'] = this.password;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
-    return data;
+    return {
+      '_id': sId,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'image': image,
+      'role': role,
+      'status': status,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
   }
 }

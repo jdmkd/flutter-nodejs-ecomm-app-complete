@@ -27,8 +27,7 @@ class ProductGridTile extends StatelessWidget {
 
     // Product Image Fallback
     String imageUrl = product.images != null && product.images!.isNotEmpty
-        ? product.images![0].url?.replaceAll('localhost', '192.168.141.74') ??
-            ''
+        ? product.images![0].url?.replaceAll('localhost', '192.168.1.3') ?? ''
         : 'https://dummyimage.com/300x400/aaaaaa/ffffff&text=Loading...';
 
     return Card(

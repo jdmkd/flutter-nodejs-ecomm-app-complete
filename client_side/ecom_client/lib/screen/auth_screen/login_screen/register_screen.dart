@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import './provider/user_provider.dart'; // Ensure correct import
-import './login_screen.dart'; // Your Login Screen
+import 'provider/user_provider.dart'; // Ensure correct import
+import 'login_screen.dart'; // Your Login Screen
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});

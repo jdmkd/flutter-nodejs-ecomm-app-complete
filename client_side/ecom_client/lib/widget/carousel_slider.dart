@@ -39,7 +39,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
               final imageUrl = widget.items
                       .safeElementAt(index)
                       ?.url
-                      ?.replaceAll('localhost', '192.168.141.74') ??
+                      ?.replaceAll('localhost', '192.168.1.3') ??
                   '';
 
               return Padding(

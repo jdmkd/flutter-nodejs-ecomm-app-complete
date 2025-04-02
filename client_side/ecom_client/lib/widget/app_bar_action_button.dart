@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 import '../../../utility/app_color.dart';
 
-
 class AppBarActionButton extends StatelessWidget {
   final IconData icon;
   final VoidCallback onPressed;
@@ -19,7 +18,7 @@ class AppBarActionButton extends StatelessWidget {
       margin: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
-        color: AppColor.lightGrey,
+        color: Colors.white,
       ),
       child: IconButton(
         padding: const EdgeInsets.all(8),

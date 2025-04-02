@@ -1,8 +1,9 @@
 import 'package:ecom_client/utility/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../auth_screen/my_profile_screen.dart';
-import '../login_screen/login_screen.dart';
+import '../auth_screen/my_profile_screen/my_profile_screen.dart';
+import '../auth_screen/login_screen/login_screen.dart';
 import '../my_address_screen/my_address_screen.dart';
 import '../my_order_screen/my_order_screen.dart';
 import '../../utility/app_color.dart';
@@ -13,15 +14,25 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Explicitly enable system UI overlays
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
+        overlays: SystemUiOverlay.values);
+
+    // Ensure the status bar is visible
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    //   statusBarColor: Colors.transparent, // Adjust color as needed
+    //   statusBarIconBrightness:
+    //       Brightness.dark, // Use Brightness.light for light theme
+    // ));
+
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: const Text(
           "My Account",
           style: TextStyle(
-              fontSize: 24, 
-              fontWeight: FontWeight.bold, 
-              color: Colors.black
-            ),
+              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         centerTitle: true,
       ),

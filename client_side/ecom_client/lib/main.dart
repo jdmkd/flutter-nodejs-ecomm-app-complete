@@ -1,7 +1,8 @@
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/services.dart';
 import 'screen/home_screen.dart';
-import 'screen/login_screen/login_screen.dart';
-import 'screen/login_screen/provider/user_provider.dart';
+import 'screen/auth_screen/login_screen/login_screen.dart';
+import 'screen/auth_screen/login_screen/provider/user_provider.dart';
 import 'screen/product_by_category_screen/provider/product_by_category_provider.dart';
 import 'screen/product_cart_screen/provider/cart_provider.dart';
 import 'screen/product_details_screen/provider/product_detail_provider.dart';
@@ -21,6 +22,16 @@ import 'models/user.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+  // Ensure the status bar is visible with proper contrast
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.white, // White background for status bar
+    statusBarIconBrightness:
+        Brightness.dark, // Dark icons for better visibility
+    statusBarBrightness: Brightness.light, // iOS-specific
+  ));
+
   await GetStorage.init();
   var cart = FlutterCart();
 

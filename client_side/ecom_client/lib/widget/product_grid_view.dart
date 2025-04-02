@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../models/product.dart';
 import '../screen/product_details_screen/product_detail_screen.dart';
 import '../utility/animation/open_container_wrapper.dart';
@@ -14,6 +15,14 @@ class ProductGridView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Ensure system UI mode allows status bar visibility
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    // Set status bar color and brightness
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Make it transparent or set a color
+      statusBarIconBrightness: Brightness.dark, // Change to light if needed
+    ));
     return Padding(
       padding: const EdgeInsets.all(0),
       child: GridView.builder(

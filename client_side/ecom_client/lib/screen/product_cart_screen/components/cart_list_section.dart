@@ -21,7 +21,7 @@ class CartListSection extends StatelessWidget {
           final cartItem = cartProducts[index];
 
           final imageUrl = (cartItem.productImages.safeElementAt(0) ?? '')
-              .replaceAll('localhost', '192.168.141.74');
+              .replaceAll('localhost', '192.168.1.3');
 
           return Container(
             margin: const EdgeInsets.only(bottom: 20),

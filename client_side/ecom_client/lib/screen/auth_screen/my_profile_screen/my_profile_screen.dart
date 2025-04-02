@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../login_screen/provider/user_provider.dart';
-import 'edit_my_profile_screen.dart';
+import 'edit_my_profile_screen/edit_my_profile_screen.dart';
 
 class MyProfileScreen extends StatelessWidget {
   const MyProfileScreen({super.key});
@@ -33,7 +33,8 @@ class MyProfileScreen extends StatelessWidget {
             // Profile Image Section
             CircleAvatar(
               radius: 60,
-              backgroundImage: const AssetImage('assets/images/profile_pic.png'),
+              backgroundImage:
+                  const AssetImage('assets/images/profile_pic.png'),
               backgroundColor: Colors.grey[300],
             ),
 
@@ -75,7 +76,8 @@ class MyProfileScreen extends StatelessWidget {
                         Text(
                           // user.phone ?? 'No phone number',
                           '9898989898',
-                          style: TextStyle(fontSize: 16, color: Colors.grey[800]),
+                          style:
+                              TextStyle(fontSize: 16, color: Colors.grey[800]),
                         ),
                       ],
                     ),
@@ -89,7 +91,9 @@ class MyProfileScreen extends StatelessWidget {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const EditMyProfileScreen()),
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const EditMyProfileScreen()),
                           );
                         },
                         style: TextButton.styleFrom(
