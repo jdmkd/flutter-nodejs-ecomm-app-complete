@@ -5,7 +5,7 @@ import '../../../core/data/data_provider.dart';
 import '../../../models/product.dart';
 import '../../../models/sub_category.dart';
 
-class ProductByCategoryProvider extends ChangeNotifier {
+class ProductBySubCategoryProvider extends ChangeNotifier {
   final DataProvider _dataProvider;
   Category? mySelectedCategory;
   SubCategory? mySelectedSubCategory;
@@ -14,18 +14,18 @@ class ProductByCategoryProvider extends ChangeNotifier {
   List<Brand> selectedBrands = [];
   List<Product> filteredProduct = [];
 
-  ProductByCategoryProvider(this._dataProvider);
+  ProductBySubCategoryProvider(this._dataProvider);
 
-  filterInitialProductAndSubCategory(Category selectedCategory) {
-    mySelectedSubCategory = SubCategory(name: 'All');
-    mySelectedCategory = selectedCategory;
+  filterInitialProductAndSubCategory(SubCategory selectedSubCategory) {
+    mySelectedSubCategory = selectedSubCategory;
+    mySelectedCategory = Category(name: 'All');
     subCategories = _dataProvider.subCategories
-        .where((element) => element.categoryId?.sId == selectedCategory.sId)
+        .where((element) => element.categoryId?.sId == selectedSubCategory.sId)
         .toList();
     subCategories.insert(0, SubCategory(name: 'All'));
     filteredProduct = _dataProvider.products
-        .where(
-            (element) => element.proCategoryId?.name == selectedCategory.name)
+        .where((element) =>
+            element.proCategoryId?.name == selectedSubCategory.name)
         .toList();
     notifyListeners();
   }

@@ -16,14 +16,23 @@ class AppData {
   ];
 
   static List<Color> randomPosterBgColors = [
-    const Color(0xFFE70D56),
-    const Color(0xFF9006A4),
-    const Color(0xFF137C0B),
-    const Color(0xFF0F2EDE),
-    const Color(0xFFECBE23),
-    const Color(0xFFA60FF1),
-    const Color(0xFF0AE5CF),
-    const Color(0xFFE518D1),
+    const Color.fromARGB(191, 215, 58, 110),
+    const Color.fromARGB(136, 158, 91, 169),
+    const Color.fromARGB(189, 100, 163, 96),
+    const Color.fromARGB(175, 92, 100, 148),
+    const Color.fromARGB(166, 169, 150, 88),
+    const Color.fromARGB(170, 129, 87, 151),
+    const Color.fromARGB(130, 90, 151, 145),
+    const Color.fromARGB(162, 158, 95, 152),
+
+    // const Color(0xFFE70D56),
+    // const Color(0xFF9006A4),
+    // const Color(0xFF137C0B),
+    // const Color(0xFF0F2EDE),
+    // const Color(0xFFECBE23),
+    // const Color(0xFFA60FF1),
+    // const Color(0xFF0AE5CF),
+    // const Color(0xFFE518D1),
   ];
 
   static List<BottomNavyBarItem> bottomNavyBarItems = [

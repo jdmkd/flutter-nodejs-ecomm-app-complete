@@ -50,8 +50,8 @@ class UserProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            'Error: ${response.body?['message'] ?? response.statusText}');
-        return 'Error: ${response.body?['message'] ?? response.statusText}';
+            '${response.body?['message'] ?? response.statusText}');
+        return '${response.body?['message'] ?? response.statusText}';
       }
     } catch (e) {
       print(e);
@@ -91,6 +91,7 @@ class UserProvider extends ChangeNotifier {
           SnackBarHelper.showSuccessSnackBar(
               apiResponse.message ?? 'Registration successful');
           log('Register Success');
+          // Get.to(() => OtpVerificationScreen(email: email));
           return null;
         } else {
           SnackBarHelper.showErrorSnackBar(
@@ -99,8 +100,8 @@ class UserProvider extends ChangeNotifier {
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            'Error 1${response.body?['message'] ?? response.statusText}');
-        return 'Error 2${response.body?['message'] ?? response.statusText}';
+            '${response.body?['message'] ?? response.statusText}');
+        return '${response.body?['message'] ?? response.statusText}';
       }
     } catch (e, stackTrace) {
       log("Registration error: $e");
@@ -111,14 +112,52 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-  //? to save login info after login
-  Future<void> saveLoginInfo(User? loginUser) async {
-    if (loginUser != null) {
-      await box.write(USER_INFO_BOX, loginUser.toJson());
-      Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
-      log('User saved: ${box.read(USER_INFO_BOX)}'); // Debug log
-    } else {
-      log('User is null, not saving');
+  Future<String?> verifyOtp(
+      String email, String otp, BuildContext context) async {
+    try {
+      Map<String, dynamic> user = {"email": email, "otp": otp, "purpose": 0};
+      // purpose=0 for registraion purpose=1 for the forgot password
+      final response = await service.addItem(
+          endpointUrl: 'users/verify-otp', itemData: user);
+
+      // Check if response is null
+      if (response == null) {
+        SnackBarHelper.showErrorSnackBar('Server did not return a response.');
+        return 'Server did not return a response.';
+      }
+
+      // Check if response body is null
+      if (response.body == null) {
+        SnackBarHelper.showErrorSnackBar('Server response is empty.');
+        return 'Server response is empty.';
+      }
+
+      if (response.isOk) {
+        ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+
+        // Check if apiResponse is valid and has success key
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(
+              apiResponse.message ?? 'OTP Verified.');
+          log('apiResponse.message ==> $apiResponse.message');
+          // Navigate to the login screen (or dashboard)
+          Get.offAll(() =>
+              LoginScreen()); // Use Get.offAll to remove all previous screens from the stack
+          // Navigator.pushReplacementNamed(context, '/login'); // or dashboard
+          return null; // Indicate success
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Email varification Failed: ${apiResponse.message ?? "Unknown error"}');
+          return 'Email varification Failed: ${apiResponse.message ?? "Unknown error"}';
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            '${response.body?['message'] ?? response.statusText}');
+        return '${response.body?['message'] ?? response.statusText}';
+      }
+    } catch (error) {
+      SnackBarHelper.showErrorSnackBar('Something went wrong: $error');
+      return 'Error: $error';
     }
   }
 
@@ -133,5 +172,16 @@ class UserProvider extends ChangeNotifier {
   logOutUser() {
     box.remove(USER_INFO_BOX);
     Get.offAll(LoginScreen());
+  }
+
+  //? to save login info after login
+  Future<void> saveLoginInfo(User? loginUser) async {
+    if (loginUser != null) {
+      await box.write(USER_INFO_BOX, loginUser.toJson());
+      Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
+      log('User saved: ${box.read(USER_INFO_BOX)}'); // Debug log
+    } else {
+      log('User is null, not saving');
+    }
   }
 }

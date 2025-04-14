@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'provider/user_provider.dart'; // Ensure correct import
 import 'login_screen.dart'; // Your Login Screen
+// import 'package:ecom_client/screens/otp_verification_screen.dart';
+import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,7 +16,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _fullNameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
   bool _obscureConfirmPassword = true;
@@ -53,7 +56,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     if (errorMessage == null) {
       // Registration success, navigate to login
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (context) => LoginScreen()),
+        MaterialPageRoute(builder: (context) => OTPVerificationScreen(email)),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -131,22 +134,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   child: _isLoading
                       ? CircularProgressIndicator(color: Colors.white)
                       : Text(
-                    'Register',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
+                          'Register',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12)),
                   ),
                 ),
               ),
               SizedBox(height: 15),
               GestureDetector(
-                onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => LoginScreen())),
+                onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => LoginScreen())),
                 child: RichText(
                   text: TextSpan(
                     text: 'Already have an account? ',
@@ -189,9 +194,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
           prefixIcon: Icon(icon, color: Colors.blueAccent),
           suffixIcon: toggleObscure != null
               ? IconButton(
-            icon: Icon(obscureText ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
-            onPressed: toggleObscure,
-          )
+                  icon: Icon(
+                      obscureText ? Icons.visibility_off : Icons.visibility,
+                      color: Colors.grey),
+                  onPressed: toggleObscure,
+                )
               : null,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),

@@ -13,17 +13,20 @@ import 'package:get/get.dart';
 
 import '../../sub_category/sub_category_screen.dart';
 
-class MainScreenProvider extends ChangeNotifier{
+class MainScreenProvider extends ChangeNotifier {
   Widget selectedScreen = DashboardScreen();
-
-
+  String currentScreenKey = 'Dashboard';
 
   //? to update screen when click tab on side bar
   navigateToScreen(String screenName) {
+    if (screenName == currentScreenKey) return;
+
+    currentScreenKey = screenName;
+
     switch (screenName) {
       case 'Dashboard':
         selectedScreen = DashboardScreen();
-        break; // Break statement needed here
+        break;
       case 'Category':
         selectedScreen = CategoryScreen();
         break;
@@ -53,9 +56,8 @@ class MainScreenProvider extends ChangeNotifier{
         break;
       default:
         selectedScreen = DashboardScreen();
+        currentScreenKey = 'Dashboard';
     }
     notifyListeners();
   }
-  
-  
 }

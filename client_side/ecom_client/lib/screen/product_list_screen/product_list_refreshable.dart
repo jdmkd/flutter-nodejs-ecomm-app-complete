@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:ecom_client/screen/product_list_screen/components/sub_category_selector.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../core/data/data_provider.dart';
@@ -16,6 +19,8 @@ class _ProductListRefreshableState extends State<ProductListRefreshable> {
   Future<void> _refreshData() async {
     final dataProvider = Provider.of<DataProvider>(context, listen: false);
     await dataProvider.getAllProduct(); // Fetch latest data from API or DB
+    log("dataProvider.products ==> ");
+    print(dataProvider.products);
   }
 
   @override
@@ -68,6 +73,28 @@ class _ProductListRefreshableState extends State<ProductListRefreshable> {
                 builder: (context, dataProvider, child) {
                   return CategorySelector(
                     categories: dataProvider.categories,
+                  );
+                },
+              ),
+
+              const SizedBox(height: 10),
+
+              // Categories Section with modern design
+              Text(
+                "Top Sub Categories",
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w600,
+                      color: Colors.black87,
+                    ),
+              ),
+              const SizedBox(height: 10),
+
+              Consumer<DataProvider>(
+                builder: (context, dataProvider, child) {
+                  log("dataProvider.subCategories ==> ${dataProvider.subCategories}");
+                  return SubCategorySelector(
+                    subcategories: dataProvider.subCategories,
                   );
                 },
               ),

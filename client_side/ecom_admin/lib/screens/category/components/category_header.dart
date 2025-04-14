@@ -10,20 +10,40 @@ class CategoryHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      children: [
-        Text(
-          "Category",
-          style: Theme.of(context).textTheme.titleLarge,
-        ),
-        Spacer(flex: 2),
-        Expanded(child: SearchField(
-          onChange: (val) {
-            context.dataProvider.filterCategories(val);
-          },
-        )),
-        ProfileCard()
-      ],
+    final isMobile = MediaQuery.of(context).size.width < 600;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      child: isMobile
+          ? Column(
+              // crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ProfileCard(),
+                ),
+                const SizedBox(height: defaultPadding),
+                SearchField(
+                  onChange: (val) {
+                    context.dataProvider.filterCategories(val);
+                  },
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(
+                  width: 400,
+                  child: SearchField(
+                    onChange: (val) {
+                      context.dataProvider.filterCategories(val);
+                    },
+                  ),
+                ),
+                const ProfileCard(),
+              ],
+            ),
     );
   }
 }
@@ -47,16 +67,28 @@ class ProfileCard extends StatelessWidget {
         border: Border.all(color: Colors.white10),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Image.asset(
-            "assets/images/profile_pic.png",
-            height: 38,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              "assets/images/profile_pic.png",
+              height: 40,
+              width: 40,
+              fit: BoxFit.cover,
+              errorBuilder: (context, error, stackTrace) {
+                return Icon(Icons.account_circle,
+                    size: 40, color: Colors.white);
+              },
+            ),
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: defaultPadding / 2),
-            child: Text("Admin"),
+          SizedBox(width: defaultPadding / 2),
+          Text(
+            "Admin",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
           ),
-          Icon(Icons.keyboard_arrow_down),
+          SizedBox(width: 8),
+          Icon(Icons.keyboard_arrow_down, color: Colors.white),
         ],
       ),
     );

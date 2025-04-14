@@ -17,39 +17,46 @@ class CategoryProvider extends ChangeNotifier {
   TextEditingController categoryNameCtrl = TextEditingController();
   Category? categoryForUpdate;
 
-
   File? selectedImage;
   XFile? imgXFile;
-
 
   CategoryProvider(this._dataProvider);
 
   addCategory() async {
     try {
-      if(selectedImage == null){
+      if (selectedImage == null) {
         SnackBarHelper.showErrorSnackBar('Pleas Choose A Image !');
         return; //? stop the program eviction
       }
       Map<String, dynamic> formDataMap = {
         'name': categoryNameCtrl.text,
-        'image': 'no_data', //? image path will add from server side
+        // 'image': 'no_data', //? image path will add from server side
       };
 
-      final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
+      final FormData form =
+          await createFormData(imgXFile: imgXFile, formData: formDataMap);
 
-      final response = await service.addItem(endpointUrl: 'categories', itemData: form);
-      if (response.isOk) {
+      if (categoryForUpdate != null) {}
+
+      final response =
+          await service.addItem(endpointUrl: 'categories', itemData: form);
+
+      if (response.isOk && response.body != null) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
           _dataProvider.getAllCategory();
           log('category added');
+          await Future.delayed(Duration(seconds: 1));
+          clearFields();
         } else {
-          SnackBarHelper.showErrorSnackBar('Failed to add category: ${apiResponse.message}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add category: ${apiResponse.message}');
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -62,25 +69,32 @@ class CategoryProvider extends ChangeNotifier {
     try {
       Map<String, dynamic> formDataMap = {
         'name': categoryNameCtrl.text,
-        'image': categoryForUpdate?.image ?? '',
+        // 'image': categoryForUpdate?.image ?? '',
+        'image': imgXFile != null ? 'new' : (categoryForUpdate?.image ?? ''),
       };
 
-      final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
+      final FormData form =
+          await createFormData(imgXFile: imgXFile, formData: formDataMap);
 
-      final response =
-      await service.updateItem(endpointUrl: 'categories', itemData: form, itemId: categoryForUpdate?.sId ?? '');
-      if (response.isOk) {
+      final response = await service.updateItem(
+          endpointUrl: 'categories',
+          itemData: form,
+          itemId: categoryForUpdate?.sId ?? '');
+
+      if (response.isOk && response.body != null) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+
         if (apiResponse.success == true) {
-          clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
-          log('category added');
+          log('category Updated');
           _dataProvider.getAllCategory();
         } else {
-          SnackBarHelper.showErrorSnackBar('Failed to add category: ${apiResponse.message}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to Update category: ${apiResponse.message}');
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -88,7 +102,6 @@ class CategoryProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
 
   submitCategory() {
     if (categoryForUpdate != null) {
@@ -98,18 +111,19 @@ class CategoryProvider extends ChangeNotifier {
     }
   }
 
-
   deleteCategory(Category category) async {
     try {
-      Response response = await service.deleteItem(endpointUrl: 'categories', itemId: category.sId ?? '');
+      Response response = await service.deleteItem(
+          endpointUrl: 'categories', itemId: category.sId ?? '');
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           SnackBarHelper.showSuccessSnackBar('Category Deleted Successfully');
           _dataProvider.getAllCategory();
         }
-      }else{
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -117,11 +131,11 @@ class CategoryProvider extends ChangeNotifier {
     }
   }
 
-
   //? pick image for category image
   void pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
     if (image != null) {
       selectedImage = File(image.path);
       imgXFile = image;
@@ -129,20 +143,36 @@ class CategoryProvider extends ChangeNotifier {
     }
   }
 
-
   //? to create form data for sending image with body
-  Future<FormData> createFormData({required XFile? imgXFile, required Map<String, dynamic> formData}) async {
+  Future<FormData> createFormData(
+      {required XFile? imgXFile,
+      required Map<String, dynamic> formData}) async {
     if (imgXFile != null) {
+      final String fileName = imgXFile.name;
+      final String extension = fileName.split('.').last.toLowerCase();
+
+      // Determine the content type
+      String mimeType = 'image/jpeg'; // Default fallback
+      if (extension == 'png') {
+        mimeType = 'image/png';
+      } else if (extension == 'jpg' || extension == 'jpeg') {
+        mimeType = 'image/jpeg';
+      } else if (extension == 'webp') {
+        mimeType = 'image/webp';
+      }
+
       MultipartFile multipartFile;
       if (kIsWeb) {
         String fileName = imgXFile.name;
         Uint8List byteImg = await imgXFile.readAsBytes();
-        multipartFile = MultipartFile(byteImg, filename: fileName);
+        multipartFile =
+            MultipartFile(byteImg, filename: fileName, contentType: mimeType);
       } else {
         String fileName = imgXFile.path.split('/').last;
-        multipartFile = MultipartFile(imgXFile.path, filename: fileName);
+        multipartFile = MultipartFile(imgXFile.path,
+            filename: fileName, contentType: mimeType);
       }
-      formData['img'] = multipartFile;
+      formData['image'] = multipartFile;
     }
     final FormData form = FormData(formData);
     return form;
@@ -165,5 +195,10 @@ class CategoryProvider extends ChangeNotifier {
     selectedImage = null;
     imgXFile = null;
     categoryForUpdate = null;
+  }
+
+  //? to update UI
+  updateUI() {
+    notifyListeners();
   }
 }

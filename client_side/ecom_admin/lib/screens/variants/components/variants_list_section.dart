@@ -10,113 +10,134 @@ import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 import '../../../models/variant_type.dart';
 
-
 class VariantsListSection extends StatelessWidget {
-  const VariantsListSection({
-    Key? key,
-  }) : super(key: key);
+  const VariantsListSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "All Variants",
-            style: Theme
-                .of(context)
-                .textTheme
-                .titleMedium,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          padding: const EdgeInsets.all(defaultPadding),
+          decoration: BoxDecoration(
+            color: secondaryColor,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Consumer<DataProvider>(
-              builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Variant"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "All Variants",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: defaultPadding),
+              Consumer<DataProvider>(
+                builder: (context, dataProvider, child) {
+                  return Scrollbar(
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minWidth: constraints.maxWidth),
+                        child: DataTable(
+                          columnSpacing: defaultPadding,
+                          columns: const [
+                            DataColumn(label: Text("Variant")),
+                            DataColumn(label: Text("Variant Type")),
+                            DataColumn(label: Text("Added Date")),
+                            DataColumn(label: Text("Edit")),
+                            DataColumn(label: Text("Delete")),
+                          ],
+                          rows: List.generate(
+                            dataProvider.variants.length,
+                            (index) => variantDataRow(
+                              dataProvider.variants[index],
+                              index + 1,
+                              edit: () {
+                                showAddVariantForm(
+                                    context, dataProvider.variants[index]);
+                              },
+                              delete: () {
+                                context.variantProvider.deleteVariant(
+                                    dataProvider.variants[index]);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    DataColumn(
-                      label: Text("Variant Type"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.variants.length,
-                        (index) =>
-                        variantDataRow(dataProvider.variants[index], index + 1, edit: () {
-                          showAddVariantForm(context, dataProvider.variants[index]);
-                        }, delete: () {
-                          context.variantProvider.deleteVariant(dataProvider.variants[index]);
-                        }),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-DataRow variantDataRow(Variant VariantInfo, int index, {Function? edit, Function? delete}) {
+DataRow variantDataRow(Variant variantInfo, int index,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
             Container(
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: colors[index % colors.length],
                 shape: BoxShape.circle,
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
+              child: Text(
+                index.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(VariantInfo.name ?? ''),
+            const SizedBox(width: defaultPadding),
+            SizedBox(
+              width: 150,
+              child: Text(
+                variantInfo.name ?? '',
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
       ),
-      DataCell(Text(VariantInfo.variantTypeId?.name ?? '')),
-      DataCell(Text(VariantInfo.createdAt ?? '')),
-      DataCell(IconButton(
+      DataCell(
+        SizedBox(
+          width: 150,
+          child: Text(
+            variantInfo.variantTypeId?.name ?? '',
+            overflow: TextOverflow.ellipsis,
+          ),
+        ),
+      ),
+      DataCell(Text(variantInfo.createdAt ?? '')),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (edit != null) edit();
           },
-          icon: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ))),
-      DataCell(IconButton(
+          icon: const Icon(Icons.edit, color: Colors.white),
+        ),
+      ),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (delete != null) delete();
           },
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red,
-          ))),
+          icon: const Icon(Icons.delete, color: Colors.red),
+        ),
+      ),
     ],
   );
 }

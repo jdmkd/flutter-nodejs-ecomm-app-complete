@@ -88,10 +88,12 @@ class PosterSubmitForm extends StatelessWidget {
                     ),
                     onPressed: () {
                       // Validate and save the form
-                      if (context.posterProvider.addPosterFormKey.currentState!.validate()) {
-                        context.posterProvider.addPosterFormKey.currentState!.save();
+                      if (context.posterProvider.addPosterFormKey.currentState!
+                          .validate()) {
+                        context.posterProvider.addPosterFormKey.currentState!
+                            .save();
                         context.posterProvider.submitPoster();
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
                       }
                     },
                     child: Text('Submit'),
@@ -113,7 +115,9 @@ void showAddPosterForm(BuildContext context, Poster? poster) {
     builder: (BuildContext context) {
       return AlertDialog(
         backgroundColor: bgColor,
-        title: Center(child: Text('Add Poster'.toUpperCase(), style: TextStyle(color: primaryColor))),
+        title: Center(
+            child: Text('Add Poster'.toUpperCase(),
+                style: TextStyle(color: primaryColor))),
         content: PosterSubmitForm(poster: poster),
       );
     },

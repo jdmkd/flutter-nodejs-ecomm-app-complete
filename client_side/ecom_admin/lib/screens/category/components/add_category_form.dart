@@ -16,7 +16,9 @@ class CategorySubmitForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+
     context.categoryProvider.setDataForUpdateCategory(category);
+
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
@@ -77,10 +79,14 @@ class CategorySubmitForm extends StatelessWidget {
                     ),
                     onPressed: () {
                       // Validate and save the form
-                      if (context.categoryProvider.addCategoryFormKey.currentState!.validate()) {
-                        context.categoryProvider.addCategoryFormKey.currentState!.save();
+                      if (context
+                          .categoryProvider.addCategoryFormKey.currentState!
+                          .validate()) {
+                        context
+                            .categoryProvider.addCategoryFormKey.currentState!
+                            .save();
                         context.categoryProvider.submitCategory();
-                        Navigator.of(context).pop();
+                        // Navigator.of(context).pop();
                       }
                     },
                     child: Text('Submit'),
@@ -99,10 +105,20 @@ class CategorySubmitForm extends StatelessWidget {
 void showAddCategoryForm(BuildContext context, Category? category) {
   showDialog(
     context: context,
+    barrierDismissible: false,
     builder: (BuildContext context) {
+      final screenHeight = MediaQuery.of(context).size.height;
+      final dialogHeight = screenHeight * 0.8; // 80% of screen height
+
       return AlertDialog(
         backgroundColor: bgColor,
-        title: Center(child: Text('Add Category'.toUpperCase(), style: TextStyle(color: primaryColor))),
+        contentPadding: EdgeInsets.zero,
+        title: Center(
+          child: Text(
+            (category == null ? 'ADD' : 'UPDATE') + ' Category'.toUpperCase(),
+            style: TextStyle(color: primaryColor),
+          ),
+        ),
         content: CategorySubmitForm(category: category),
       );
     },

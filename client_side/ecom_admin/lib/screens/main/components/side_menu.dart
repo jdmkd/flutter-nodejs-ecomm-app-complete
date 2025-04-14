@@ -1,7 +1,9 @@
+import 'package:ecom_admin/screens/main/provider/main_screen_provider.dart';
 import 'package:ecom_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../../utility/constants.dart';
 
@@ -17,9 +19,12 @@ class SideMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentKey = context.mainScreenProvider.currentScreenKey;
+
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
-      width: isCollapsed ? 60 : 250, // Adjust width dynamically
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      width: isCollapsed ? 60 : 250,
       child: Stack(
         children: [
           Drawer(
@@ -28,9 +33,9 @@ class SideMenu extends StatelessWidget {
                 // DrawerHeader(
                 //   child: Image.asset("assets/images/logo.png"),
                 // ),
-                SizedBox(height: 80),
+                SizedBox(height: 70),
                 Align(
-                  alignment: Alignment.center, // Center the text inside
+                  alignment: Alignment.bottomCenter, // Center the text inside
                   child: Text(
                     "Welcome Admin",
                     style: TextStyle(
@@ -41,9 +46,9 @@ class SideMenu extends StatelessWidget {
                     textAlign: TextAlign.center,
                   ),
                 ),
-                // press: () {
-                //   context.mainScreenProvider.navigateToScreen('Dashboard');
-                // },
+
+                // SizedBox(height: 20),
+
                 Expanded(
                   child: ListView(
                     children: [
@@ -51,10 +56,14 @@ class SideMenu extends StatelessWidget {
                         title: "Dashboard",
                         svgSrc: "assets/icons/menu_dashboard.svg",
                         press: () {
-                          context.mainScreenProvider
+                          Provider.of<MainScreenProvider>(context,
+                                  listen: false)
                               .navigateToScreen('Dashboard');
+
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Dashboard',
                       ),
                       DrawerListTile(
                         title: "Category",
@@ -62,8 +71,10 @@ class SideMenu extends StatelessWidget {
                         press: () {
                           context.mainScreenProvider
                               .navigateToScreen('Category');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Category',
                       ),
                       DrawerListTile(
                         title: "Sub Category",
@@ -71,16 +82,20 @@ class SideMenu extends StatelessWidget {
                         press: () {
                           context.mainScreenProvider
                               .navigateToScreen('SubCategory');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'SubCategory',
                       ),
                       DrawerListTile(
                         title: "Brands",
                         svgSrc: "assets/icons/menu_doc.svg",
                         press: () {
                           context.mainScreenProvider.navigateToScreen('Brands');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Brands',
                       ),
                       DrawerListTile(
                         title: "Variant Type",
@@ -88,8 +103,10 @@ class SideMenu extends StatelessWidget {
                         press: () {
                           context.mainScreenProvider
                               .navigateToScreen('VariantType');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'VariantType',
                       ),
                       DrawerListTile(
                         title: "Variants",
@@ -97,32 +114,40 @@ class SideMenu extends StatelessWidget {
                         press: () {
                           context.mainScreenProvider
                               .navigateToScreen('Variants');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Variants',
                       ),
                       DrawerListTile(
                         title: "Orders",
                         svgSrc: "assets/icons/menu_profile.svg",
                         press: () {
                           context.mainScreenProvider.navigateToScreen('Order');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Order',
                       ),
                       DrawerListTile(
                         title: "Coupons",
                         svgSrc: "assets/icons/menu_setting.svg",
                         press: () {
                           context.mainScreenProvider.navigateToScreen('Coupon');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Coupon',
                       ),
                       DrawerListTile(
                         title: "Posters",
                         svgSrc: "assets/icons/menu_doc.svg",
                         press: () {
                           context.mainScreenProvider.navigateToScreen('Poster');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Poster',
                       ),
                       DrawerListTile(
                         title: "Notifications",
@@ -130,8 +155,10 @@ class SideMenu extends StatelessWidget {
                         press: () {
                           context.mainScreenProvider
                               .navigateToScreen('Notifications');
+                          onToggle();
                         },
                         isCollapsed: isCollapsed,
+                        isSelected: currentKey == 'Notifications',
                       ),
                     ],
                   ),
@@ -157,6 +184,7 @@ class DrawerListTile extends StatelessWidget {
   final String title, svgSrc;
   final VoidCallback press;
   final bool isCollapsed;
+  final bool isSelected;
 
   const DrawerListTile({
     Key? key,
@@ -164,23 +192,32 @@ class DrawerListTile extends StatelessWidget {
     required this.svgSrc,
     required this.press,
     required this.isCollapsed,
+    required this.isSelected,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ListTile(
       onTap: press,
+      tileColor:
+          isSelected ? Colors.white.withOpacity(0.15) : Colors.transparent,
       horizontalTitleGap: 0.0,
       leading: SvgPicture.asset(
         svgSrc,
-        colorFilter: ColorFilter.mode(Colors.white54, BlendMode.srcIn),
+        colorFilter: ColorFilter.mode(
+          isSelected ? Colors.white : Colors.white54,
+          BlendMode.srcIn,
+        ),
         height: 16,
       ),
       title: isCollapsed
           ? null
           : Text(
               title,
-              style: TextStyle(color: Colors.white54),
+              style: TextStyle(
+                color: isSelected ? Colors.white : Colors.white54,
+                fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              ),
             ),
     );
   }

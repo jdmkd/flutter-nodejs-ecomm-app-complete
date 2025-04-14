@@ -8,7 +8,24 @@ import 'components/order_details_section.dart';
 import 'components/product_list_section.dart';
 import 'components/product_summery_section.dart';
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends StatefulWidget {
+  @override
+  State<DashboardScreen> createState() => _DashboardScreenState();
+}
+
+class _DashboardScreenState extends State<DashboardScreen> {
+  bool _initialized = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_initialized) {
+      context.dataProvider;
+      // context.dataProvider.getAllProduct(showSnack: false);
+      _initialized = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(

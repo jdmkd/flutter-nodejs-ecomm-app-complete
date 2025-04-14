@@ -10,7 +10,6 @@ import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 import '../../category/components/add_category_form.dart';
 
-
 class SubCategoryListSection extends StatelessWidget {
   const SubCategoryListSection({
     Key? key,
@@ -18,106 +17,133 @@ class SubCategoryListSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "All SubCategory",
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Consumer<DataProvider>(
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        padding: const EdgeInsets.all(defaultPadding),
+        decoration: BoxDecoration(
+          color: secondaryColor,
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "All SubCategory",
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: defaultPadding),
+            Consumer<DataProvider>(
               builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("SubCategory Name"),
-                    ),
-                    DataColumn(
-                      label: Text("Category"),
-                    ),
-                    DataColumn(
-                      label: Text("Added Date"),
-                    ),
-                    DataColumn(
-                      label: Text("Edit"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.subCategories.length,
-                    (index) => subCategoryDataRow(
-                      dataProvider.subCategories[index],
-                      index + 1,
-                      edit: () {
-                        showAddSubCategoryForm(context, dataProvider.subCategories[index]);
-                      },
-                      delete: () {
-                        context.subCategoryProvider.deleteSubCategory(dataProvider.subCategories[index]);
-                      },
+                return Scrollbar(
+                  thumbVisibility: true,
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minWidth: constraints.maxWidth,
+                      ),
+                      child: DataTable(
+                        columnSpacing: defaultPadding,
+                        columns: const [
+                          DataColumn(label: Text("SubCategory Name")),
+                          DataColumn(label: Text("Category")),
+                          DataColumn(label: Text("Added Date")),
+                          DataColumn(label: Text("Edit")),
+                          DataColumn(label: Text("Delete")),
+                        ],
+                        rows: List.generate(
+                          dataProvider.subCategories.length,
+                          (index) => subCategoryDataRow(
+                            dataProvider.subCategories[index],
+                            index + 1,
+                            edit: () {
+                              showAddSubCategoryForm(
+                                context,
+                                dataProvider.subCategories[index],
+                              );
+                            },
+                            delete: () {
+                              context.subCategoryProvider.deleteSubCategory(
+                                dataProvider.subCategories[index],
+                              );
+                            },
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 );
               },
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
-DataRow subCategoryDataRow(SubCategory subCatInfo, int index, {Function? edit, Function? delete}) {
+DataRow subCategoryDataRow(
+  SubCategory subCatInfo,
+  int index, {
+  Function? edit,
+  Function? delete,
+}) {
   return DataRow(
     cells: [
       DataCell(
         Row(
           children: [
             Container(
-              height: 24,
-              width: 24,
+              height: 32,
+              width: 32,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: colors[index % colors.length],
                 shape: BoxShape.circle,
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
+              child: Text(
+                index.toString(),
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(subCatInfo.name ?? ''),
+            const SizedBox(width: defaultPadding),
+            SizedBox(
+              width: 150,
+              child: Text(
+                subCatInfo.name ?? '',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
             ),
           ],
         ),
       ),
-      DataCell(Text(subCatInfo.categoryId?.name ?? '')),
+      DataCell(
+        SizedBox(
+          width: 150,
+          child: Text(
+            subCatInfo.categoryId?.name ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
       DataCell(Text(subCatInfo.createdAt ?? '')),
       DataCell(IconButton(
-          onPressed: () {
-            if (edit != null) edit();
-          },
-          icon: Icon(
-            Icons.edit,
-            color: Colors.white,
-          ))),
+        onPressed: () {
+          if (edit != null) edit();
+        },
+        icon: const Icon(Icons.edit, color: Colors.white),
+      )),
       DataCell(IconButton(
-          onPressed: () {
-            if (delete != null) delete();
-          },
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red,
-          ))),
+        onPressed: () {
+          if (delete != null) delete();
+        },
+        icon: const Icon(Icons.delete, color: Colors.red),
+      )),
     ],
   );
 }

@@ -20,8 +20,7 @@ class CartListSection extends StatelessWidget {
         itemBuilder: (context, index) {
           final cartItem = cartProducts[index];
 
-          final imageUrl = (cartItem.productImages.safeElementAt(0) ?? '')
-              .replaceAll('localhost', '192.168.1.3');
+          final imageUrl = (cartItem.productImages.safeElementAt(0) ?? '');
 
           return Container(
             margin: const EdgeInsets.only(bottom: 20),

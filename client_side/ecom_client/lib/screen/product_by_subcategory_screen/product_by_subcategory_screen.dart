@@ -3,7 +3,7 @@ import 'package:ecom_client/utility/extensions.dart';
 import '../../models/brand.dart';
 import '../../models/category.dart';
 import '../../models/sub_category.dart';
-import 'provider/product_by_category_provider.dart';
+import 'provider/product_by_subcategory_provider.dart';
 import '../../utility/app_color.dart';
 import '../../widget/custom_dropdown.dart';
 import '../../widget/multi_select_drop_down.dart';
@@ -12,16 +12,17 @@ import 'package:provider/provider.dart';
 import '../../widget/horizondal_list.dart';
 import '../../widget/product_grid_view.dart';
 
-class ProductByCategoryScreen extends StatelessWidget {
-  final Category selectedCategory;
+class ProductBySubCategoryScreen extends StatelessWidget {
+  final SubCategory selectedSubCategory;
 
-  const ProductByCategoryScreen({super.key, required this.selectedCategory});
+  const ProductBySubCategoryScreen(
+      {super.key, required this.selectedSubCategory});
 
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration.zero, () {
-      context.proByCProvider
-          .filterInitialProductAndSubCategory(selectedCategory);
+      context.proBySubCProvider
+          .filterInitialProductAndSubCategory(selectedSubCategory);
     });
     return Scaffold(
       body: SafeArea(
@@ -31,7 +32,7 @@ class ProductByCategoryScreen extends StatelessWidget {
               floating: true,
               snap: true,
               title: Text(
-                "${selectedCategory.name}",
+                "${selectedSubCategory.name}",
                 style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -50,7 +51,7 @@ class ProductByCategoryScreen extends StatelessWidget {
                         right: 0,
                         child: Column(
                           children: [
-                            Consumer<ProductByCategoryProvider>(
+                            Consumer<ProductBySubCategoryProvider>(
                               builder: (context, proByCatProvider, child) {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -90,7 +91,7 @@ class ProductByCategoryScreen extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(
-                                  child: Consumer<ProductByCategoryProvider>(
+                                  child: Consumer<ProductBySubCategoryProvider>(
                                     builder:
                                         (context, proByCatProvider, child) {
                                       return MultiSelectDropDown<Brand>(
@@ -122,7 +123,7 @@ class ProductByCategoryScreen extends StatelessWidget {
             SliverPadding(
               padding: const EdgeInsets.all(20),
               sliver: SliverToBoxAdapter(
-                child: Consumer<ProductByCategoryProvider>(
+                child: Consumer<ProductBySubCategoryProvider>(
                   builder: (context, proByCaProvider, child) {
                     return ProductGridView(
                       items: proByCaProvider.filteredProduct,

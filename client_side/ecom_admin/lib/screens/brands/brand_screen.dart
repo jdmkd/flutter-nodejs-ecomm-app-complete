@@ -6,11 +6,10 @@ import 'components/add_brand_form.dart';
 import 'components/brand_header.dart';
 import 'components/brand_list_section.dart';
 
-
 class BrandScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: SingleChildScrollView(
         primary: false,
         padding: EdgeInsets.all(defaultPadding),
@@ -26,27 +25,23 @@ class BrandScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Expanded(
-                            child: Text(
-                              "My Categories",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "Brands",
+                          //     style: Theme.of(context).textTheme.titleMedium,
+                          //   ),
+                          // ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
-                                vertical:
-                                defaultPadding,
+                                vertical: defaultPadding,
                               ),
                             ),
                             onPressed: () {
-                              showBrandForm(context,null);
+                              showBrandForm(context, null);
                             },
                             icon: Icon(Icons.add),
                             label: Text("Add New"),
@@ -54,7 +49,8 @@ class BrandScreen extends StatelessWidget {
                           Gap(20),
                           IconButton(
                               onPressed: () {
-                                context.dataProvider.getAllBrands(showSnack: true);
+                                context.dataProvider
+                                    .getAllBrands(showSnack: true);
                               },
                               icon: Icon(Icons.refresh)),
                         ],

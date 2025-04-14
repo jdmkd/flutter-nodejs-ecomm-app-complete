@@ -18,9 +18,13 @@ import 'screens/variants/provider/variant_provider.dart';
 import 'screens/variants_type/provider/variant_type_provider.dart';
 import 'utility/constants.dart';
 import 'utility/extensions.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  await requestNotificationPermission();
+
   runApp(MultiProvider(providers: [
     ChangeNotifierProvider(create: (context) => DataProvider()),
     ChangeNotifierProvider(create: (context) => MainScreenProvider()),
@@ -35,6 +39,7 @@ void main() {
     ChangeNotifierProvider(
         create: (context) => VariantsProvider(context.dataProvider)),
     ChangeNotifierProvider(
+        lazy: false,
         create: (context) => DashBoardProvider(context.dataProvider)),
     ChangeNotifierProvider(
         create: (context) => CouponCodeProvider(context.dataProvider)),
@@ -64,5 +69,12 @@ class MyApp extends StatelessWidget {
       defaultTransition: Transition.cupertino,
       getPages: AppPages.routes,
     );
+  }
+}
+
+Future<void> requestNotificationPermission() async {
+  var status = await Permission.notification.status;
+  if (status.isDenied || status.isPermanentlyDenied) {
+    await Permission.notification.request();
   }
 }

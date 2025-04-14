@@ -16,7 +16,8 @@ class CustomTextField extends StatelessWidget {
     required this.onSave,
     this.inputType = TextInputType.text,
     this.lineNumber = 1,
-    this.validator, required this.controller,
+    this.validator,
+    required this.controller,
   }) : super(key: key);
 
   @override
@@ -33,14 +34,17 @@ class CustomTextField extends StatelessWidget {
             borderSide: BorderSide(color: secondaryColor),
           ),
         ),
-        keyboardType: inputType,
+        // keyboardType: inputType,
+        keyboardType:
+            inputType != null ? TextInputType.text : TextInputType.number,
         onSaved: (value) {
           onSave(value?.isEmpty ?? true ? null : value);
         },
         validator: validator,
         inputFormatters: [
           LengthLimitingTextInputFormatter(700),
-          if (inputType == TextInputType.number) FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),
+          if (inputType == TextInputType.number)
+            FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),
         ],
       ),
     );

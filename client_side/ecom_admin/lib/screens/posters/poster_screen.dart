@@ -29,12 +29,12 @@ class PosterScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Expanded(
-                            child: Text(
-                              "My Posters",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "My Posters",
+                          //     style: Theme.of(context).textTheme.titleMedium,
+                          //   ),
+                          // ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(

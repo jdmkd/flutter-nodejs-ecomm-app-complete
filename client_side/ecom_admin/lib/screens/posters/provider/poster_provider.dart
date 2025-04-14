@@ -20,40 +20,43 @@ class PosterProvider extends ChangeNotifier {
   TextEditingController productIdCtrl = TextEditingController();
   Poster? posterForUpdate;
 
-
   File? selectedImage;
   XFile? imgXFile;
-
 
   PosterProvider(this._dataProvider);
 
   addPoster() async {
     try {
-      if(selectedImage == null){
+      if (selectedImage == null) {
         SnackBarHelper.showErrorSnackBar('Pleas Choose A Image !');
         return; //? stop the program eviction
       }
       Map<String, dynamic> formDataMap = {
         'posterName': posterNameCtrl.text,
         'productId': productIdCtrl.text,
-        'image': 'no_data', //? image path will add from server side
+        'imageUrl': 'no_data', //? image path will add from server side
       };
 
-      final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
+      final FormData form =
+          await createFormData(imgXFile: imgXFile, formData: formDataMap);
 
-      final response = await service.addItem(endpointUrl: 'posters', itemData: form);
-      if (response.isOk) {
+      final response =
+          await service.addItem(endpointUrl: 'posters', itemData: form);
+      if (response.isOk && response.body != null) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
+
         if (apiResponse.success == true) {
           clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
           log('poster added');
           _dataProvider.getAllPosters();
         } else {
-          SnackBarHelper.showErrorSnackBar('Failed to add posters: ${apiResponse.message}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add posters: ${apiResponse.message}');
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -61,32 +64,37 @@ class PosterProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
 
   updatePoster() async {
     try {
       Map<String, dynamic> formDataMap = {
         'posterName': posterNameCtrl.text,
         'productId': productIdCtrl.text,
-        'image': posterForUpdate?.imageUrl ?? '',
+        'imageUrl': posterForUpdate?.imageUrl ?? '',
       };
 
-      final FormData form = await createFormData(imgXFile: imgXFile, formData: formDataMap);
+      final FormData form =
+          await createFormData(imgXFile: imgXFile, formData: formDataMap);
 
-      final response =
-      await service.updateItem(endpointUrl: 'posters', itemData: form, itemId: posterForUpdate?.sId ?? '');
-      if (response.isOk) {
+      final response = await service.updateItem(
+          endpointUrl: 'posters',
+          itemData: form,
+          itemId: posterForUpdate?.sId ?? '');
+
+      if (response.isOk && response.body != null) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
-          clearFields();
+          // clearFields();
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
-          log('poster added');
+          log('poster updated');
           _dataProvider.getAllPosters();
         } else {
-          SnackBarHelper.showErrorSnackBar('Failed to add poster: ${apiResponse.message}');
+          SnackBarHelper.showErrorSnackBar(
+              'Failed to add poster: ${apiResponse.message}');
         }
       } else {
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -94,8 +102,6 @@ class PosterProvider extends ChangeNotifier {
       rethrow;
     }
   }
-
-
 
   submitPoster() {
     if (posterForUpdate != null) {
@@ -105,18 +111,19 @@ class PosterProvider extends ChangeNotifier {
     }
   }
 
-
   deletePoster(Poster poster) async {
     try {
-      Response response = await service.deleteItem(endpointUrl: 'posters', itemId: poster.sId ?? '');
+      Response response = await service.deleteItem(
+          endpointUrl: 'posters', itemId: poster.sId ?? '');
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
         if (apiResponse.success == true) {
           SnackBarHelper.showSuccessSnackBar('Poster Deleted Successfully');
           _dataProvider.getAllPosters();
         }
-      }else{
-        SnackBarHelper.showErrorSnackBar('Error ${response.body?['message'] ?? response.statusText}');
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error ${response.body?['message'] ?? response.statusText}');
       }
     } catch (e) {
       print(e);
@@ -124,18 +131,17 @@ class PosterProvider extends ChangeNotifier {
     }
   }
 
-
   //? to pick image for poster
   void pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+
     if (image != null) {
       selectedImage = File(image.path);
       imgXFile = image;
       notifyListeners();
     }
   }
-
 
   //? to set data initially for updating poster form
   setDataForUpdatePoster(Poster? poster) {
@@ -150,18 +156,35 @@ class PosterProvider extends ChangeNotifier {
   }
 
   //? to create form data fir send image with data
-  Future<FormData> createFormData({required XFile? imgXFile, required Map<String, dynamic> formData}) async {
+  Future<FormData> createFormData(
+      {required XFile? imgXFile,
+      required Map<String, dynamic> formData}) async {
     if (imgXFile != null) {
+      final String fileName = imgXFile.name;
+      final String extension = fileName.split('.').last.toLowerCase();
+
+      // Determine the content type
+      String mimeType = 'image/jpeg'; // Default fallback
+      if (extension == 'png') {
+        mimeType = 'image/png';
+      } else if (extension == 'jpg' || extension == 'jpeg') {
+        mimeType = 'image/jpeg';
+      } else if (extension == 'webp') {
+        mimeType = 'image/webp';
+      }
+
       MultipartFile multipartFile;
+
       if (kIsWeb) {
-        String fileName = imgXFile.name;
         Uint8List byteImg = await imgXFile.readAsBytes();
-        multipartFile = MultipartFile(byteImg, filename: fileName);
+        multipartFile = await MultipartFile(byteImg,
+            filename: fileName, contentType: mimeType);
       } else {
         String fileName = imgXFile.path.split('/').last;
-        multipartFile = MultipartFile(imgXFile.path, filename: fileName);
+        multipartFile = await MultipartFile(imgXFile.path,
+            filename: fileName, contentType: mimeType);
       }
-      formData['img'] = multipartFile;
+      formData['imageUrl'] = multipartFile;
     }
     final FormData form = FormData(formData);
     return form;

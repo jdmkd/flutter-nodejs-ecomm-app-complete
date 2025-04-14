@@ -10,7 +10,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  bool isCollapsed = false; // Track collapse state
+  bool isCollapsed = true; // Track collapse state
 
   void toggleMenu() {
     setState(() {
@@ -20,6 +20,12 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final mainProvider = context.watch<MainScreenProvider>();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600; // Customize breakpoint as needed
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Stack(
         children: [
@@ -34,7 +40,7 @@ class _MainScreenState extends State<MainScreen> {
 
           // SideMenu with Stylish Glassmorphism Effect
           AnimatedPositioned(
-            duration: Duration(milliseconds: 300),
+            duration: Duration(milliseconds: 500),
             left: isCollapsed ? -260 : 0, // Adjusted for better UX
             top: 0,
             bottom: 0,
@@ -59,13 +65,16 @@ class _MainScreenState extends State<MainScreen> {
           ),
 
           // Floating Menu Button
-          Positioned(
-            top: 20,
+          AnimatedPositioned(
+            duration: Duration(milliseconds: 500),
+            curve: Curves.easeInOut,
+            top: isMobile ? 60 : 20,
             left: isCollapsed ? 15 : 270,
             child: GestureDetector(
               onTap: toggleMenu,
               child: AnimatedContainer(
-                duration: Duration(milliseconds: 300),
+                duration: Duration(milliseconds: 500),
+                curve: Curves.easeInOut,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Colors.white.withOpacity(0.2),

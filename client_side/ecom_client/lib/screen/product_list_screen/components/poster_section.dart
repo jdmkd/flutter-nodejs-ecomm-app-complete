@@ -99,7 +99,7 @@ class PosterSection extends StatelessWidget {
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Image.network(
-                            '${dataProvider.posters[index].imageUrl?.replaceAll('localhost', '192.168.1.3')}',
+                            '${dataProvider.posters[index].imageUrl}',
                             fit: BoxFit.cover,
                             alignment: Alignment.center,
                             loadingBuilder: (context, child, loadingProgress) {

@@ -8,70 +8,76 @@ import 'package:provider/provider.dart';
 import '../../../utility/color_list.dart';
 import '../../../utility/constants.dart';
 
-
 class NotificationListSection extends StatelessWidget {
-  const NotificationListSection({
-    Key? key,
-  }) : super(key: key);
+  const NotificationListSection({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(defaultPadding),
-      decoration: BoxDecoration(
-        color: secondaryColor,
-        borderRadius: const BorderRadius.all(Radius.circular(10)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "All Notification",
-            style: Theme.of(context).textTheme.titleMedium,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          padding: const EdgeInsets.all(defaultPadding),
+          decoration: BoxDecoration(
+            color: secondaryColor,
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
-          SizedBox(
-            width: double.infinity,
-            child: Consumer<DataProvider>(
-              builder: (context, dataProvider, child) {
-                return DataTable(
-                  columnSpacing: defaultPadding,
-                  // minWidth: 600,
-                  columns: [
-                    DataColumn(
-                      label: Text("Title"),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "All Notifications",
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: defaultPadding),
+              Consumer<DataProvider>(
+                builder: (context, dataProvider, child) {
+                  return Scrollbar(
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: ConstrainedBox(
+                        constraints:
+                            BoxConstraints(minWidth: constraints.maxWidth),
+                        child: DataTable(
+                          columnSpacing: defaultPadding,
+                          columns: const [
+                            DataColumn(label: Text("Title")),
+                            DataColumn(label: Text("Description")),
+                            DataColumn(label: Text("Send Date")),
+                            DataColumn(label: Text("View")),
+                            DataColumn(label: Text("Delete")),
+                          ],
+                          rows: List.generate(
+                            dataProvider.notifications.length,
+                            (index) => notificationDataRow(
+                              dataProvider.notifications[index],
+                              index + 1,
+                              edit: () {
+                                viewNotificationStatics(
+                                    context, dataProvider.notifications[index]);
+                              },
+                              delete: () {
+                                context.notificationProvider.deleteNotification(
+                                    dataProvider.notifications[index]);
+                              },
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
-                    DataColumn(
-                      label: Text("Description"),
-                    ),
-                    DataColumn(
-                      label: Text("Send Date"),
-                    ),
-                    DataColumn(
-                      label: Text("View"),
-                    ),
-                    DataColumn(
-                      label: Text("Delete"),
-                    ),
-                  ],
-                  rows: List.generate(
-                    dataProvider.notifications.length,
-                    (index) => notificationDataRow(dataProvider.notifications[index], index + 1, edit: () {
-                      viewNotificationStatics(context, dataProvider.notifications[index]);
-                    }, delete: () {
-                      context.notificationProvider.deleteNotification(dataProvider.notifications[index]);
-                    }),
-                  ),
-                );
-              },
-            ),
+                  );
+                },
+              ),
+            ],
           ),
-        ],
-      ),
+        );
+      },
     );
   }
 }
 
-DataRow notificationDataRow(MyNotification notificationInfo, int index, {Function? edit, Function? delete}) {
+DataRow notificationDataRow(MyNotification notification, int index,
+    {Function? edit, Function? delete}) {
   return DataRow(
     cells: [
       DataCell(
@@ -80,37 +86,54 @@ DataRow notificationDataRow(MyNotification notificationInfo, int index, {Functio
             Container(
               height: 24,
               width: 24,
+              alignment: Alignment.center,
               decoration: BoxDecoration(
                 color: colors[index % colors.length],
                 shape: BoxShape.circle,
               ),
-              child: Text(index.toString(), textAlign: TextAlign.center),
+              child: Text(
+                index.toString(),
+                style: const TextStyle(color: Colors.white, fontSize: 12),
+              ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: defaultPadding),
-              child: Text(notificationInfo.title!),
+            const SizedBox(width: defaultPadding),
+            SizedBox(
+              width: 150,
+              child: Text(
+                notification.title ?? '',
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
       ),
-      DataCell(Text(notificationInfo.description ?? '')),
-      DataCell(Text(notificationInfo.createdAt ?? '')),
-      DataCell(IconButton(
+      DataCell(
+        SizedBox(
+          width: 200,
+          child: Text(
+            notification.description ?? '',
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+          ),
+        ),
+      ),
+      DataCell(Text(notification.createdAt ?? '')),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (edit != null) edit();
           },
-          icon: Icon(
-            Icons.remove_red_eye_sharp,
-            color: Colors.white,
-          ))),
-      DataCell(IconButton(
+          icon: const Icon(Icons.remove_red_eye_sharp, color: Colors.white),
+        ),
+      ),
+      DataCell(
+        IconButton(
           onPressed: () {
             if (delete != null) delete();
           },
-          icon: Icon(
-            Icons.delete,
-            color: Colors.red,
-          ))),
+          icon: const Icon(Icons.delete, color: Colors.red),
+        ),
+      ),
     ],
   );
 }

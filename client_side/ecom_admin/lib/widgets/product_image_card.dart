@@ -26,7 +26,7 @@ class ProductImageCard extends StatelessWidget {
       children: [
         Card(
           child: Container(
-            height: 130,
+            height: 100,
             width: size.width * 0.12,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(8),
@@ -42,17 +42,17 @@ class ProductImageCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: kIsWeb
                           ? Image.network(
-                        imageFile?.path ?? '',
-                        width: double.infinity,
-                        height: 80,
-                        fit: BoxFit.scaleDown,
-                      )
+                              imageFile?.path ?? '',
+                              width: double.infinity,
+                              height: 80,
+                              fit: BoxFit.scaleDown,
+                            )
                           : Image.file(
-                        imageFile!,
-                        width: double.infinity,
-                        height: 80,
-                        fit: BoxFit.scaleDown,
-                      ),
+                              imageFile!,
+                              width: double.infinity,
+                              height: 80,
+                              fit: BoxFit.scaleDown,
+                            ),
                     )
                   else if (imageUrlForUpdateImage != null)
                     ClipRRect(
@@ -61,30 +61,34 @@ class ProductImageCard extends StatelessWidget {
                         imageUrlForUpdateImage ?? '',
                         width: double.infinity,
                         height: 80,
-                        fit: BoxFit.scaleDown,
+                        fit: BoxFit.fitHeight,
                       ),
                     )
                   else
-                    Icon(Icons.camera_alt, size: 50, color: Colors.grey[600]),
-                  SizedBox(height: 8),
-                  Text(
-                    labelText,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[800],
-                    ),
-                  ),
+                    Icon(Icons.camera_alt, size: 48, color: Colors.grey[600]),
+
+                  SizedBox(height: 4),
+                  // Text(
+                  //   labelText,
+                  //   style: TextStyle(
+                  //     fontSize: 8,
+                  //     color: Colors.grey[800],
+                  //   ),
+                  // ),
                 ],
               ),
             ),
           ),
         ),
-        if ( imageFile != null && onRemoveImage != null)
+        if (imageFile != null && onRemoveImage != null)
           Positioned(
             top: 0,
             right: 0,
             child: IconButton(
-              icon: Icon(Icons.close,color: Colors.red,),
+              icon: Icon(
+                Icons.close,
+                color: Colors.red,
+              ),
               onPressed: onRemoveImage,
             ),
           ),

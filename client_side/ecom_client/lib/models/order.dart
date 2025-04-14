@@ -14,17 +14,17 @@ class Order {
 
   Order(
       {this.shippingAddress,
-        this.orderTotal,
-        this.sId,
-        this.userID,
-        this.orderStatus,
-        this.items,
-        this.totalPrice,
-        this.paymentMethod,
-        this.couponCode,
-        this.trackingUrl,
-        this.orderDate,
-        this.iV});
+      this.orderTotal,
+      this.sId,
+      this.userID,
+      this.orderStatus,
+      this.items,
+      this.totalPrice,
+      this.paymentMethod,
+      this.couponCode,
+      this.trackingUrl,
+      this.orderDate,
+      this.iV});
 
   Order.fromJson(Map<String, dynamic> json) {
     shippingAddress = json['shippingAddress'] != null
@@ -35,7 +35,7 @@ class Order {
         : null;
     sId = json['_id'];
     userID =
-    json['userID'] != null ? new UserID.fromJson(json['userID']) : null;
+        json['userID'] != null ? new UserID.fromJson(json['userID']) : null;
     orderStatus = json['orderStatus'];
     if (json['items'] != null) {
       items = <Items>[];
@@ -43,7 +43,8 @@ class Order {
         items!.add(new Items.fromJson(v));
       });
     }
-    totalPrice = json['totalPrice']?.toDouble();;
+    totalPrice = json['totalPrice']?.toDouble();
+    ;
     paymentMethod = json['paymentMethod'];
     couponCode = json['couponCode'] != null
         ? new CouponCode.fromJson(json['couponCode'])
@@ -91,11 +92,11 @@ class ShippingAddress {
 
   ShippingAddress(
       {this.phone,
-        this.street,
-        this.city,
-        this.state,
-        this.postalCode,
-        this.country});
+      this.street,
+      this.city,
+      this.state,
+      this.postalCode,
+      this.country});
 
   ShippingAddress.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
@@ -169,11 +170,11 @@ class Items {
 
   Items(
       {this.productID,
-        this.productName,
-        this.quantity,
-        this.price,
-        this.variant,
-        this.sId});
+      this.productName,
+      this.quantity,
+      this.price,
+      this.variant,
+      this.sId});
 
   Items.fromJson(Map<String, dynamic> json) {
     productID = json['productID'];

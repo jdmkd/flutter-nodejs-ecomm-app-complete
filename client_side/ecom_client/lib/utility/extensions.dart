@@ -1,3 +1,5 @@
+import 'package:ecom_client/screen/product_by_subcategory_screen/provider/product_by_subcategory_provider.dart';
+
 import '../screen/auth_screen/login_screen/provider/user_provider.dart';
 import '../screen/product_cart_screen/provider/cart_provider.dart';
 import '../screen/profile_screen/provider/profile_provider.dart';
@@ -14,6 +16,8 @@ extension Providers on BuildContext {
       Provider.of<DataProvider>(this, listen: false);
   ProductByCategoryProvider get proByCProvider =>
       Provider.of<ProductByCategoryProvider>(this, listen: false);
+  ProductBySubCategoryProvider get proBySubCProvider =>
+      Provider.of<ProductBySubCategoryProvider>(this, listen: false);
   ProductDetailProvider get proDetailProvider =>
       Provider.of<ProductDetailProvider>(this, listen: false);
   CartProvider get cartProvider =>

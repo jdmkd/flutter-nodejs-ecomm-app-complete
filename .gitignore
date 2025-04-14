@@ -66,9 +66,6 @@ _______________________________________
 **/node_modules/
 # Build output
 **/.next/
-# Local environment variables
-**/.env
-**/.local.env
 # Logs
 **/*.log
 # Temporary files
@@ -78,6 +75,10 @@ _______________________________________
 Thumbs.db
 
 # Ignore local environment files
+**/.env
+**/.env.*
+**/.local.env
+**/.env.*.local
 **/.env.local
 **/.env.development.local
 **/.env.test.local

@@ -27,7 +27,7 @@ class ProductGridTile extends StatelessWidget {
 
     // Product Image Fallback
     String imageUrl = product.images != null && product.images!.isNotEmpty
-        ? product.images![0].url?.replaceAll('localhost', '192.168.1.3') ?? ''
+        ? product.images![0].url ?? ''
         : 'https://dummyimage.com/300x400/aaaaaa/ffffff&text=Loading...';
 
     return Card(
@@ -235,25 +235,25 @@ class ProductGridTile extends StatelessWidget {
                 // const SizedBox(height: 3), // Space between buttons
 
                 // Add to Cart Button
-                ElevatedButton.icon(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    minimumSize: const Size(double.infinity, 40),
-                  ),
-                  onPressed: () {
-                    // Implement Add to Cart functionality
-                  },
-                  icon:
-                      const Icon(Icons.add_shopping_cart, color: Colors.white),
-                  label: const Text(
-                    "Add to Cart",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold, color: Colors.white),
-                  ),
-                ),
+                // ElevatedButton.icon(
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.blue,
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //     ),
+                //     minimumSize: const Size(double.infinity, 40),
+                //   ),
+                //   onPressed: () {
+                //     // Implement Add to Cart functionality
+                //   },
+                //   icon:
+                //       const Icon(Icons.add_shopping_cart, color: Colors.white),
+                //   label: const Text(
+                //     "Add to Cart",
+                //     style: TextStyle(
+                //         fontWeight: FontWeight.bold, color: Colors.white),
+                //   ),
+                // ),
               ],
             ),
           ),

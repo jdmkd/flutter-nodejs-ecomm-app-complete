@@ -1,8 +1,8 @@
-// const MAIN_URL = 'https://flutter-ecomm-nodejs-backend.vercel.app';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-const MAIN_URL = 'http://192.168.1.3:3000';
-
-// const MAIN_URL = 'http://10.0.2.2:3000';
+class AppConfig {
+  static String get baseUrl => dotenv.env['MAIN_URL'] ?? '';
+}
 
 const FAVORITE_PRODUCT_BOX = 'FAVORITE_PRODUCT_BOX';
 const USER_INFO_BOX = 'USER_INFO_BOX';

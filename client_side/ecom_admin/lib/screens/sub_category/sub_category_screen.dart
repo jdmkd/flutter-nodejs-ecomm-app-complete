@@ -6,11 +6,10 @@ import 'components/add_sub_category_form.dart';
 import 'components/sub_category_header.dart';
 import 'components/sub_category_list_section.dart';
 
-
 class SubCategoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return  SafeArea(
+    return SafeArea(
       child: SingleChildScrollView(
         primary: false,
         padding: EdgeInsets.all(defaultPadding),
@@ -26,27 +25,26 @@ class SubCategoryScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Expanded(
-                            child: Text(
-                              "My Sub Categories",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "My Sub Categories",
+                          //     style: Theme
+                          //         .of(context)
+                          //         .textTheme
+                          //         .titleMedium,
+                          //   ),
+                          // ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(
                                 horizontal: defaultPadding * 1.5,
-                                vertical:
-                                defaultPadding,
+                                vertical: defaultPadding,
                               ),
                             ),
                             onPressed: () {
-                              showAddSubCategoryForm(context,null);
+                              showAddSubCategoryForm(context, null);
                             },
                             icon: Icon(Icons.add),
                             label: Text("Add New"),
@@ -54,7 +52,8 @@ class SubCategoryScreen extends StatelessWidget {
                           Gap(20),
                           IconButton(
                               onPressed: () {
-                                context.dataProvider.getAllSubCategory(showSnack: true);
+                                context.dataProvider
+                                    .getAllSubCategory(showSnack: true);
                               },
                               icon: Icon(Icons.refresh)),
                         ],

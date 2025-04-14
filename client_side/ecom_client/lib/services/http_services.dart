@@ -1,12 +1,13 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get_connect.dart';
 import 'package:get/get.dart';
 
 import '../utility/constants.dart';
 
 class HttpService {
-  final String baseUrl = MAIN_URL;
+  final String baseUrl = AppConfig.baseUrl;
 
   Future<Response> getItems({required String endpointUrl}) async {
     try {

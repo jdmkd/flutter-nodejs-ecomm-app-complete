@@ -29,17 +29,17 @@ class NotificationScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Expanded(
-                            child: Text(
-                              "My Notification",
-                              style: Theme
-                                  .of(context)
-                                  .textTheme
-                                  .titleMedium,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "My Notification",
+                          //     style: Theme
+                          //         .of(context)
+                          //         .textTheme
+                          //         .titleMedium,
+                          //   ),
+                          // ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(

@@ -34,11 +34,18 @@ android {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            // minifyEnabled false  // Disable R8 minification
-            // shrinkResources false  // Disable resource shrinking
-            signingConfig = signingConfigs.debug
+            minifyEnabled true  // Disable R8 minification
+            shrinkResources true  // Disable resource shrinking
+            signingConfig = signingConfigs.debug  // or use a proper release config if ready
+            proguardFiles getDefaultProguardFile(
+                'proguard-android-optimize.txt'
+            ), 'proguard-rules.pro'
         }
     }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ["-Xlint:deprecation"]
 }
 
 flutter {

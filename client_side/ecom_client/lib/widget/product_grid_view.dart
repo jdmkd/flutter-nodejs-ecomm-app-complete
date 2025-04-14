@@ -19,7 +19,7 @@ class ProductGridView extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     // Set status bar color and brightness
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Make it transparent or set a color
       statusBarIconBrightness: Brightness.dark, // Change to light if needed
     ));
@@ -31,7 +31,7 @@ class ProductGridView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 9 / 18, // Slightly adjusted for better alignment
+          childAspectRatio: 9 / 15, // Slightly adjusted for better alignment
           // childAspectRatio: 0.65, // Better for card + image + text + button
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -10,25 +12,40 @@ class DashBoardHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.end, // Align everything to the right
-      children: [
-        // Profile Card Positioned on Right
-        Align(
-          alignment: Alignment.topRight,
-          child: ProfileCard(),
-        ),
-        SizedBox(height: defaultPadding), // Space before search bar
-
-        // Search Field Below
-        SearchField(
-          onChange: (val) {
-            final dataProvider = context.read<DataProvider>();
-            dataProvider.filterProducts(val);
-          },
-        ),
-      ],
+    final isMobile = MediaQuery.of(context).size.width < 600;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 0),
+      child: isMobile
+          ? Column(
+              // crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: ProfileCard(),
+                ),
+                const SizedBox(height: defaultPadding),
+                SizedBox(
+                  child: SearchField(
+                    onChange: (val) =>
+                        context.read<DataProvider>().filterProducts(val),
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                // Smaller width for SearchField
+                SizedBox(
+                  width: 400,
+                  child: SearchField(
+                    onChange: (val) =>
+                        context.read<DataProvider>().filterProducts(val),
+                  ),
+                ),
+                ProfileCard(),
+              ],
+            ),
     );
   }
 }
@@ -39,6 +56,7 @@ class ProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: EdgeInsets.only(left: defaultPadding),
       padding: EdgeInsets.symmetric(
           horizontal: defaultPadding, vertical: defaultPadding / 2),
       decoration: BoxDecoration(
@@ -92,44 +110,38 @@ class SearchField extends StatelessWidget {
     return Container(
       height: 45, // Slightly taller for better usability
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: secondaryColor,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 6,
-            offset: Offset(0, 2),
-          ),
-        ],
       ),
       child: TextField(
         decoration: InputDecoration(
           hintText: "Search...",
-          hintStyle: TextStyle(color: Colors.black54, fontSize: 16),
+          hintStyle: TextStyle(color: Colors.white, fontSize: 16),
           contentPadding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           border: OutlineInputBorder(
             borderSide: BorderSide.none,
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           suffixIcon: InkWell(
             onTap: () {},
             child: Container(
-              padding: EdgeInsets.all(10),
-              margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: EdgeInsets.all(defaultPadding * 0.75),
+              margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
+              // margin: EdgeInsets.symmetric(horizontal: defaultPadding / 2),
               decoration: BoxDecoration(
                 color: primaryColor,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: SvgPicture.asset(
                 "assets/icons/Search.svg",
-                height: 22,
-                width: 22,
+                // height: 22,
+                // width: 22,
                 colorFilter: ColorFilter.mode(Colors.white, BlendMode.srcIn),
               ),
             ),
           ),
         ),
-        style: TextStyle(color: Colors.black, fontSize: 16),
+        style: TextStyle(color: Colors.white, fontSize: 16),
         onChanged: (value) {
           onChange(value);
         },

@@ -19,7 +19,6 @@ class ProductSummeryCard extends StatelessWidget {
       onTap: () {
         onTap(info.title);
       },
-      
       child: AnimatedContainer(
         duration: Duration(milliseconds: 250),
         curve: Curves.easeInOut,
@@ -35,7 +34,6 @@ class ProductSummeryCard extends StatelessWidget {
             ),
           ],
         ),
-        
         child: Column(
           mainAxisSize: MainAxisSize.min, // Adjust height dynamically
 
@@ -89,7 +87,7 @@ class ProductSummeryCard extends StatelessWidget {
               color: info.color,
               percentage: info.percentage,
             ),
-            SizedBox(height: 10),
+            // SizedBox(height: 10),
 
             // Product Count
             Row(

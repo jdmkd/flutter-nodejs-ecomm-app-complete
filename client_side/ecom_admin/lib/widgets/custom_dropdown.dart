@@ -23,6 +23,7 @@ class CustomDropdown<T> extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: DropdownButtonFormField<T>(
+        isExpanded: true,
         decoration: InputDecoration(
           labelText: hintText,
           hintText: hintText,
@@ -34,7 +35,7 @@ class CustomDropdown<T> extends StatelessWidget {
         items: items.map((T value) {
           return DropdownMenuItem<T>(
             value: value,
-            child: Text(displayItem(value)), // Use displayItem to get the text
+            child: Text(displayItem(value)),
           );
         }).toList(),
         onChanged: onChanged,

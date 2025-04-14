@@ -16,26 +16,27 @@ class CategoryScreen extends StatelessWidget {
         primary: false,
         padding: EdgeInsets.all(defaultPadding),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start, // Fix alignment
+          // crossAxisAlignment: CrossAxisAlignment.start, // Fix alignment
           children: [
             CategoryHeader(),
             SizedBox(height: defaultPadding),
+            Gap(defaultPadding),
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              // crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   flex: 5,
                   child: Column(
                     children: [
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.end,
                         children: [
-                          Flexible(
-                            child: Text(
-                              "My Categories",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
-                          ),
+                          // Expanded(
+                          //   child: Text(
+                          //     "My Categories",
+                          //     style: Theme.of(context).textTheme.titleMedium,
+                          //   ),
+                          // ),
                           ElevatedButton.icon(
                             style: TextButton.styleFrom(
                               padding: EdgeInsets.symmetric(

@@ -36,12 +36,7 @@ class _CarouselSliderState extends State<CarouselSlider> {
               });
             },
             itemBuilder: (_, index) {
-              final imageUrl = widget.items
-                      .safeElementAt(index)
-                      ?.url
-                      ?.replaceAll('localhost', '192.168.1.3') ??
-                  '';
-
+              final imageUrl = widget.items.safeElementAt(index)?.url ?? '';
               return Padding(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

@@ -62,13 +62,24 @@ class ProductSummerySection extends StatelessWidget {
 
         return LayoutBuilder(
           builder: (context, constraints) {
-            int crossAxisCount = (screenSize.width > 1200)
-                ? 4
-                : (screenSize.width > 900)
-                    ? 3
-                    : (screenSize.width > 600)
-                        ? 2
-                        : 1;
+            double width = constraints.maxWidth;
+            int crossAxisCount = (width < 600)
+                ? 2
+                : // 2 cards on mobile
+                (width < 900)
+                    ? 2
+                    : (width < 1200)
+                        ? 3
+                        : 4;
+
+            double aspectRatio = (width < 600)
+                ? 0.9
+                : // Smaller cards
+                (width < 900)
+                    ? 1.1
+                    : (width < 1200)
+                        ? 1.3
+                        : 1.4;
 
             return Padding(
               padding:
@@ -79,9 +90,10 @@ class ProductSummerySection extends StatelessWidget {
                 itemCount: productSummeryItems.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: crossAxisCount,
-                  crossAxisSpacing: defaultPadding,
-                  mainAxisSpacing: defaultPadding,
+                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 8,
                   childAspectRatio: screenSize.width < 1200 ? 1.1 : 1.4,
+                  // childAspectRatio: aspectRatio,
                 ),
                 itemBuilder: (context, index) => ProductSummeryCard(
                   info: productSummeryItems[index],

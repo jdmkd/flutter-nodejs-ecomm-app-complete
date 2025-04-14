@@ -17,28 +17,30 @@ class Product {
 
   Product(
       {this.sId,
-        this.name,
-        this.description,
-        this.quantity,
-        this.price,
-        this.offerPrice,
-        this.proCategoryId,
-        this.proSubCategoryId,
-        this.proBrandId,
-        this.proVariantTypeId,
-        this.proVariantId,
-        this.images,
-        this.createdAt,
-        this.updatedAt,
-        this.iV});
+      this.name,
+      this.description,
+      this.quantity,
+      this.price,
+      this.offerPrice,
+      this.proCategoryId,
+      this.proSubCategoryId,
+      this.proBrandId,
+      this.proVariantTypeId,
+      this.proVariantId,
+      this.images,
+      this.createdAt,
+      this.updatedAt,
+      this.iV});
 
   Product.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
     description = json['description'];
     quantity = json['quantity'];
-    price = json['price']?.toDouble();;
-    offerPrice = json['offerPrice']?.toDouble();;
+    price = json['price']?.toDouble();
+    ;
+    offerPrice = json['offerPrice']?.toDouble();
+    ;
     proCategoryId = json['proCategoryId'] != null
         ? new ProRef.fromJson(json['proCategoryId'])
         : null;
@@ -51,7 +53,12 @@ class Product {
     proVariantTypeId = json['proVariantTypeId'] != null
         ? new ProTypeRef.fromJson(json['proVariantTypeId'])
         : null;
-    proVariantId = json['proVariantId'].cast<String>();
+    proVariantId = json['proVariantId'] != null
+        ? List<String>.from(json['proVariantId'])
+        : null;
+
+    // proVariantId = json['proVariantId'].cast<String>();
+
     if (json['images'] != null) {
       images = <Images>[];
       json['images'].forEach((v) {
@@ -83,7 +90,9 @@ class Product {
     if (this.proVariantTypeId != null) {
       data['proVariantTypeId'] = this.proVariantTypeId!.toJson();
     }
-    data['proVariantId'] = this.proVariantId;
+    if (this.proVariantTypeId != null) {
+      data['proVariantId'] = this.proVariantId;
+    }
     if (this.images != null) {
       data['images'] = this.images!.map((v) => v.toJson()).toList();
     }
