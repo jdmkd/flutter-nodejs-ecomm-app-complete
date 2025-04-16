@@ -21,8 +21,10 @@ class UserProvider extends ChangeNotifier {
   Future<String?> login(String email, String password) async {
     try {
       Map<String, dynamic> credentials = {"email": email, "password": password};
+
       final response = await service.addItem(
           endpointUrl: 'users/login', itemData: credentials);
+
       log('Attempting Login with: $email - $password');
 
       log('Login API Response: ${response.body}');
@@ -31,11 +33,14 @@ class UserProvider extends ChangeNotifier {
             ApiResponse<Map<String, dynamic>>.fromJson(
                 response.body, (json) => json as Map<String, dynamic>);
         if (apiResponse.success ?? false) {
-          Map<String, dynamic>? userData =
-              apiResponse.data?['user']; // Extract user object
-          if (userData != null) {
+          Map<String, dynamic>? userData = apiResponse.data?['user'];
+          String? token = apiResponse.data?['token'];
+          log("userData ==>>> $userData");
+
+          if (userData != null && token != null) {
             User user = User.fromJson(userData); // Create a User object
-            saveLoginInfo(user); // Save correct user info
+            await saveLoginInfo(user, token); // Save correct user info
+
             SnackBarHelper.showSuccessSnackBar(apiResponse.message);
             log('Login success: ${user.toJson()}');
             return null;
@@ -175,13 +180,86 @@ class UserProvider extends ChangeNotifier {
   }
 
   //? to save login info after login
-  Future<void> saveLoginInfo(User? loginUser) async {
+  Future<void> saveLoginInfo(User? loginUser, String token) async {
     if (loginUser != null) {
       await box.write(USER_INFO_BOX, loginUser.toJson());
+      await box.write('auth_token', token); // Done inside saveLoginInfo()
+
       Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
-      log('User saved: ${box.read(USER_INFO_BOX)}'); // Debug log
     } else {
       log('User is null, not saving');
+    }
+  }
+
+  // Update user profile
+  Future<String?> updateUserProfile(
+      String itemId, String name, String? phone, String? gender) async {
+    final String trimmedPhone = phone?.trim() ?? '';
+    log("Phone input received: '$trimmedPhone'");
+
+    // Validate phone number
+    if (trimmedPhone.isEmpty || int.tryParse(trimmedPhone) == null) {
+      log('Invalid phone number format!!');
+      return 'Invalid phone number';
+    }
+
+    Map<String, dynamic> updatedData = {
+      "name": name.trim(),
+      "phone": trimmedPhone,
+      // "gender": gender, // Uncomment if needed
+    };
+
+    try {
+      final response = await service.updateItem(
+        endpointUrl: 'users/update',
+        itemId: itemId,
+        itemData: updatedData,
+        withAuth: true,
+      );
+
+      if (response.isOk) {
+        final ApiResponse<Map<String, dynamic>> apiResponse =
+            ApiResponse<Map<String, dynamic>>.fromJson(
+                response.body, (json) => json as Map<String, dynamic>);
+
+        if (apiResponse.success == true) {
+          final updatedUserJson = apiResponse.data;
+
+          // Check if user data exists
+          if (updatedUserJson != null) {
+            final updatedUser = User.fromJson(updatedUserJson);
+            await updateLocalUserInfo(updatedUser); // Update local cache
+
+            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+            return null; // No error
+          } else {
+            return 'No user data returned.';
+          }
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Update failed: ${apiResponse.message}');
+          return apiResponse.message;
+        }
+      } else {
+        SnackBarHelper.showErrorSnackBar(
+            'Error: ${response.body?['message'] ?? response.statusText}');
+        return '${response.body?['message'] ?? response.statusText}';
+      }
+    } catch (e) {
+      log('Exception while updating profile: $e');
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      return 'An error occurred: $e';
+    }
+  }
+
+// Save updated user info locally
+  Future<void> updateLocalUserInfo(User updatedUser) async {
+    if (updatedUser != null) {
+      await box.write(USER_INFO_BOX, updatedUser.toJson());
+
+      Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
+    } else {
+      log('Updated user is null, not saving');
     }
   }
 }
