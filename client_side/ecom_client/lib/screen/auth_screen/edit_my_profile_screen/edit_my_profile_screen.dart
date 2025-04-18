@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:ecom_client/models/order.dart';
 import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecom_client/screen/auth_screen/reset_password_screen/reset_password_with_otp_screen.dart';
 import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 
 class EditMyProfileScreen extends StatefulWidget {
   const EditMyProfileScreen({super.key});
@@ -20,6 +22,7 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
+  final _dateOfBirthController = TextEditingController();
 
   String _selectedGender = 'Male';
   String? _profileImagePath = 'assets/images/profile_pic.png';
@@ -42,8 +45,27 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
         _nameController.text = user?.name ?? '';
         _emailController.text = user?.email ?? '';
         _phoneController.text = user?.phone ?? '';
-        _addressController.text = '';
+        _addressController.text = user?.currentAddress ?? '';
+        // _dateOfBirthController.text = user?.dateOfBirth ?? '';
+
+        if (user?.dateOfBirth != null && user!.dateOfBirth!.isNotEmpty) {
+          // Parse and format date (ensure it's in YYYY-MM-DD)
+          DateTime? dob = DateTime.tryParse(user.dateOfBirth ?? '');
+          if (dob != null) {
+            _dateOfBirthController.text = DateFormat('dd-MM-yyyy').format(dob);
+          }
+        }
+
         // _profileImageUrl = 'assets/images/profile_pic.png';
+
+        String gender = (user?.gender ?? '').toLowerCase();
+        if (gender == 'female') {
+          _selectedGender = 'Female';
+        } else if (gender == 'other') {
+          _selectedGender = 'Other';
+        } else {
+          _selectedGender = 'Male'; // Default to Male
+        }
       });
     });
   }
@@ -52,6 +74,8 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
     final name = _nameController.text;
     final phone = _phoneController.text;
     final gender = _selectedGender;
+    final currentAddress = _addressController.text;
+    final dateOfBirth = _dateOfBirthController.text;
 
     if (name.isEmpty || name.length < 3) {
       SnackBarHelper.showErrorSnackBar(
@@ -59,7 +83,7 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
       return;
     }
 
-    if (phone.isEmpty || phone.length < 10 || int.tryParse(phone) == null) {
+    if (phone.isEmpty || phone.length != 10 || int.tryParse(phone) == null) {
       SnackBarHelper.showErrorSnackBar(
           "Please enter a valid 10-digit mobile number");
       return;
@@ -73,6 +97,8 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
       name,
       phone,
       gender,
+      dateOfBirth,
+      currentAddress,
     );
 
     setState(() => _isLoading = false);
@@ -85,7 +111,13 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
   }
 
   void _navigateToResetPassword() {
-    Navigator.pushNamed(context, '/reset-password'); // Create this route
+    // Navigator.pushNamed(context, '/reset-password'); // Create this route
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ResetPasswordWithOtpScreen(),
+      ),
+    );
   }
 
   void _changeProfilePhoto() {
@@ -168,12 +200,58 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
               // Address
               TextFormField(
                 controller: _addressController,
+                keyboardType: TextInputType.streetAddress,
                 decoration: _buildInputDecoration('Address', Icons.home),
                 validator: (value) =>
                     value!.isEmpty ? 'Please enter your address' : null,
               ),
               const SizedBox(height: 16),
 
+              // Date of Birth
+              GestureDetector(
+                onTap: () async {
+                  FocusScope.of(context).requestFocus(
+                      FocusNode()); // Prevents keyboard from opening
+                  DateTime currentDate = DateTime.now();
+
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: currentDate,
+                    firstDate: DateTime(1900),
+                    lastDate: currentDate,
+                  );
+
+                  if (pickedDate != null) {
+                    _dateOfBirthController.text =
+                        DateFormat('dd-MM-yyyy').format(pickedDate);
+                  }
+                },
+                child: AbsorbPointer(
+                  child: TextFormField(
+                    controller: _dateOfBirthController,
+                    decoration: _buildInputDecoration('DOB', Icons.date_range),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Please enter your Date of Birth';
+                      }
+
+                      try {
+                        DateTime dob =
+                            DateFormat('dd-MM-yyyy').parseStrict(value);
+                        if (dob.isAfter(DateTime.now())) {
+                          return 'Date of Birth cannot be in the future1';
+                        }
+                      } catch (e) {
+                        return 'Please enter a valid Date of Birth111';
+                      }
+
+                      return null;
+                    },
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 16),
               // Gender dropdown
               DropdownButtonFormField<String>(
                 value: _selectedGender,
@@ -184,6 +262,9 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                 onChanged: (value) {
                   setState(() => _selectedGender = value!);
                 },
+                validator: (value) => value == null || value.isEmpty
+                    ? 'Please select your gender'
+                    : null,
               ),
               const SizedBox(height: 30),
 

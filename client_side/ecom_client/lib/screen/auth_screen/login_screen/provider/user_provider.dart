@@ -192,10 +192,12 @@ class UserProvider extends ChangeNotifier {
   }
 
   // Update user profile
-  Future<String?> updateUserProfile(
-      String itemId, String name, String? phone, String? gender) async {
+  Future<String?> updateUserProfile(String itemId, String name, String? phone,
+      String? gender, String dateOfBirth, String currentAddress) async {
     final String trimmedPhone = phone?.trim() ?? '';
     log("Phone input received: '$trimmedPhone'");
+    log("Phone input dateOfBirth: '$dateOfBirth'");
+    log("Phone input currentAddress: '$currentAddress'");
 
     // Validate phone number
     if (trimmedPhone.isEmpty || int.tryParse(trimmedPhone) == null) {
@@ -206,7 +208,9 @@ class UserProvider extends ChangeNotifier {
     Map<String, dynamic> updatedData = {
       "name": name.trim(),
       "phone": trimmedPhone,
-      // "gender": gender, // Uncomment if needed
+      "gender": gender,
+      "dateOfBirth": dateOfBirth,
+      "currentAddress": currentAddress,
     };
 
     try {
@@ -256,10 +260,171 @@ class UserProvider extends ChangeNotifier {
   Future<void> updateLocalUserInfo(User updatedUser) async {
     if (updatedUser != null) {
       await box.write(USER_INFO_BOX, updatedUser.toJson());
-
       Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
+      log("updatedUser => ${updatedUser}");
+      log("USER_INFO_BOX ==> ${box.read(USER_INFO_BOX)}");
     } else {
       log('Updated user is null, not saving');
+    }
+  }
+
+  Future<String?> changeUserPassword(
+      String oldPassword, String newPassword, String itemId) async {
+    log("oldPassword => ${oldPassword}");
+    log("newPassword => ${newPassword}");
+
+    Map<String, dynamic> updatedData = {
+      "oldPassword": oldPassword,
+      "newPassword": newPassword,
+    };
+    log("updatedData  => ${updatedData}");
+    try {
+      final response = await service.updateItem(
+        endpointUrl: 'users/password/change',
+        itemId: itemId,
+        itemData: updatedData,
+        withAuth: true,
+      );
+
+      log("response.statusCode => ${response.statusCode}");
+      log("response.isOk => ${response.isOk}");
+      log("response.body => ${response.body}");
+
+      if (response.isOk) {
+        final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+            response.body, (json) => json as Map<String, dynamic>);
+
+        log("apiResponse1 ==> $apiResponse");
+        log("apiResponse.data ==> ${apiResponse.data}");
+        log("apiResponse.success ==> ${apiResponse.success}");
+        log("apiResponse.message ==> ${apiResponse.message}");
+
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          return null;
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Update failed: ${apiResponse.message}');
+          return apiResponse.message;
+        }
+      } else {
+        final errorMsg =
+            response.body?['message'] ?? response.statusText ?? 'Unknown error';
+        SnackBarHelper.showErrorSnackBar('Error: $errorMsg');
+        return errorMsg;
+      }
+    } catch (e) {
+      log('Exception while updating profile: $e');
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      return 'An error occurred: $e';
+    }
+  }
+
+  // reset Password Otp Send
+  Future<String?> resetPasswordOtpSend(String email) async {
+    Map<String, dynamic> updatedData = {
+      "email": email,
+      // "itemId": itemId,
+    };
+
+    log("updatedData  => ${updatedData}");
+
+    try {
+      final response = await service.addItem(
+        endpointUrl: 'users/password/reset/send-otp',
+        itemData: updatedData,
+        // withAuth: true,
+      );
+      log("OTP send response1 => $response");
+      log("OTP send response.body => ${response.body}");
+      log("OTP send response.statusCode => ${response.statusCode}");
+      final resData = response.body;
+      if (resData['success'] == true) {
+        return null; // null means success
+      } else {
+        return resData['message'] ?? 'Unknown error';
+      }
+    } catch (e) {
+      log("OTP send error => $e");
+      return e.toString(); // Return error string
+    }
+  }
+
+  Future<String?> resetPasswordWithOtpOnly(String email, String otp) async {
+    Map<String, dynamic> updatedData = {
+      "email": email,
+      "otp": otp,
+    };
+
+    log("Verifying OTP with data => $updatedData");
+
+    try {
+      final response = await service.addItem(
+        endpointUrl: 'users/password/reset/verify-otp-only',
+        itemData: updatedData,
+      );
+
+      log("OTP verify response2 => $response");
+      log("OTP send response2 => $response");
+      log("OTP send response.body2 => ${response.body}");
+      log("OTP send response.statusCode2 => ${response.statusCode}");
+      final resData = response.body;
+      if (resData['success'] == true) {
+        return null; // success
+      } else {
+        return resData['message'] ?? "Something went wrong";
+      }
+    } catch (e) {
+      log("OTP verify error => $e");
+      return e.toString(); // Return error string
+    }
+  }
+
+  Future<String?> resetPasswordWithOtp(
+      String email, String otp, String newPassword) async {
+    Map<String, dynamic> updatedData = {
+      "email": email,
+      "otp": otp,
+      "newPassword": newPassword,
+    };
+
+    log("Verifying OTP with data => $updatedData");
+
+    try {
+      final response = await service.addItem(
+        endpointUrl: 'users/password/reset/verify-otp',
+        itemData: updatedData,
+      );
+
+      final resData = response.body;
+      //
+      if (response.isOk) {
+        final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
+            response.body, (json) => json as Map<String, dynamic>);
+
+        log("apiResponse1 ==> $apiResponse");
+        log("apiResponse.data1 ==> ${apiResponse.data}");
+        log("apiResponse.success1 ==> ${apiResponse.success}");
+        log("apiResponse.message1 ==> ${apiResponse.message}");
+
+        if (apiResponse.success == true) {
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          return null;
+        } else {
+          SnackBarHelper.showErrorSnackBar(
+              'Update failed: ${apiResponse.message}');
+          return apiResponse.message;
+        }
+      } else {
+        final errorMsg =
+            response.body?['message'] ?? response.statusText ?? 'Unknown error';
+        SnackBarHelper.showErrorSnackBar('Error1x: $errorMsg');
+        return errorMsg;
+      }
+    } catch (e) {
+      log("OTP verify error => $e");
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+      return 'An error occurred: $e';
     }
   }
 }

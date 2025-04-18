@@ -6,6 +6,9 @@ class User {
   String? image;
   int? role;
   String? status;
+  String? currentAddress;
+  String? dateOfBirth;
+  String? gender;
   String? createdAt;
   String? updatedAt;
 
@@ -14,6 +17,9 @@ class User {
     this.name,
     this.email,
     this.phone,
+    this.gender,
+    this.dateOfBirth,
+    this.currentAddress,
     this.image,
     this.role,
     this.status,
@@ -28,6 +34,9 @@ class User {
       name: json['name'],
       email: json['email'],
       phone: json['phone'],
+      gender: json['gender'],
+      dateOfBirth: json['dateOfBirth'],
+      currentAddress: json['currentAddress'],
       image: json['image'],
       role: json['role'],
       status: json['status'],
@@ -43,6 +52,9 @@ class User {
       'name': name,
       'email': email,
       'phone': phone,
+      'gender': gender,
+      'dateOfBirth': dateOfBirth,
+      'currentAddress': currentAddress,
       'image': image,
       'role': role,
       'status': status,

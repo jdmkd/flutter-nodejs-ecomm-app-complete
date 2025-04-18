@@ -1,8 +1,10 @@
 import 'package:ecom_client/models/user.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import '../login_screen/provider/user_provider.dart';
 import '../edit_my_profile_screen/edit_my_profile_screen.dart';
+import 'package:intl/intl.dart';
 
 class MyProfileScreen extends StatefulWidget {
   const MyProfileScreen({Key? key}) : super(key: key);
@@ -123,14 +125,22 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                         buildInfoTile(Icons.phone, 'Phone Number',
                             user?.phone ?? '9898989898'),
                         const Divider(),
-                        buildInfoTile(Icons.cake_outlined, 'Date of Birth',
-                            '01 Jan 2000'),
+                        buildInfoTile(
+                            Icons.location_on_outlined,
+                            'Current Location',
+                            user?.currentAddress ?? 'Ahmedabad, Gujarat'),
                         const Divider(),
-                        buildInfoTile(Icons.location_on_outlined, 'Location',
-                            'Ahmedabad, Gujarat'),
+                        buildInfoTile(
+                            Icons.cake_outlined,
+                            'Date of Birth',
+                            user?.dateOfBirth != null &&
+                                    user!.dateOfBirth!.isNotEmpty
+                                ? DateFormat('dd-MM-yyyy').format(
+                                    DateTime.parse(user?.dateOfBirth ?? ''))
+                                : ''),
                         const Divider(),
-                        buildInfoTile(Icons.badge_outlined, 'Profession',
-                            'Software Developer'),
+                        buildInfoTile(Icons.person, 'Gender',
+                            user!.gender?.capitalize ?? ''),
                       ],
                     ),
                   ),
