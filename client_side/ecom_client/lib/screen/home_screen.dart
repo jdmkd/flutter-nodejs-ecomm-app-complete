@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return PageWrapper(
       child: Scaffold(
-        // backgroundColor: Colors.white,
+        backgroundColor: Colors.white,
         bottomNavigationBar: BottomNavyBar(
           itemCornerRadius: 10,
           selectedIndex: newIndex,

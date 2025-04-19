@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../core/data/data_provider.dart';
 import '../../../../models/api_response.dart';
@@ -59,7 +60,7 @@ class UserProvider extends ChangeNotifier {
         return '${response.body?['message'] ?? response.statusText}';
       }
     } catch (e) {
-      print(e);
+      log("An error occurred: $e");
       SnackBarHelper.showErrorSnackBar('An error occurred: $e');
       return 'An error occurred: $e';
     }
@@ -145,10 +146,11 @@ class UserProvider extends ChangeNotifier {
           SnackBarHelper.showSuccessSnackBar(
               apiResponse.message ?? 'OTP Verified.');
           log('apiResponse.message ==> $apiResponse.message');
+
           // Navigate to the login screen (or dashboard)
           Get.offAll(() =>
               LoginScreen()); // Use Get.offAll to remove all previous screens from the stack
-          // Navigator.pushReplacementNamed(context, '/login'); // or dashboard
+
           return null; // Indicate success
         } else {
           SnackBarHelper.showErrorSnackBar(
@@ -163,6 +165,46 @@ class UserProvider extends ChangeNotifier {
     } catch (error) {
       SnackBarHelper.showErrorSnackBar('Something went wrong: $error');
       return 'Error: $error';
+    }
+  }
+
+  // resend New OTP for unvarified Registered Email
+  Future<Map<String, dynamic>> resendOtpAgainForVarifingRegisteredEmail(
+      String email, BuildContext context) async {
+    final updatedData = {"email": email};
+
+    log("resend udateData  => ${updatedData}");
+
+    try {
+      final response = await service.addItem(
+        endpointUrl: 'users/email/resend/verify-otp',
+        itemData: updatedData,
+        // withAuth: true,
+      );
+      log("OTP resend response1 => $response");
+      log("OTP resend response.body => ${response.body}");
+      log("OTP resend response.statusCode => ${response.statusCode}");
+
+      final resData = response.body;
+
+      if (resData['success'] == true) {
+        log("OTP sent successfully to => $email");
+        return {
+          'success': true,
+          'message': resData['message'] ?? 'OTP sent successfully.',
+        };
+      } else {
+        return {
+          'success': false,
+          'message': resData['message'] ?? 'Failed to resend OTP.',
+        };
+      }
+    } catch (e) {
+      log("OTP send error => $e");
+      return {
+        'success': false,
+        'message': e.toString(),
+      };
     }
   }
 
@@ -195,14 +237,36 @@ class UserProvider extends ChangeNotifier {
   Future<String?> updateUserProfile(String itemId, String name, String? phone,
       String? gender, String dateOfBirth, String currentAddress) async {
     final String trimmedPhone = phone?.trim() ?? '';
-    log("Phone input received: '$trimmedPhone'");
-    log("Phone input dateOfBirth: '$dateOfBirth'");
-    log("Phone input currentAddress: '$currentAddress'");
 
     // Validate phone number
     if (trimmedPhone.isEmpty || int.tryParse(trimmedPhone) == null) {
-      log('Invalid phone number format!!');
       return 'Invalid phone number';
+    }
+
+    if (dateOfBirth.isNotEmpty) {
+      try {
+        DateTime dob = DateFormat('yyyy-MM-dd').parseStrict(dateOfBirth);
+        DateTime today = DateTime.now();
+
+        if (dob.isAfter(today)) {
+          return 'XX Date of Birth cannot be in the future';
+        }
+
+        int age = today.year - dob.year;
+
+        if (dob.month > today.month ||
+            (dob.month == today.month && dob.day > today.day)) {
+          age--;
+        }
+
+        if (age < 16) {
+          return 'You must be at least 16 years old';
+        }
+      } catch (e) {
+        return 'Please enter a valid Date of Birth ::: $e';
+      }
+    } else {
+      log("DOB not provided, skipping DOB update.");
     }
 
     Map<String, dynamic> updatedData = {
@@ -261,8 +325,8 @@ class UserProvider extends ChangeNotifier {
     if (updatedUser != null) {
       await box.write(USER_INFO_BOX, updatedUser.toJson());
       Map<String, dynamic>? userJson = box.read(USER_INFO_BOX);
-      log("updatedUser => ${updatedUser}");
-      log("USER_INFO_BOX ==> ${box.read(USER_INFO_BOX)}");
+      // log("updatedUser => ${updatedUser}");
+      // log("USER_INFO_BOX ==> ${box.read(USER_INFO_BOX)}");
     } else {
       log('Updated user is null, not saving');
     }
@@ -356,7 +420,7 @@ class UserProvider extends ChangeNotifier {
       "otp": otp,
     };
 
-    log("Verifying OTP with data => $updatedData");
+    log("Verifying OTP with data1 => $updatedData");
 
     try {
       final response = await service.addItem(
@@ -388,7 +452,7 @@ class UserProvider extends ChangeNotifier {
       "newPassword": newPassword,
     };
 
-    log("Verifying OTP with data => $updatedData");
+    log("Verifying OTP with data2 => $updatedData");
 
     try {
       final response = await service.addItem(
@@ -397,7 +461,7 @@ class UserProvider extends ChangeNotifier {
       );
 
       final resData = response.body;
-      //
+      log("response1x ==> ${response.body}");
       if (response.isOk) {
         final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
             response.body, (json) => json as Map<String, dynamic>);
@@ -418,7 +482,7 @@ class UserProvider extends ChangeNotifier {
       } else {
         final errorMsg =
             response.body?['message'] ?? response.statusText ?? 'Unknown error';
-        SnackBarHelper.showErrorSnackBar('Error1x: $errorMsg');
+        SnackBarHelper.showErrorSnackBar('Error: $errorMsg');
         return errorMsg;
       }
     } catch (e) {

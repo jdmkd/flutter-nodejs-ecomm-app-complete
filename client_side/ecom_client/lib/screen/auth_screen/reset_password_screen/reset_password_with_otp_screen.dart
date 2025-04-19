@@ -1,4 +1,6 @@
+import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecom_client/screen/auth_screen/my_profile_screen/my_profile_screen.dart';
 import 'package:ecom_client/screen/auth_screen/reset_password_screen/change_password_screen.dart';
 import 'package:ecom_client/screen/auth_screen/reset_password_screen/reset_password_screen.dart';
 import 'package:ecom_client/utility/button.dart';
@@ -73,20 +75,14 @@ class _ResetPasswordWithOtpScreenState
       if (errorMessage == null) {
         setState(() => _otpVerified = true);
         SnackBarHelper.showSuccessSnackBar("OTP Verified!");
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(
-        //     builder: (context) => const ResetPasswordMainScreen(),
-        //   ),
-        // );
-        Navigator.of(context).pushAndRemoveUntil(
+
+        Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-              builder: (context) =>
-                  ResetPasswordScreen(_otpController.text.trim())),
-          (route) => false,
+              builder: (context) => ResetPasswordScreen(
+                  _emailController.text.trim(), _otpController.text.trim())),
         );
       } else {
-        SnackBarHelper.showErrorSnackBar(errorMessage);
+        SnackBarHelper.showErrorSnackBar("xxx1 : ${errorMessage}");
       }
     } else {
       SnackBarHelper.showErrorSnackBar("Enter a valid 4-digit OTP");
@@ -95,7 +91,7 @@ class _ResetPasswordWithOtpScreenState
 
   void _resetPassword() {
     if (_formKey.currentState!.validate()) {
-      // Optional: call API to change password (new screen like ChangePasswordScreen)
+      //// Optional: call API to change password (new screen like ChangePasswordScreen)
       SnackBarHelper.showSuccessSnackBar("Password successfully reset!");
     }
   }
@@ -123,93 +119,111 @@ class _ResetPasswordWithOtpScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Reset Password')),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(Icons.lock, size: 80, color: Colors.black),
-                SizedBox(height: 10),
-                Text(
-                  'Reset Your Password',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey[300], // Light gray color for the line
-                  thickness: 1.2, // Thickness of the line
-                  indent: 40, // Indentation on left side
-                  endIndent: 40, // Indentation on right side
-                ),
-                Text(
-                  'Secure your account by creating a new password',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextFormField(
-                  controller: _emailController,
-                  decoration: _buildInputDecoration('Email', Icons.email),
-                  keyboardType: TextInputType.emailAddress,
-                  validator: (value) => value!.isEmpty || !value.contains('@')
-                      ? 'Enter a valid email'
-                      : null,
-                ),
-                const SizedBox(height: 20),
-                if (!_otpSent)
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: _sendOtp,
-                        style: buttonStyle,
-                        child: const Text("Send OTP")),
-                  ),
-                if (_otpSent && !_otpVerified) ...[
-                  const SizedBox(height: 16),
-                  TextFormField(
-                    controller: _otpController,
-                    decoration:
-                        _buildInputDecoration('Enter OTP', Icons.lock_clock),
-                    keyboardType: TextInputType.number,
-                  ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                        onPressed: _verifyOtp,
-                        style: buttonStyle,
-                        child: const Text("Verify OTP")),
-                  ),
-                ],
-                const SizedBox(height: 12),
-                GestureDetector(
-                  onTap: _navigateToChangePassword,
-                  child: const Text(
-                    'Change Password? Reset here',
+      appBar: AppBar(
+        title: const Text('Reset Password'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black87),
+          onPressed: () {
+            if (itemId.isNotEmpty) {
+              //// User is logged in → go to EditProfileScreen
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => MyProfileScreen()),
+              );
+            } else {
+              //// User is not logged in → go to LoginScreen
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => LoginScreen()),
+                (route) => false,
+              );
+            }
+          },
+        ),
+      ),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock_reset, size: 80, color: Colors.blueAccent),
+                  SizedBox(height: 10),
+                  Text(
+                    'Forgot your password?',
                     style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blueAccent,
-                      decorationThickness: 2.0,
+                      color: Colors.black87,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                ),
-              ],
+                  SizedBox(height: 8),
+                  Text(
+                    'Enter your email address below, and we will send you a varification code to reset your password.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  TextFormField(
+                    controller: _emailController,
+                    decoration: _buildInputDecoration('Email', Icons.email),
+                    keyboardType: TextInputType.emailAddress,
+                    validator: (value) => value!.isEmpty || !value.contains('@')
+                        ? 'Enter a valid email'
+                        : null,
+                  ),
+                  const SizedBox(height: 20),
+                  if (!_otpSent)
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: _sendOtp,
+                          style: buttonStyle,
+                          child: const Text("Send OTP")),
+                    ),
+                  if (_otpSent && !_otpVerified) ...[
+                    const SizedBox(height: 16),
+                    TextFormField(
+                      controller: _otpController,
+                      decoration:
+                          _buildInputDecoration('Enter OTP', Icons.lock_clock),
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                          onPressed: _verifyOtp,
+                          style: buttonStyle,
+                          child: const Text("Verify OTP")),
+                    ),
+                  ],
+                  const SizedBox(height: 12),
+                  if (itemId.isNotEmpty)
+                    GestureDetector(
+                      onTap: _navigateToChangePassword,
+                      child: const Text(
+                        'Change Password? click here',
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 16,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blueAccent,
+                          decorationThickness: 2.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

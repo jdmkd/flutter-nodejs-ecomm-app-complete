@@ -1,4 +1,5 @@
 import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 
 class PasswordResetScreen extends StatefulWidget {
@@ -13,16 +14,14 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
     final email = _emailController.text.trim();
 
     if (email.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please enter your email!')),
-      );
+      SnackBarHelper.showErrorSnackBar('Please enter your registered email!');
       return;
     }
 
-    // TODO: Implement password reset logic
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Password reset link sent to $email')),
-    );
+    
+
+    SnackBarHelper.showSuccessSnackBar(
+        'Password reset varification code sented to $email');
   }
 
   @override
@@ -62,7 +61,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     ),
                     SizedBox(height: 8),
                     Text(
-                      'Enter your email address below, and we will send you a link to reset your password.',
+                      'Enter your email address below, and we will send you a varification code to reset your password.',
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16, color: Colors.black87),
                     ),
@@ -91,7 +90,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                               borderRadius: BorderRadius.circular(8)),
                         ),
                         child: Text(
-                          'Send Reset Link',
+                          'Send Reset Code',
                           style: TextStyle(
                               fontSize: 16,
                               fontWeight: FontWeight.bold,

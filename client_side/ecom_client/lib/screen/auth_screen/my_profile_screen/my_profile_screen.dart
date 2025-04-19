@@ -38,6 +38,10 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
         backgroundColor: Colors.indigo,
         elevation: 0,
         centerTitle: true,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         title: const Text(
           'My Profile',
           style: TextStyle(
@@ -47,144 +51,136 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        child: Stack(
-          children: [
-            // Container(
-            //   height: 100,
-            //   decoration: BoxDecoration(
-            //     gradient: LinearGradient(
-            //       colors: [Colors.indigo.shade400, Colors.indigo.shade600],
-            //       begin: Alignment.topLeft,
-            //       end: Alignment.bottomRight,
-            //     ),
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-              child: Column(
-                children: [
-                  Stack(
-                    children: [
-                      CircleAvatar(
-                        radius: 60,
-                        backgroundImage:
-                            const AssetImage('assets/images/profile_pic.png'),
-                        backgroundColor: Colors.white,
-                      ),
-                      Positioned(
-                        bottom: 4,
-                        right: 4,
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: Colors.indigo,
-                          child: const Icon(Icons.edit,
-                              color: Colors.white, size: 18),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Stack(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                child: Column(
+                  children: [
+                    Stack(
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundImage:
+                              const AssetImage('assets/images/profile_pic.png'),
+                          backgroundColor: Colors.white,
                         ),
-                      )
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Name and Email
-                  Text(
-                    user?.name ?? 'User Name',
-                    style: const TextStyle(
-                      fontSize: 22,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    user?.email ?? 'email@example.com',
-                    style: const TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey,
-                    ),
-                  ),
-
-                  const SizedBox(height: 30),
-
-                  // Information Card
-                  Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: const [
-                        BoxShadow(
-                          color: Colors.black12,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
+                        Positioned(
+                          bottom: 4,
+                          right: 4,
+                          child: CircleAvatar(
+                            radius: 18,
+                            backgroundColor: Colors.indigo,
+                            child: const Icon(Icons.edit,
+                                color: Colors.white, size: 18),
+                          ),
                         )
                       ],
                     ),
-                    child: Column(
-                      children: [
-                        buildInfoTile(Icons.phone, 'Phone Number',
-                            user?.phone ?? '9898989898'),
-                        const Divider(),
-                        buildInfoTile(
-                            Icons.location_on_outlined,
-                            'Current Location',
-                            user?.currentAddress ?? 'Ahmedabad, Gujarat'),
-                        const Divider(),
-                        buildInfoTile(
-                            Icons.cake_outlined,
-                            'Date of Birth',
-                            user?.dateOfBirth != null &&
-                                    user!.dateOfBirth!.isNotEmpty
-                                ? DateFormat('dd-MM-yyyy').format(
-                                    DateTime.parse(user?.dateOfBirth ?? ''))
-                                : ''),
-                        const Divider(),
-                        buildInfoTile(Icons.person, 'Gender',
-                            user!.gender?.capitalize ?? ''),
-                      ],
+                    const SizedBox(height: 16),
+
+                    // Name and Email
+                    Text(
+                      user?.name ?? 'User Name',
+                      style: const TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black87,
+                      ),
                     ),
-                  ),
+                    const SizedBox(height: 4),
+                    Text(
+                      user?.email ?? 'email@example.com',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey,
+                      ),
+                    ),
 
-                  const SizedBox(height: 30),
+                    const SizedBox(height: 30),
 
-                  // Edit Profile Button
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () async {
-                        final result = await Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const EditMyProfileScreen(),
+                    // Information Card
+                    Container(
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: const [
+                          BoxShadow(
+                            color: Colors.black12,
+                            blurRadius: 10,
+                            offset: Offset(0, 4),
+                          )
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          buildInfoTile(Icons.phone, 'Phone Number',
+                              user?.phone ?? '9898989898'),
+                          const Divider(),
+                          buildInfoTile(
+                              Icons.location_on_outlined,
+                              'Current Location',
+                              user?.currentAddress ?? 'Ahmedabad, Gujarat'),
+                          const Divider(),
+                          buildInfoTile(
+                              Icons.cake_outlined,
+                              'Date of Birth',
+                              user?.dateOfBirth != null &&
+                                      user!.dateOfBirth!.isNotEmpty
+                                  ? DateFormat('dd-MM-yyyy').format(
+                                      DateTime.parse(user?.dateOfBirth ?? ''))
+                                  : ''),
+                          const Divider(),
+                          buildInfoTile(Icons.person, 'Gender',
+                              user!.gender?.capitalize ?? ''),
+                        ],
+                      ),
+                    ),
+
+                    const SizedBox(height: 30),
+
+                    // Edit Profile Button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const EditMyProfileScreen(),
+                            ),
+                          );
+
+                          if (result == true) {
+                            fetchUserData();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                          backgroundColor: Colors.indigo.shade500,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
                           ),
-                        );
-
-                        if (result == true) {
-                          fetchUserData();
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.indigo.shade500,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          elevation: 4,
                         ),
-                        elevation: 4,
-                      ),
-                      child: const Text(
-                        'Edit Profile',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                          color: Colors.white,
+                        child: const Text(
+                          'Edit Profile',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

@@ -75,7 +75,21 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
     final phone = _phoneController.text;
     final gender = _selectedGender;
     final currentAddress = _addressController.text;
-    final dateOfBirth = _dateOfBirthController.text;
+    // final dateOfBirth = _dateOfBirthController.text;
+    final rawDob = _dateOfBirthController.text.trim();
+    String? formattedDob;
+
+    if (rawDob.isNotEmpty) {
+      try {
+        final parsedDob = DateFormat('dd-MM-yyyy').parseStrict(rawDob);
+        formattedDob = DateFormat('yyyy-MM-dd').format(parsedDob);
+      } catch (e) {
+        SnackBarHelper.showErrorSnackBar("Invalid Date of Birth format");
+        return;
+      }
+    } else {
+      formattedDob = null; // or "" depending on how your backend handles it
+    }
 
     if (name.isEmpty || name.length < 3) {
       SnackBarHelper.showErrorSnackBar(
@@ -97,7 +111,7 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
       name,
       phone,
       gender,
-      dateOfBirth,
+      formattedDob ?? "",
       currentAddress,
     );
 
@@ -106,7 +120,7 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
     if (errorMessage == null) {
       Navigator.pop(context, true);
     } else {
-      SnackBarHelper.showErrorSnackBar("Error: $errorMessage");
+      SnackBarHelper.showErrorSnackBar("$errorMessage");
     }
   }
 
@@ -140,173 +154,168 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
         centerTitle: true,
         elevation: 2,
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              // Profile image with edit icon
-              Stack(
-                alignment: Alignment.bottomRight,
-                children: [
-                  CircleAvatar(
-                    radius: 60,
-                    backgroundImage: AssetImage(_profileImagePath!),
-                    backgroundColor: Colors.grey[300],
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.edit, color: Colors.blue),
-                    // style: BorderStyle
-                    onPressed: _changeProfilePhoto,
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
-
-              // Full Name
-              TextFormField(
-                controller: _nameController,
-                decoration: _buildInputDecoration('Full Name', Icons.person),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter your name' : null,
-              ),
-              const SizedBox(height: 16),
-
-              // Email
-              TextFormField(
-                controller: _emailController,
-                readOnly: true,
-                enabled: false,
-                keyboardType: TextInputType.emailAddress,
-                decoration: _buildInputDecoration('Email Address', Icons.email)
-                    .copyWith(
-                  fillColor: Colors.grey.shade100,
-                  filled: true,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Phone
-              TextFormField(
-                controller: _phoneController,
-                keyboardType: TextInputType.phone,
-                decoration: _buildInputDecoration('Phone Number', Icons.phone),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter your phone number' : null,
-              ),
-              const SizedBox(height: 16),
-
-              // Address
-              TextFormField(
-                controller: _addressController,
-                keyboardType: TextInputType.streetAddress,
-                decoration: _buildInputDecoration('Address', Icons.home),
-                validator: (value) =>
-                    value!.isEmpty ? 'Please enter your address' : null,
-              ),
-              const SizedBox(height: 16),
-
-              // Date of Birth
-              GestureDetector(
-                onTap: () async {
-                  FocusScope.of(context).requestFocus(
-                      FocusNode()); // Prevents keyboard from opening
-                  DateTime currentDate = DateTime.now();
-
-                  final DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: currentDate,
-                    firstDate: DateTime(1900),
-                    lastDate: currentDate,
-                  );
-
-                  if (pickedDate != null) {
-                    _dateOfBirthController.text =
-                        DateFormat('dd-MM-yyyy').format(pickedDate);
-                  }
-                },
-                child: AbsorbPointer(
-                  child: TextFormField(
-                    controller: _dateOfBirthController,
-                    decoration: _buildInputDecoration('DOB', Icons.date_range),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter your Date of Birth';
-                      }
-
-                      try {
-                        DateTime dob =
-                            DateFormat('dd-MM-yyyy').parseStrict(value);
-                        if (dob.isAfter(DateTime.now())) {
-                          return 'Date of Birth cannot be in the future1';
-                        }
-                      } catch (e) {
-                        return 'Please enter a valid Date of Birth111';
-                      }
-
-                      return null;
-                    },
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: 16),
-              // Gender dropdown
-              DropdownButtonFormField<String>(
-                value: _selectedGender,
-                decoration: _buildInputDecoration('Gender', Icons.person_3),
-                items: _genders.map((gender) {
-                  return DropdownMenuItem(value: gender, child: Text(gender));
-                }).toList(),
-                onChanged: (value) {
-                  setState(() => _selectedGender = value!);
-                },
-                validator: (value) => value == null || value.isEmpty
-                    ? 'Please select your gender'
-                    : null,
-              ),
-              const SizedBox(height: 30),
-
-              // Submit button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton.icon(
-                  onPressed: _submit,
-                  icon: const Icon(Icons.save, color: Colors.white),
-                  label: const Text(
-                    'Save Changes',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.green,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      side: const BorderSide(color: Colors.green),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                // Profile image with edit icon
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      radius: 60,
+                      backgroundImage: AssetImage(_profileImagePath!),
+                      backgroundColor: Colors.grey[300],
                     ),
-                    textStyle: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      // style: BorderStyle
+                      onPressed: _changeProfilePhoto,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
+
+                // Full Name
+                TextFormField(
+                  controller: _nameController,
+                  decoration: _buildInputDecoration('Full Name', Icons.person),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter your name' : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Email
+                TextFormField(
+                  controller: _emailController,
+                  readOnly: true,
+                  enabled: false,
+                  keyboardType: TextInputType.emailAddress,
+                  decoration:
+                      _buildInputDecoration('Email Address', Icons.email)
+                          .copyWith(
+                    fillColor: Colors.grey.shade100,
+                    filled: true,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Phone
+                TextFormField(
+                  controller: _phoneController,
+                  keyboardType: TextInputType.phone,
+                  decoration:
+                      _buildInputDecoration('Phone Number', Icons.phone),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter your phone number' : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Address
+                TextFormField(
+                  controller: _addressController,
+                  keyboardType: TextInputType.streetAddress,
+                  decoration: _buildInputDecoration('Address', Icons.home),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Please enter your address' : null,
+                ),
+                const SizedBox(height: 16),
+
+                // Date of Birth
+                GestureDetector(
+                  onTap: () async {
+                    FocusScope.of(context).requestFocus(
+                        FocusNode()); // Prevents keyboard from opening
+                    DateTime currentDate = DateTime.now();
+
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: currentDate,
+                      firstDate: DateTime(1900),
+                      lastDate: currentDate,
+                    );
+
+                    if (pickedDate != null) {
+                      _dateOfBirthController.text =
+                          DateFormat('dd-MM-yyyy').format(pickedDate);
+                    }
+                  },
+                  child: AbsorbPointer(
+                    child: TextFormField(
+                      controller: _dateOfBirthController,
+                      decoration:
+                          _buildInputDecoration('DOB', Icons.date_range),
+                      // validator: (value) {
+                      //   if (value == null || value.isEmpty) {
+                      //     return 'Please enter your Date of Birth';
+                      //   }
+
+                      //   return null;
+                      // },
                     ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 20),
 
-              // Reset Password link
-              GestureDetector(
-                onTap: _navigateToResetPassword,
-                child: const Text(
-                  'Forgot Password? Reset here',
-                  style: TextStyle(
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w600,
+                const SizedBox(height: 16),
+                // Gender dropdown
+                DropdownButtonFormField<String>(
+                  value: _selectedGender,
+                  decoration: _buildInputDecoration('Gender', Icons.person_3),
+                  items: _genders.map((gender) {
+                    return DropdownMenuItem(value: gender, child: Text(gender));
+                  }).toList(),
+                  onChanged: (value) {
+                    setState(() => _selectedGender = value!);
+                  },
+                  validator: (value) => value == null || value.isEmpty
+                      ? 'Please select your gender'
+                      : null,
+                ),
+                const SizedBox(height: 30),
+
+                // Submit button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: _submit,
+                    icon: const Icon(Icons.save, color: Colors.white),
+                    label: const Text(
+                      'Save Changes',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.green,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.green),
+                      ),
+                      textStyle: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 20),
+
+                // Reset Password link
+                GestureDetector(
+                  onTap: _navigateToResetPassword,
+                  child: const Text(
+                    'Forgot Password? Reset here',
+                    style: TextStyle(
+                      color: Colors.blue,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

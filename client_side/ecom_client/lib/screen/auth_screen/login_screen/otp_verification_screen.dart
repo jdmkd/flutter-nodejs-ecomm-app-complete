@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:ecom_client/screen/auth_screen/login_screen/resend_otp_screen.dart';
+import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -40,28 +44,20 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     String otp = _controllers.map((c) => c.text).join();
     if (otp.length == 4) {
       // You can handle OTP verification logic here
-      print("Entered OTP: $otp, type: ${otp.runtimeType}");
+      log("Entered OTP: $otp, type: ${otp.runtimeType}");
 
-      print("email ==> ${widget.email}");
+      log("email ==> ${widget.email}");
       final userProvider = Provider.of<UserProvider>(context, listen: false);
 
       final errorMessage =
           await userProvider.verifyOtp(widget.email, otp, context);
 
-      if (errorMessage != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
-      } else {
-        // success, maybe navigate to login/home
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("OTP verified successfully.")),
-        );
+      if (errorMessage == null) {
+        // SnackBarHelper.showErrorSnackBar("xx :: ${errorMessage}");
+        SnackBarHelper.showSuccessSnackBar("OTP verified successfully11.");
       }
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter all 4 digits of the OTP.")),
-      );
+      SnackBarHelper.showErrorSnackBar("Please enter all 4 digits of the OTP.");
     }
   }
 
@@ -101,9 +97,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("OTP Verification"),
+        title: const Text("OTP Verification",
+            style: TextStyle(color: Colors.white)),
         centerTitle: true,
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.indigo.shade500,
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -154,12 +151,75 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => const ResendOtpScreen()),
+                          builder: (_) => ResendOtpScreen(widget.email)),
                     );
                   },
-                  child: const Text(
-                    "Didn’t receive the code? Resend",
-                    style: TextStyle(color: Colors.indigo),
+                  // child: const Text(
+                  //   "Didn't get the code or it expired? Resend",
+                  //   style: TextStyle(
+                  //     color: Colors.green,
+                  //     decoration: TextDecoration.underline,
+                  //   ),
+                  // ),
+                  child: Stack(
+                    clipBehavior: Clip.none, // Avoids clipping the underline
+                    children: [
+                      // Text
+                      const Text(
+                        "Didn't get the code or it expired? Resend",
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      // Positioned Underline
+                      Positioned(
+                        bottom:
+                            1, // Adjust this to control the gap between text and underline
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 1, // Line thickness
+                          color: Colors.indigo,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                TextButton(
+                  onPressed: () {
+                    // Handle resend OTP logic here
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => LoginScreen()),
+                    );
+                  },
+                  child: Stack(
+                    clipBehavior: Clip.none, // Avoids clipping the underline
+                    children: [
+                      // Text
+                      const Text(
+                        "Continue with login?",
+                        style: TextStyle(
+                          color: Colors.indigo,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      // Positioned Underline
+                      Positioned(
+                        bottom:
+                            1, // Adjust this to control the gap between text and underline
+                        left: 0,
+                        right: 0,
+                        child: Container(
+                          height: 1, // Line thickness
+                          color: Colors.indigo,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ],

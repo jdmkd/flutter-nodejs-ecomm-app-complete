@@ -69,106 +69,108 @@ class _RegisterScreenState extends State<RegisterScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.account_circle, size: 80, color: Colors.black),
-              SizedBox(height: 10),
-              Text(
-                'Create Account',
-                style: TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black87,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.account_circle, size: 80, color: Colors.black),
+                SizedBox(height: 10),
+                Text(
+                  'Create Account',
+                  style: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
                 ),
-              ),
-              SizedBox(height: 20),
-              _buildTextField(
-                title: 'Full Name',
-                hint: 'Your Full Name',
-                controller: _fullNameController,
-                icon: Icons.person,
-                obscureText: false,
-              ),
-              _buildTextField(
-                title: 'Email',
-                hint: 'youremail@email.com',
-                controller: _emailController,
-                icon: Icons.email,
-                obscureText: false,
-              ),
-              _buildTextField(
-                title: 'Password',
-                hint: '**********',
-                controller: _passwordController,
-                icon: Icons.lock,
-                obscureText: _obscurePassword,
-                toggleObscure: () {
-                  setState(() {
-                    _obscurePassword = !_obscurePassword;
-                  });
-                },
-              ),
-              _buildTextField(
-                title: 'Confirm Password',
-                hint: '**********',
-                controller: _confirmPasswordController,
-                icon: Icons.lock,
-                obscureText: _obscureConfirmPassword,
-                toggleObscure: () {
-                  setState(() {
-                    _obscureConfirmPassword = !_obscureConfirmPassword;
-                  });
-                },
-              ),
-              SizedBox(height: 20),
-              SizedBox(
-                width: double.infinity,
-                height: 60,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _onRegisterPressed,
-                  child: _isLoading
-                      ? CircularProgressIndicator(color: Colors.white)
-                      : Text(
-                          'Register',
+                SizedBox(height: 20),
+                _buildTextField(
+                  title: 'Full Name',
+                  hint: 'Your Full Name',
+                  controller: _fullNameController,
+                  icon: Icons.person,
+                  obscureText: false,
+                ),
+                _buildTextField(
+                  title: 'Email',
+                  hint: 'youremail@email.com',
+                  controller: _emailController,
+                  icon: Icons.email,
+                  obscureText: false,
+                ),
+                _buildTextField(
+                  title: 'Password',
+                  hint: '**********',
+                  controller: _passwordController,
+                  icon: Icons.lock,
+                  obscureText: _obscurePassword,
+                  toggleObscure: () {
+                    setState(() {
+                      _obscurePassword = !_obscurePassword;
+                    });
+                  },
+                ),
+                _buildTextField(
+                  title: 'Confirm Password',
+                  hint: '**********',
+                  controller: _confirmPasswordController,
+                  icon: Icons.lock,
+                  obscureText: _obscureConfirmPassword,
+                  toggleObscure: () {
+                    setState(() {
+                      _obscureConfirmPassword = !_obscureConfirmPassword;
+                    });
+                  },
+                ),
+                SizedBox(height: 20),
+                SizedBox(
+                  width: double.infinity,
+                  height: 60,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _onRegisterPressed,
+                    child: _isLoading
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            'Register',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.blueAccent,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                ),
+                SizedBox(height: 15),
+                GestureDetector(
+                  onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (context) => LoginScreen())),
+                  child: RichText(
+                    text: TextSpan(
+                      text: 'Already have an account? ',
+                      style: TextStyle(color: Colors.black54),
+                      children: [
+                        TextSpan(
+                          text: 'Log In',
                           style: TextStyle(
-                            fontSize: 18,
+                            color: Colors.blueAccent,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
                           ),
                         ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 15),
-              GestureDetector(
-                onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => LoginScreen())),
-                child: RichText(
-                  text: TextSpan(
-                    text: 'Already have an account? ',
-                    style: TextStyle(color: Colors.black54),
-                    children: [
-                      TextSpan(
-                        text: 'Log In',
-                        style: TextStyle(
-                          color: Colors.blueAccent,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

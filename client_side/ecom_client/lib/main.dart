@@ -28,15 +28,15 @@ import 'models/user.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: ".env");
-  // SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-  // Ensure the status bar is visible with proper contrast
-  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-  //   statusBarColor: Colors.white, // White background for status bar
-  //   statusBarIconBrightness:
-  //       Brightness.dark, // Dark icons for better visibility
-  //   statusBarBrightness: Brightness.light, // iOS-specific
-  // ));
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // optional
+  SystemChrome.setSystemUIOverlayStyle(
+    const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ),
+  );
 
   await GetStorage.init();
   var cart = FlutterCart();

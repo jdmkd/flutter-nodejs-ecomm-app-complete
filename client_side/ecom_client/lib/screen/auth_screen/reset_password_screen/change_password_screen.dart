@@ -86,92 +86,95 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
         title: Text('Change Password', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.blueAccent,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Icon(Icons.lock, size: 80, color: Colors.black),
-              SizedBox(height: 10),
-              Text(
-                'Change Your Password',
-                style: TextStyle(
-                  color: Colors.black87,
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 0.5,
-                ),
-              ),
-              Divider(
-                color: Colors.grey[300], // Light gray color for the line
-                thickness: 1.2, // Thickness of the line
-                indent: 40, // Indentation on left side
-                endIndent: 40, // Indentation on right side
-              ),
-              Text(
-                'Secure your account by creating a new password',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.black54,
-                  fontSize: 16,
-                  height: 1.4,
-                ),
-              ),
-              const SizedBox(height: 16),
-
-              // Old Password
-              TextFormField(
-                controller: _oldPassController,
-                obscureText: true,
-                decoration:
-                    _buildInputDecoration('Old Password', Icons.lock_outline),
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter your old password' : null,
-              ),
-              const SizedBox(height: 12),
-
-              // New Password
-              TextFormField(
-                controller: _newPassController,
-                obscureText: true,
-                decoration: _buildInputDecoration('New Password', Icons.lock),
-                validator: (value) {
-                  if (value!.isEmpty) return 'Enter a new password';
-                  if (value.length < 6)
-                    return 'Password must be at least 6 characters';
-                  return null;
-                },
-              ),
-              const SizedBox(height: 12),
-
-              // Confirm New Password
-              TextFormField(
-                controller: _confirmPassController,
-                obscureText: true,
-                decoration:
-                    _buildInputDecoration('Confirm Password', Icons.lock_reset),
-                validator: (value) => value != _newPassController.text
-                    ? 'Passwords do not match'
-                    : null,
-              ),
-
-              const SizedBox(height: 24),
-
-              // Reset Password Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _changePassword,
-                  style: buttonStyle,
-                  child: Text(
-                    "Reset Password",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Icon(Icons.lock, size: 80, color: Colors.black),
+                SizedBox(height: 10),
+                Text(
+                  'Change Your Password',
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 0.5,
                   ),
                 ),
-              ),
-            ],
+                Divider(
+                  color: Colors.grey[300], // Light gray color for the line
+                  thickness: 1.2, // Thickness of the line
+                  indent: 40, // Indentation on left side
+                  endIndent: 40, // Indentation on right side
+                ),
+                Text(
+                  'Secure your account by creating a new password',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    color: Colors.black54,
+                    fontSize: 16,
+                    height: 1.4,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Old Password
+                TextFormField(
+                  controller: _oldPassController,
+                  obscureText: true,
+                  decoration:
+                      _buildInputDecoration('Old Password', Icons.lock_outline),
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your old password' : null,
+                ),
+                const SizedBox(height: 12),
+
+                // New Password
+                TextFormField(
+                  controller: _newPassController,
+                  obscureText: true,
+                  decoration: _buildInputDecoration('New Password', Icons.lock),
+                  validator: (value) {
+                    if (value!.isEmpty) return 'Enter a new password';
+                    if (value.length < 6)
+                      return 'Password must be at least 6 characters';
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 12),
+
+                // Confirm New Password
+                TextFormField(
+                  controller: _confirmPassController,
+                  obscureText: true,
+                  decoration: _buildInputDecoration(
+                      'Confirm Password', Icons.lock_reset),
+                  validator: (value) => value != _newPassController.text
+                      ? 'Passwords do not match'
+                      : null,
+                ),
+
+                const SizedBox(height: 24),
+
+                // Reset Password Button
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _changePassword,
+                    style: buttonStyle,
+                    child: Text(
+                      "Reset Password",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

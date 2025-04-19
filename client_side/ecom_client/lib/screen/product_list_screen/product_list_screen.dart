@@ -13,11 +13,13 @@ class ProductListScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      extendBodyBehindAppBar: true,
-      appBar: const CustomAppBar(),
-      body: const SafeArea(
-        child: ProductListRefreshable(), // Use the new refreshable screen
+    return SafeArea(
+      child: Scaffold(
+        extendBodyBehindAppBar: true,
+        appBar: CustomAppBar(),
+        body: SafeArea(
+          child: ProductListRefreshable(), // Use the new refreshable screen
+        ),
       ),
     );
   }
