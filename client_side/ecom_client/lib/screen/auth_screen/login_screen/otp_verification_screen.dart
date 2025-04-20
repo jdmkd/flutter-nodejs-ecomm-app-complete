@@ -52,10 +52,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       final errorMessage =
           await userProvider.verifyOtp(widget.email, otp, context);
 
-      if (errorMessage == null) {
-        // SnackBarHelper.showErrorSnackBar("xx :: ${errorMessage}");
-        SnackBarHelper.showSuccessSnackBar("OTP verified successfully11.");
-      }
+      // if (errorMessage == null) {
+      //   // SnackBarHelper.showErrorSnackBar("xx :: ${errorMessage}");
+      //   SnackBarHelper.showSuccessSnackBar("OTP verified successfully11.");
+      // }
     } else {
       SnackBarHelper.showErrorSnackBar("Please enter all 4 digits of the OTP.");
     }
