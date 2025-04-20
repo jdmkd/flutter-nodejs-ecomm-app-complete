@@ -67,11 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       _confirmPassController.clear();
 
       if (itemId.isNotEmpty) {
-        // Logged-in user: go to edit profile
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (context) => MyProfileScreen()),
-          (route) => false,
-        );
+        Navigator.of(context).pop();
       } else {
         // Not logged-in user: go to login screen
         Navigator.of(context).pushAndRemoveUntil(
@@ -86,10 +82,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   }
 
   void _navigateToResendEmailScreen() async {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (context) => ResetPasswordWithOtpScreen()),
-      (route) => false,
+    Navigator.of(context).push(
+      MaterialPageRoute(
+          builder: (context) => const ResetPasswordWithOtpScreen()),
     );
+    // Navigator.of(context).pop();
   }
 
   InputDecoration _buildInputDecoration(String label, IconData icon) {
@@ -104,124 +101,124 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Reset Password',
-          style: TextStyle(color: Colors.white),
+    return PopScope(
+      canPop: false, // prevents back navigation
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Reset Password',
+            style: TextStyle(color: Colors.white),
+          ),
+          backgroundColor: Colors.blueAccent,
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () {
+              if (itemId.isNotEmpty) {
+                Navigator.of(context).pop();
+              } else {
+                //// User is not logged in → go to LoginScreen
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (route) => false,
+                );
+              }
+            },
+          ),
         ),
-        backgroundColor: Colors.blueAccent,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            if (itemId.isNotEmpty) {
-              //// User is logged in → go to EditProfileScreen
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => MyProfileScreen()),
-                (route) => false,
-              );
-            } else {
-              //// User is not logged in → go to LoginScreen
-              Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => LoginScreen()),
-                (route) => false,
-              );
-            }
-          },
-        ),
-      ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.all(16.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Icon(Icons.lock, size: 80, color: Colors.black),
-                SizedBox(height: 10),
-                Text(
-                  'Reset Your Password',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 0.5,
-                  ),
-                ),
-                Divider(
-                  color: Colors.grey[300], // Light gray color for the line
-                  thickness: 1.2, // Thickness of the line
-                  indent: 40, // Indentation on left side
-                  endIndent: 40, // Indentation on right side
-                ),
-                Text(
-                  'Secure your account by creating a new password',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // New Password
-                TextFormField(
-                  controller: _newPassController,
-                  obscureText: true,
-                  decoration: _buildInputDecoration('New Password', Icons.lock),
-                  validator: (value) {
-                    if (value!.isEmpty) return 'Enter a new password';
-                    if (value.length < 6)
-                      return 'Password must be at least 6 characters';
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 12),
-
-                // Confirm New Password
-                TextFormField(
-                  controller: _confirmPassController,
-                  obscureText: true,
-                  decoration: _buildInputDecoration(
-                      'Confirm Password', Icons.lock_reset),
-                  validator: (value) => value != _newPassController.text
-                      ? 'Passwords do not match'
-                      : null,
-                ),
-
-                const SizedBox(height: 24),
-
-                // Reset Password Button
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: _resetPassword,
-                    style: buttonStyle,
-                    child: Text(
-                      "Reset Password",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                GestureDetector(
-                  onTap: _navigateToResendEmailScreen,
-                  child: const Text(
-                    'Resend email? click here',
+        body: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock, size: 80, color: Colors.black),
+                  SizedBox(height: 10),
+                  Text(
+                    'Reset Your Password',
                     style: TextStyle(
-                      color: Colors.blueAccent,
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
-                      decorationColor: Colors.blueAccent,
-                      decorationThickness: 2.0,
+                      color: Colors.black87,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
                     ),
                   ),
-                ),
-              ],
+                  Divider(
+                    color: Colors.grey[300], // Light gray color for the line
+                    thickness: 1.2, // Thickness of the line
+                    indent: 40, // Indentation on left side
+                    endIndent: 40, // Indentation on right side
+                  ),
+                  Text(
+                    'Secure your account by creating a new password',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                      height: 1.4,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // New Password
+                  TextFormField(
+                    controller: _newPassController,
+                    obscureText: true,
+                    decoration:
+                        _buildInputDecoration('New Password', Icons.lock),
+                    validator: (value) {
+                      if (value!.isEmpty) return 'Enter a new password';
+                      if (value.length < 6)
+                        return 'Password must be at least 6 characters';
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 12),
+
+                  // Confirm New Password
+                  TextFormField(
+                    controller: _confirmPassController,
+                    obscureText: true,
+                    decoration: _buildInputDecoration(
+                        'Confirm Password', Icons.lock_reset),
+                    validator: (value) => value != _newPassController.text
+                        ? 'Passwords do not match'
+                        : null,
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Reset Password Button
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _resetPassword,
+                      style: buttonStyle,
+                      child: Text(
+                        "Reset Password",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  GestureDetector(
+                    onTap: _navigateToResendEmailScreen,
+                    child: const Text(
+                      'Resend email? click here',
+                      style: TextStyle(
+                        color: Colors.blueAccent,
+                        fontSize: 16,
+                        decoration: TextDecoration.underline,
+                        decorationColor: Colors.blueAccent,
+                        decorationThickness: 2.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

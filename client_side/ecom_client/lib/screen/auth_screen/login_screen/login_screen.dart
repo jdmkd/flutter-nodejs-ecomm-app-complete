@@ -94,131 +94,136 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.lock, size: 80, color: Colors.black),
-                SizedBox(height: 10),
-                Text(
-                  'Welcome Back!',
-                  style: TextStyle(
-                    color: Colors.black87,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  'Login to continue',
-                  style: TextStyle(
-                    color: Colors.black54,
-                    fontSize: 16,
-                  ),
-                ),
-                SizedBox(height: 25),
-                _buildTextField(
-                  label: 'Email',
-                  hint: 'you@example.com',
-                  controller: _emailController,
-                  icon: Icons.email,
-                ),
-                _buildTextField(
-                  label: 'Password',
-                  hint: '**********',
-                  controller: _passwordController,
-                  icon: Icons.lock,
-                  obscureText: !_isPasswordVisible,
-                  suffixIcon: IconButton(
-                    icon: Icon(
-                      _isPasswordVisible
-                          ? Icons.visibility
-                          : Icons.visibility_off,
-                      color: Colors.blueAccent,
+      body: PopScope(
+        canPop: false, // prevents back navigation
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lock, size: 80, color: Colors.black),
+                  SizedBox(height: 10),
+                  Text(
+                    'Welcome Back!',
+                    style: TextStyle(
+                      color: Colors.black87,
+                      fontSize: 26,
+                      fontWeight: FontWeight.bold,
                     ),
-                    onPressed: () {
-                      setState(() {
-                        _isPasswordVisible = !_isPasswordVisible;
-                      });
-                    },
                   ),
-                ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
+                  SizedBox(height: 6),
+                  Text(
+                    'Login to continue',
+                    style: TextStyle(
+                      color: Colors.black54,
+                      fontSize: 16,
+                    ),
+                  ),
+                  SizedBox(height: 25),
+                  _buildTextField(
+                    label: 'Email',
+                    hint: 'you@example.com',
+                    controller: _emailController,
+                    icon: Icons.email,
+                  ),
+                  _buildTextField(
+                    label: 'Password',
+                    hint: '**********',
+                    controller: _passwordController,
+                    icon: Icons.lock,
+                    obscureText: !_isPasswordVisible,
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                        color: Colors.blueAccent,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
+                    ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: TextButton(
+                      onPressed: () {
+                        // Navigator.of(context).push(
+                        //   MaterialPageRoute(
+                        //       builder: (context) => PasswordResetScreen()),
+                        // );
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  ResetPasswordWithOtpScreen()),
+                        );
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: _isLoading ? null : _loginUser,
+                      child: _isLoading
+                          ? CircularProgressIndicator(color: Colors.white)
+                          : Text(
+                              'Log In',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        backgroundColor: Colors.blueAccent,
+                        padding: EdgeInsets.symmetric(vertical: 14),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 15),
+                  TextButton(
                     onPressed: () {
-                      // Navigator.of(context).push(
-                      //   MaterialPageRoute(
-                      //       builder: (context) => PasswordResetScreen()),
-                      // );
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => ResetPasswordWithOtpScreen()),
+                            builder: (context) => RegisterScreen()),
                       );
                     },
-                    child: Text(
-                      'Forgot Password?',
-                      style: TextStyle(
-                        color: Colors.blueAccent,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                      ),
-                    ),
-                  ),
-                ),
-                SizedBox(height: 20),
-                SizedBox(
-                  width: double.infinity,
-                  height: 55,
-                  child: ElevatedButton(
-                    onPressed: _isLoading ? null : _loginUser,
-                    child: _isLoading
-                        ? CircularProgressIndicator(color: Colors.white)
-                        : Text(
-                            'Log In',
+                    child: RichText(
+                      text: TextSpan(
+                        text: 'Don\'t have an account? ',
+                        style: TextStyle(color: Colors.black54, fontSize: 14),
+                        children: [
+                          TextSpan(
+                            text: 'Sign Up',
                             style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                              color: Colors.blueAccent,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
                             ),
-                          ),
-                    style: ElevatedButton.styleFrom(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                          )
+                        ],
                       ),
-                      backgroundColor: Colors.blueAccent,
-                      padding: EdgeInsets.symmetric(vertical: 14),
                     ),
                   ),
-                ),
-                SizedBox(height: 15),
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => RegisterScreen()),
-                    );
-                  },
-                  child: RichText(
-                    text: TextSpan(
-                      text: 'Don\'t have an account? ',
-                      style: TextStyle(color: Colors.black54, fontSize: 14),
-                      children: [
-                        TextSpan(
-                          text: 'Sign Up',
-                          style: TextStyle(
-                            color: Colors.blueAccent,
-                            fontWeight: FontWeight.w700,
-                            fontSize: 14,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

@@ -148,8 +148,8 @@ class UserProvider extends ChangeNotifier {
           log('apiResponse.message ==> $apiResponse.message');
 
           // Navigate to the login screen (or dashboard)
-          Get.offAll(() =>
-              LoginScreen()); // Use Get.offAll to remove all previous screens from the stack
+          // Use Get.offAll to remove all previous screens from the stack
+          Get.offAll(LoginScreen());
 
           return null; // Indicate success
         } else {

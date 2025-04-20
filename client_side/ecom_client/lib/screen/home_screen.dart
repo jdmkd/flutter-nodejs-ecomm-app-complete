@@ -27,66 +27,71 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return PageWrapper(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        bottomNavigationBar: BottomNavyBar(
-          itemCornerRadius: 10,
-          selectedIndex: newIndex,
-          // showElevation: true,
+    return PopScope(
+      canPop: false, // prevents back navigation
+      child: PageWrapper(
+        child: Scaffold(
           backgroundColor: Colors.white,
-          curve: Curves.easeInOut,
-          items: AppData.bottomNavyBarItems.map(
-            (item) {
-              return BottomNavyBarItem(
-                icon: Padding(
-                  padding:
-                      const EdgeInsets.all(0), // Space between icon and title
+          bottomNavigationBar: BottomNavyBar(
+            itemCornerRadius: 10,
+            selectedIndex: newIndex,
+            // showElevation: true,
+            backgroundColor: Colors.white,
+            curve: Curves.easeInOut,
+            items: AppData.bottomNavyBarItems.map(
+              (item) {
+                return BottomNavyBarItem(
+                  icon: Padding(
+                    padding:
+                        const EdgeInsets.all(0), // Space between icon and title
 
-                  child: Icon(
-                    item.icon.icon,
-                    size: 28, // Fixed size for icon
-                    color: newIndex == AppData.bottomNavyBarItems.indexOf(item)
-                        ? item.activeColor // Active color when selected
-                        : item
-                            .inactiveColor, // Inactive color when not selected
+                    child: Icon(
+                      item.icon.icon,
+                      size: 28, // Fixed size for icon
+                      color: newIndex ==
+                              AppData.bottomNavyBarItems.indexOf(item)
+                          ? item.activeColor // Active color when selected
+                          : item
+                              .inactiveColor, // Inactive color when not selected
+                    ),
                   ),
-                ),
-                title: Text(
-                  item.title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 12, // Text size for the title
-                    color: newIndex == AppData.bottomNavyBarItems.indexOf(item)
-                        ? item.activeColor
-                        : item.inactiveColor,
+                  title: Text(
+                    item.title,
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12, // Text size for the title
+                      color:
+                          newIndex == AppData.bottomNavyBarItems.indexOf(item)
+                              ? item.activeColor
+                              : item.inactiveColor,
+                    ),
                   ),
-                ),
-                activeColor: item.activeColor,
-                inactiveColor: item.inactiveColor,
+                  activeColor: item.activeColor,
+                  inactiveColor: item.inactiveColor,
+                );
+              },
+            ).toList(),
+            onItemSelected: (currentIndex) {
+              setState(() {
+                newIndex = currentIndex;
+              });
+            },
+          ),
+          body: PageTransitionSwitcher(
+            duration: const Duration(seconds: 1),
+            transitionBuilder: (
+              Widget child,
+              Animation<double> animation,
+              Animation<double> secondaryAnimation,
+            ) {
+              return FadeThroughTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                child: child,
               );
             },
-          ).toList(),
-          onItemSelected: (currentIndex) {
-            setState(() {
-              newIndex = currentIndex;
-            });
-          },
-        ),
-        body: PageTransitionSwitcher(
-          duration: const Duration(seconds: 1),
-          transitionBuilder: (
-            Widget child,
-            Animation<double> animation,
-            Animation<double> secondaryAnimation,
-          ) {
-            return FadeThroughTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              child: child,
-            );
-          },
-          child: HomeScreen.screens[newIndex],
+            child: HomeScreen.screens[newIndex],
+          ),
         ),
       ),
     );

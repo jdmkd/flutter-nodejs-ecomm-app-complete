@@ -124,6 +124,13 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
     }
   }
 
+  void _changeProfilePhoto() {
+    // Logic to change image
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Change photo tapped!')),
+    );
+  }
+
   void _navigateToResetPassword() {
     // Navigator.pushNamed(context, '/reset-password'); // Create this route
     Navigator.push(
@@ -131,13 +138,6 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
       MaterialPageRoute(
         builder: (context) => const ResetPasswordWithOtpScreen(),
       ),
-    );
-  }
-
-  void _changeProfilePhoto() {
-    // Logic to change image
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Change photo tapped!')),
     );
   }
 

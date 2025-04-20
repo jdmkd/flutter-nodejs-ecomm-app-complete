@@ -3,6 +3,7 @@ import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provid
 import 'package:ecom_client/screen/auth_screen/my_profile_screen/my_profile_screen.dart';
 import 'package:ecom_client/screen/auth_screen/reset_password_screen/change_password_screen.dart';
 import 'package:ecom_client/screen/auth_screen/reset_password_screen/reset_password_screen.dart';
+import 'package:ecom_client/screen/home_screen.dart';
 import 'package:ecom_client/utility/button.dart';
 import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
@@ -21,8 +22,6 @@ class _ResetPasswordWithOtpScreenState
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
   final _otpController = TextEditingController();
-  final _newPassController = TextEditingController();
-  final _confirmPassController = TextEditingController();
 
   bool _otpSent = false;
   bool _otpVerified = false;
@@ -82,7 +81,7 @@ class _ResetPasswordWithOtpScreenState
                   _emailController.text.trim(), _otpController.text.trim())),
         );
       } else {
-        SnackBarHelper.showErrorSnackBar("xxx1 : ${errorMessage}");
+        SnackBarHelper.showErrorSnackBar(errorMessage);
       }
     } else {
       SnackBarHelper.showErrorSnackBar("Enter a valid 4-digit OTP");
@@ -116,6 +115,25 @@ class _ResetPasswordWithOtpScreenState
     );
   }
 
+  void _navigateToHomeScreen() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const HomeScreen(),
+      ),
+    );
+  }
+
+  void _navigateToLoginScreen() {
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(),
+      ),
+      (route) => false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -125,10 +143,7 @@ class _ResetPasswordWithOtpScreenState
           icon: const Icon(Icons.arrow_back, color: Colors.black87),
           onPressed: () {
             if (itemId.isNotEmpty) {
-              //// User is logged in → go to EditProfileScreen
-              Navigator.of(context).pushReplacement(
-                MaterialPageRoute(builder: (context) => MyProfileScreen()),
-              );
+              Navigator.of(context).pop();
             } else {
               //// User is not logged in → go to LoginScreen
               Navigator.of(context).pushAndRemoveUntil(
@@ -212,6 +227,38 @@ class _ResetPasswordWithOtpScreenState
                       onTap: _navigateToChangePassword,
                       child: const Text(
                         'Change Password? click here',
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 16,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blueAccent,
+                          decorationThickness: 2.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  if (itemId.isNotEmpty)
+                    GestureDetector(
+                      onTap: _navigateToHomeScreen,
+                      child: const Text(
+                        'Go to Home? click here',
+                        style: TextStyle(
+                          color: Colors.blueAccent,
+                          fontSize: 16,
+                          decoration: TextDecoration.underline,
+                          decorationColor: Colors.blueAccent,
+                          decorationThickness: 2.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  const SizedBox(height: 12),
+                  if (itemId.isEmpty)
+                    GestureDetector(
+                      onTap: _navigateToLoginScreen,
+                      child: const Text(
+                        'Go Back? click here',
                         style: TextStyle(
                           color: Colors.blueAccent,
                           fontSize: 16,
