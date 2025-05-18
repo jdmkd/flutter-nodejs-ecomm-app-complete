@@ -44,10 +44,12 @@ Future<void> main() async {
   // TODO: Add OneSignal app ID
   // OneSignal.initialize("YOUR_ONE_SIGNAL_APP_ID");
   OneSignal.initialize(dotenv.env['ONESIGNAL_APP_ID'] ?? '');
-
   OneSignal.Notifications.requestPermission(true);
+
   await cart.initializeCart(isPersistenceSupportEnabled: true);
+
   log("AppConfig.baseUrl ==> ${AppConfig.baseUrl}");
+
   runApp(
     DevicePreview(
       enabled: false, // Set to false to disable DevicePreview

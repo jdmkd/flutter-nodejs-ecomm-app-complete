@@ -125,7 +125,7 @@ DataRow productDataRow(Product productInfo,
       ),
       DataCell(Text(productInfo.proCategoryId?.name ?? '')),
       DataCell(Text(productInfo.proSubCategoryId?.name ?? '')),
-      DataCell(Text('${productInfo.price}')),
+      DataCell(Text('₹${productInfo.price}')),
       DataCell(
         IconButton(
           onPressed: () => edit?.call(),

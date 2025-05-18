@@ -73,9 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           );
         });
-      } else {
-        // Other login errors
-        SnackBarHelper.showErrorSnackBar("Error: $errorMessage");
       }
     } else {
       Navigator.of(context).pushAndRemoveUntil(

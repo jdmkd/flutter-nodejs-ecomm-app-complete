@@ -20,7 +20,6 @@ class DashBoardProvider extends ChangeNotifier {
   HttpService service = HttpService();
   final DataProvider _dataProvider;
   final addProductFormKey = GlobalKey<FormState>();
-  
 
   //?text editing controllers in dashBoard screen
   TextEditingController productNameCtrl = TextEditingController();
@@ -102,7 +101,8 @@ class DashBoardProvider extends ChangeNotifier {
         _dataProvider.getAllProduct();
         // log('products added');
         await Future.delayed(Duration(seconds: 1));
-        clearFields();
+        await clearFields();
+        await clearOnlyImageFields();
       } else {
         SnackBarHelper.showErrorSnackBar(
           'Failed to add/update product: ${response.body?['message'] ?? response.statusText}',
@@ -160,6 +160,9 @@ class DashBoardProvider extends ChangeNotifier {
         if (apiResponse.success == true) {
           SnackBarHelper.showSuccessSnackBar('${apiResponse.message}');
           _dataProvider.getAllProduct();
+
+          await Future.delayed(Duration(seconds: 2));
+          await clearOnlyImageFields();
         } else {
           SnackBarHelper.showErrorSnackBar(
               'Failed to add products: ${apiResponse.message}');
@@ -168,7 +171,9 @@ class DashBoardProvider extends ChangeNotifier {
         SnackBarHelper.showErrorSnackBar(
             '${response.body?['message'] ?? response.statusText}');
       }
+      notifyListeners();
     } catch (e) {
+      notifyListeners();
       log("catch ==> $e");
       SnackBarHelper.showErrorSnackBar('An error occurred: $e');
       rethrow;
@@ -366,6 +371,20 @@ class DashBoardProvider extends ChangeNotifier {
     } else {
       clearFields();
     }
+  }
+
+  clearOnlyImageFields() async {
+    selectedMainImage = null;
+    selectedSecondImage = null;
+    selectedThirdImage = null;
+    selectedFourthImage = null;
+    selectedFifthImage = null;
+
+    mainImgXFile = null;
+    secondImgXFile = null;
+    thirdImgXFile = null;
+    fourthImgXFile = null;
+    fifthImgXFile = null;
   }
 
   //? to clear the text fields and selected images and dropdowns

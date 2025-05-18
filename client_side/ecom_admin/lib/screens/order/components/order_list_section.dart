@@ -1,4 +1,5 @@
 import 'package:ecom_admin/utility/extensions.dart';
+import 'package:intl/intl.dart';
 
 import '../../../core/data/data_provider.dart';
 import 'view_order_form.dart';
@@ -42,7 +43,9 @@ class OrderListSection extends StatelessWidget {
                           columnSpacing: defaultPadding,
                           columns: const [
                             DataColumn(label: Text("Customer Name")),
+                            DataColumn(label: Text("Product Name")),
                             DataColumn(label: Text("Order Amount")),
+                            DataColumn(label: Text("Quantity")),
                             DataColumn(label: Text("Payment")),
                             DataColumn(label: Text("Status")),
                             DataColumn(label: Text("Date")),
@@ -112,10 +115,24 @@ DataRow orderDataRow(Order orderInfo, int index,
           ],
         ),
       ),
-      DataCell(Text('${orderInfo.orderTotal?.total ?? '-'}')),
+      DataCell(Text(
+        orderInfo.items?.map((item) {
+              final name = item.productName ?? '';
+              return name.length > 20 ? '${name.substring(0, 20)}...' : name;
+            }).join(', ') ??
+            '-',
+      )),
+      DataCell(Text('₹${orderInfo.orderTotal?.total ?? '-'}')),
+      DataCell(Text(
+          orderInfo.items?.map((item) => item.quantity).join(', ') ?? '-')),
       DataCell(Text(orderInfo.paymentMethod ?? '-')),
       DataCell(Text(orderInfo.orderStatus ?? '-')),
-      DataCell(Text(orderInfo.orderDate ?? '-')),
+      DataCell(Text(
+        orderInfo.orderDate != null
+            ? DateFormat('dd-MM-yyyy')
+                .format(DateTime.parse(orderInfo.orderDate!))
+            : '-',
+      )),
       DataCell(
         IconButton(
           onPressed: () {

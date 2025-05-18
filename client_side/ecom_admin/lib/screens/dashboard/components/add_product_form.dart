@@ -551,14 +551,14 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     foregroundColor: Colors.white,
                     backgroundColor: primaryColor,
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     // Validate and save the form
                     if (context
                         .dashBoardProvider.addProductFormKey.currentState!
                         .validate()) {
                       context.dashBoardProvider.addProductFormKey.currentState!
                           .save();
-                      context.dashBoardProvider.submitProduct();
+                      await context.dashBoardProvider.submitProduct();
                       // Navigator.of(context).pop();
                     }
                   },
