@@ -20,7 +20,7 @@ import 'utility/constants.dart';
 import 'utility/extensions.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() async {
+  void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await requestNotificationPermission();
