@@ -16,11 +16,25 @@ class ProductListRefreshable extends StatefulWidget {
 }
 
 class _ProductListRefreshableState extends State<ProductListRefreshable> {
+  @override
+  void initState() {
+    super.initState();
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+    dataProvider.getAllProduct(); // Fetch latest data from API or DB
+    log("dataProvider.products initState state ==> ");
+    log("dataProvider initState =========> ${dataProvider.products}");
+  }
+
+  // final dataProvider = Provider.of<DataProvider>(context, listen: false);
+  // dataProvider.getAllProduct(); // Fetch latest data from API or DB
+  // log("dataProvider.products initState state ==> ");
+  // print(dataProvider.products);
+
   Future<void> _refreshData() async {
     final dataProvider = Provider.of<DataProvider>(context, listen: false);
     await dataProvider.getAllProduct(); // Fetch latest data from API or DB
-    log("dataProvider.products ==> ");
-    print(dataProvider.products);
+    log("dataProvider.products after _refreshData ==> ");
+    print("dataProvider after _refreshData =========> ${dataProvider.products}");
   }
 
   @override
@@ -31,7 +45,7 @@ class _ProductListRefreshableState extends State<ProductListRefreshable> {
         physics:
             const AlwaysScrollableScrollPhysics(), // Enables pull-to-refresh even when content is short
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

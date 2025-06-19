@@ -8,7 +8,7 @@ class PageWrapper extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 800), child: child),
+          constraints: const BoxConstraints(maxWidth: 1080), child: child),
     );
   }
 }

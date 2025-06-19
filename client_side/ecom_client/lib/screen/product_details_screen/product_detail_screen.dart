@@ -52,145 +52,143 @@ class ProductDetailScreen extends StatelessWidget {
           ),
         ),
         body: SingleChildScrollView(
-          child: PageWrapper(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                //? product image section
-                Container(
-                  height: height * 0.35,
-                  width: width,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFFE5E6E8),
-                    // borderRadius: const BorderRadius.only(
-                    //   bottomRight: Radius.circular(200),
-                    //   bottomLeft: Radius.circular(200),
-                    // ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
-                        offset: Offset(0, 2),
-                        blurRadius: 1,
-                      ),
-                    ],
-                  ),
-                  child: CarouselSlider(items: product!.images ?? []),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              //? product image section
+              Container(
+                height: height * 0.35,
+                width: width,
+                decoration: BoxDecoration(
+                  color: const Color(0xFFE5E6E8),
+                  // borderRadius: const BorderRadius.only(
+                  //   bottomRight: Radius.circular(200),
+                  //   bottomLeft: Radius.circular(200),
+                  // ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: Offset(0, 2),
+                      blurRadius: 1,
+                    ),
+                  ],
                 ),
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      //? product name
-                      Text(
-                        '${product!.name}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .displayMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
+                child: CarouselSlider(items: product!.images ?? []),
+              ),
+              const SizedBox(height: 10),
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    //? product name
+                    Text(
+                      '${product!.name}',
+                      style: Theme.of(context)
+                          .textTheme
+                          .displayMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
 
-                      //? product rating section
-                      const ProductRatingSection(),
+                    //? product rating section
+                    const ProductRatingSection(),
 
-                      const SizedBox(height: 10),
-                      //? product rate , offer , stock section
-                      Row(
-                        children: [
-                          Text(
-                            product!.offerPrice != null
-                                ? "\₹${product!.offerPrice}"
-                                : "\₹${product!.price}",
-                            style: Theme.of(context)
-                                .textTheme
-                                .displayLarge
-                                ?.copyWith(fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(width: 3),
-                          Visibility(
-                            visible: product!.offerPrice != product!.price,
-                            child: Text(
-                              "\₹₹${product!.price}",
-                              style: const TextStyle(
-                                decoration: TextDecoration.lineThrough,
-                                color: Colors.grey,
-                                fontWeight: FontWeight.w500,
-                              ),
+                    const SizedBox(height: 10),
+                    //? product rate , offer , stock section
+                    Row(
+                      children: [
+                        Text(
+                          product!.offerPrice != null
+                              ? "\₹${product!.offerPrice}"
+                              : "\₹${product!.price}",
+                          style: Theme.of(context)
+                              .textTheme
+                              .displayLarge
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                        const SizedBox(width: 3),
+                        Visibility(
+                          visible: product!.offerPrice != product!.price,
+                          child: Text(
+                            "\₹₹${product!.price}",
+                            style: const TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w500,
                             ),
                           ),
-                          const Spacer(),
-                          Text(
-                            product!.quantity != 0
-                                ? "Available stock : ${product!.quantity}"
-                                : "Not available",
-                            style: const TextStyle(fontWeight: FontWeight.w500),
-                          )
-                        ],
-                      ),
-
-                      const SizedBox(height: 20),
-
-                      product!.proVariantId!.isNotEmpty
-                          ? Text(
-                              'Available ${product!.proVariantTypeId?.type}',
-                              style: const TextStyle(
-                                  color: Colors.black,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15),
-                            )
-                          : const SizedBox(),
-                      Consumer<ProductDetailProvider>(
-                        builder: (context, proDetailProvider, child) {
-                          return HorizontalList(
-                            items: product!.proVariantId ?? [],
-                            itemToString: (val) => val,
-                            selected: proDetailProvider.selectedVariant,
-                            onSelect: (val) {
-                              proDetailProvider.selectedVariant = val;
-                              proDetailProvider.updateUI();
-                            },
-                          );
-                        },
-                      ),
-                      //? product description
-                      Text(
-                        "About",
-                        style: Theme.of(context)
-                            .textTheme
-                            .headlineMedium
-                            ?.copyWith(fontWeight: FontWeight.bold),
-                      ),
-                      const SizedBox(height: 10),
-                      Text("${product!.description}"),
-                      const SizedBox(height: 20),
-                      //? add to cart button
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: product!.quantity != 0
-                              ? () {
-                                  context
-                                      .read<ProductDetailProvider>()
-                                      .addToCart(product!);
-                                }
-                              : null,
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: product!.quantity != 0
-                                ? Colors.blue
-                                : Colors.grey,
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                          ),
-                          child: const Text("Add to cart",
-                              style: TextStyle(color: Colors.white)),
                         ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
+                        const Spacer(),
+                        Text(
+                          product!.quantity != 0
+                              ? "Available stock : ${product!.quantity}"
+                              : "Not available",
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        )
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    product!.proVariantId!.isNotEmpty
+                        ? Text(
+                            'Available ${product!.proVariantTypeId?.type}',
+                            style: const TextStyle(
+                                color: Colors.black,
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15),
+                          )
+                        : const SizedBox(),
+                    Consumer<ProductDetailProvider>(
+                      builder: (context, proDetailProvider, child) {
+                        return HorizontalList(
+                          items: product!.proVariantId ?? [],
+                          itemToString: (val) => val,
+                          selected: proDetailProvider.selectedVariant,
+                          onSelect: (val) {
+                            proDetailProvider.selectedVariant = val;
+                            proDetailProvider.updateUI();
+                          },
+                        );
+                      },
+                    ),
+                    //? product description
+                    Text(
+                      "About",
+                      style: Theme.of(context)
+                          .textTheme
+                          .headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 10),
+                    Text("${product!.description}"),
+                    const SizedBox(height: 20),
+                    //? add to cart button
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: product!.quantity != 0
+                            ? () {
+                                context
+                                    .read<ProductDetailProvider>()
+                                    .addToCart(product!);
+                              }
+                            : null,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: product!.quantity != 0
+                              ? Colors.blue
+                              : Colors.grey,
+                          padding: const EdgeInsets.symmetric(vertical: 16),
+                        ),
+                        child: const Text("Add to cart",
+                            style: TextStyle(color: Colors.white)),
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),

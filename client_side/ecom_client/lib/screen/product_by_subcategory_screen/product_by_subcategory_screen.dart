@@ -1,5 +1,5 @@
+import 'dart:developer';
 import 'package:ecom_client/utility/extensions.dart';
-
 import '../../models/brand.dart';
 import '../../models/category.dart';
 import '../../models/sub_category.dart';
@@ -12,17 +12,20 @@ import 'package:provider/provider.dart';
 import '../../widget/horizondal_list.dart';
 import '../../widget/product_grid_view.dart';
 
+
 class ProductBySubCategoryScreen extends StatelessWidget {
   final SubCategory selectedSubCategory;
 
   const ProductBySubCategoryScreen(
       {super.key, required this.selectedSubCategory});
-
+  
   @override
   Widget build(BuildContext context) {
+    log("AddressDataProvider ===>>> ${selectedSubCategory}");
+    log("AddressDataProvider ===>>> ${selectedSubCategory.name}");
     Future.delayed(Duration.zero, () {
-      context.proBySubCProvider
-          .filterInitialProductAndSubCategory(selectedSubCategory);
+      context.proBySubCProvider.filterProductBySubCategory(selectedSubCategory);
+
     });
     return Scaffold(
       body: SafeArea(
@@ -124,9 +127,9 @@ class ProductBySubCategoryScreen extends StatelessWidget {
               padding: const EdgeInsets.all(20),
               sliver: SliverToBoxAdapter(
                 child: Consumer<ProductBySubCategoryProvider>(
-                  builder: (context, proByCaProvider, child) {
+                  builder: (context, proByCProvider, child) {
                     return ProductGridView(
-                      items: proByCaProvider.filteredProduct,
+                      items: proByCProvider.filteredProduct,
                     );
                   },
                 ),

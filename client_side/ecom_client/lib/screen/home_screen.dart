@@ -29,7 +29,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false, // prevents back navigation
-      child: PageWrapper(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Scaffold(
           backgroundColor: Colors.white,
           bottomNavigationBar: BottomNavyBar(
