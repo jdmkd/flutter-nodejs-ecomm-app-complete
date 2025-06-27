@@ -5,6 +5,7 @@ import 'package:ecom_client/screen/auth_screen/login_screen/resend_otp_screen.da
 import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
 
 import 'provider/user_provider.dart';
 
@@ -33,10 +34,38 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   }
 
   void _onOtpChanged(int index, String value) {
+    // Handle paste (if user pastes all 4 digits)
+    if (value.length > 1) {
+      final digits = value.replaceAll(RegExp(r'\D'), '');
+      for (int i = 0; i < 4; i++) {
+        _controllers[i].text = i < digits.length ? digits[i] : '';
+      }
+      // Move focus to the last filled box
+      int lastFilled = digits.length.clamp(0, 3);
+      FocusScope.of(context).requestFocus(_focusNodes[lastFilled]);
+      _controllers[lastFilled].selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _controllers[lastFilled].text.length,
+      );
+      return;
+    }
+
+    // Auto-advance
     if (value.isNotEmpty && index < 3) {
       FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-    } else if (value.isEmpty && index > 0) {
+      _controllers[index + 1].selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _controllers[index + 1].text.length,
+      );
+    }
+
+    // Auto-back on backspace
+    if (value.isEmpty && index > 0) {
       FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
+      _controllers[index - 1].selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: _controllers[index - 1].text.length,
+      );
     }
   }
 
@@ -83,6 +112,16 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           border: InputBorder.none,
         ),
         onChanged: (value) => _onOtpChanged(index, value),
+        inputFormatters: [
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        onTap: () {
+          // Select all text when the box is tapped for easier overwrite
+          _controllers[index].selection = TextSelection(
+            baseOffset: 0,
+            extentOffset: _controllers[index].text.length,
+          );
+        },
       ),
     );
   }
@@ -112,7 +151,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                 ),
                 const SizedBox(height: 12),
                 const Text(
-                  "We’ve sent a verification code to your registered email or phone number.",
+                  "We've sent a verification code to your registered email or phone number.",
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, color: Colors.black54),
                 ),
