@@ -26,9 +26,8 @@ class UserProvider extends ChangeNotifier {
       final response = await service.addItem(
           endpointUrl: 'users/login', itemData: credentials);
 
-      log('Attempting Login with: $email - $password');
+      // log('Attempting Login with: $email');
 
-      log('Login API Response: ${response.body}');
       if (response.isOk) {
         final ApiResponse<Map<String, dynamic>> apiResponse =
             ApiResponse<Map<String, dynamic>>.fromJson(
@@ -36,33 +35,39 @@ class UserProvider extends ChangeNotifier {
         if (apiResponse.success ?? false) {
           Map<String, dynamic>? userData = apiResponse.data?['user'];
           String? token = apiResponse.data?['token'];
-          log("userData ==>>> $userData");
 
           if (userData != null && token != null) {
-            User user = User.fromJson(userData); // Create a User object
-            await saveLoginInfo(user, token); // Save correct user info
+            User user = User.fromJson(userData);
+            await saveLoginInfo(user, token);
 
-            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
-            log('Login success: ${user.toJson()}');
+            SnackBarHelper.showSuccessSnackBar(
+              apiResponse.message.isNotEmpty
+                  ? apiResponse.message
+                  : 'Login successful. Welcome back!',
+            );
+            // log('Login success: ${user.toJson()}');
             return null;
           } else {
-            SnackBarHelper.showErrorSnackBar('Failed to extract user data.');
-            return 'Failed to extract user data.';
+            SnackBarHelper.showErrorSnackBar(
+                'Unable to process your login. Please try again.');
+            return 'Unable to process your login. Please try again.';
           }
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Failed to Login: ${apiResponse.message}');
-          return 'Failed to Login';
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Login failed. Please check your credentials and try again.');
+          return 'Login failed. Please check your credentials and try again.';
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            '${response.body?['message'] ?? response.statusText}');
+            'Login failed. Please check your credentials and try again.');
         return '${response.body?['message'] ?? response.statusText}';
       }
     } catch (e) {
-      log("An error occurred: $e");
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-      return 'An error occurred: $e';
+      // log("An error occurred: $e");
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -76,45 +81,39 @@ class UserProvider extends ChangeNotifier {
       final response =
           await service.addItem(endpointUrl: 'users/register', itemData: user);
 
-      log("Response Body:::::::::: ${response.body}");
-
-      // Check if response is null
-      if (response == null) {
-        SnackBarHelper.showErrorSnackBar('Server did not return a response.');
-        return 'Server did not return a response.';
+      if (response == null || response.body == null) {
+        SnackBarHelper.showErrorSnackBar(
+            'Unable to connect to the server. Please try again later.');
+        return 'Unable to connect to the server. Please try again later.';
       }
 
-      // Check if response body is null
-      if (response.body == null) {
-        SnackBarHelper.showErrorSnackBar('Server response is empty.');
-        return 'Server response is empty.';
-      }
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
 
-        // Check if apiResponse is valid and has success key
         if (apiResponse.success == true) {
-          SnackBarHelper.showSuccessSnackBar(
-              apiResponse.message ?? 'Registration successful');
-          log('Register Success');
-          // Get.to(() => OtpVerificationScreen(email: email));
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Registration successful. Please check your email for verification.');
+          // log('Register Success');
           return null;
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Failed to Register: ${apiResponse.message ?? "Unknown error"}');
-          return 'Failed to Register: ${apiResponse.message ?? "Unknown error"}';
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'A:: Registration failed. Please try again.');
+          return apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'B:: Registration failed. Please try again.';
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
             '${response.body?['message'] ?? response.statusText}');
         return '${response.body?['message'] ?? response.statusText}';
       }
-    } catch (e, stackTrace) {
-      log("Registration error: $e");
-      log("Stack Trace: $stackTrace");
-
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-      return 'An error occurred: $e';
+    } catch (e) {
+      // log("Registration error: $e");
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -122,49 +121,43 @@ class UserProvider extends ChangeNotifier {
       String email, String otp, BuildContext context) async {
     try {
       Map<String, dynamic> user = {"email": email, "otp": otp, "purpose": 0};
+
       // purpose=0 for registraion purpose=1 for the forgot password
       final response = await service.addItem(
           endpointUrl: 'users/verify-otp', itemData: user);
 
-      // Check if response is null
-      if (response == null) {
-        SnackBarHelper.showErrorSnackBar('Server did not return a response.');
-        return 'Server did not return a response.';
-      }
-
-      // Check if response body is null
-      if (response.body == null) {
-        SnackBarHelper.showErrorSnackBar('Server response is empty.');
-        return 'Server response is empty.';
+      if (response == null || response.body == null) {
+        SnackBarHelper.showErrorSnackBar(
+            'Unable to connect to the server. Please try again later.');
+        return 'Unable to connect to the server. Please try again later.';
       }
 
       if (response.isOk) {
         ApiResponse apiResponse = ApiResponse.fromJson(response.body, null);
 
-        // Check if apiResponse is valid and has success key
         if (apiResponse.success == true) {
-          SnackBarHelper.showSuccessSnackBar(
-              apiResponse.message ?? 'OTP Verified.');
-          log('apiResponse.message ==> $apiResponse.message');
-
-          // Navigate to the login screen (or dashboard)
-          // Use Get.offAll to remove all previous screens from the stack
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Verification successful.');
           Get.offAll(LoginScreen());
-
-          return null; // Indicate success
+          return null;
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Email varification Failed: ${apiResponse.message ?? "Unknown error"}');
-          return 'Email varification Failed: ${apiResponse.message ?? "Unknown error"}';
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Verification failed. Please try again.');
+          return apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Verification failed. Please try again.';
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            '${response.body?['message'] ?? response.statusText}');
-        return '${response.body?['message'] ?? response.statusText}';
+            'Verification failed. Please try again.');
+        return 'Verification failed. Please try again.';
       }
     } catch (error) {
-      SnackBarHelper.showErrorSnackBar('Something went wrong: $error');
-      return 'Error: $error';
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -172,38 +165,31 @@ class UserProvider extends ChangeNotifier {
   Future<Map<String, dynamic>> resendOtpAgainForVarifingRegisteredEmail(
       String email, BuildContext context) async {
     final updatedData = {"email": email};
-
-    log("resend udateData  => ${updatedData}");
-
     try {
       final response = await service.addItem(
         endpointUrl: 'users/email/resend/verify-otp',
         itemData: updatedData,
         // withAuth: true,
       );
-      log("OTP resend response1 => $response");
-      log("OTP resend response.body => ${response.body}");
-      log("OTP resend response.statusCode => ${response.statusCode}");
-
       final resData = response.body;
 
       if (resData['success'] == true) {
-        log("OTP sent successfully to => $email");
         return {
           'success': true,
-          'message': resData['message'] ?? 'OTP sent successfully.',
+          'message':
+              resData['message'] ?? 'A new OTP has been sent to your email.',
         };
       } else {
         return {
           'success': false,
-          'message': resData['message'] ?? 'Failed to resend OTP.',
+          'message':
+              resData['message'] ?? 'Failed to resend OTP. Please try again.',
         };
       }
     } catch (e) {
-      log("OTP send error => $e");
       return {
         'success': false,
-        'message': e.toString(),
+        'message': 'An unexpected error occurred. Please try again later.',
       };
     }
   }
@@ -238,9 +224,8 @@ class UserProvider extends ChangeNotifier {
       String? gender, String dateOfBirth, String currentAddress) async {
     final String trimmedPhone = phone?.trim() ?? '';
 
-    // Validate phone number
     if (trimmedPhone.isEmpty || int.tryParse(trimmedPhone) == null) {
-      return 'Invalid phone number';
+      return 'Please enter a valid phone number.';
     }
 
     if (dateOfBirth.isNotEmpty) {
@@ -249,24 +234,20 @@ class UserProvider extends ChangeNotifier {
         DateTime today = DateTime.now();
 
         if (dob.isAfter(today)) {
-          return 'XX Date of Birth cannot be in the future';
+          return 'Date of Birth cannot be in the future.';
         }
-
         int age = today.year - dob.year;
 
         if (dob.month > today.month ||
             (dob.month == today.month && dob.day > today.day)) {
           age--;
         }
-
         if (age < 16) {
-          return 'You must be at least 16 years old';
+          return 'You must be at least 16 years old.';
         }
       } catch (e) {
-        return 'Please enter a valid Date of Birth ::: $e';
+        return 'Please enter a valid Date of Birth.';
       }
-    } else {
-      log("DOB not provided, skipping DOB update.");
     }
 
     Map<String, dynamic> updatedData = {
@@ -292,31 +273,33 @@ class UserProvider extends ChangeNotifier {
 
         if (apiResponse.success == true) {
           final updatedUserJson = apiResponse.data;
-
-          // Check if user data exists
           if (updatedUserJson != null) {
             final updatedUser = User.fromJson(updatedUserJson);
-            await updateLocalUserInfo(updatedUser); // Update local cache
-
-            SnackBarHelper.showSuccessSnackBar(apiResponse.message);
-            return null; // No error
+            await updateLocalUserInfo(updatedUser);
+            SnackBarHelper.showSuccessSnackBar(apiResponse.message.isNotEmpty
+                ? apiResponse.message
+                : 'Profile updated successfully.');
+            return null;
           } else {
-            return 'No user data returned.';
+            return 'Profile updated, but no user data returned.';
           }
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Update failed: ${apiResponse.message}');
-          return apiResponse.message;
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Profile update failed. Please try again.');
+          return apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Profile update failed. Please try again.';
         }
       } else {
         SnackBarHelper.showErrorSnackBar(
-            'Error: ${response.body?['message'] ?? response.statusText}');
-        return '${response.body?['message'] ?? response.statusText}';
+            'Profile update failed. Please try again.');
+        return 'Profile update failed. Please try again.';
       }
     } catch (e) {
-      log('Exception while updating profile: $e');
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-      return 'An error occurred: $e';
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -334,14 +317,10 @@ class UserProvider extends ChangeNotifier {
 
   Future<String?> changeUserPassword(
       String oldPassword, String newPassword, String itemId) async {
-    log("oldPassword => ${oldPassword}");
-    log("newPassword => ${newPassword}");
-
     Map<String, dynamic> updatedData = {
       "oldPassword": oldPassword,
       "newPassword": newPassword,
     };
-    log("updatedData  => ${updatedData}");
     try {
       final response = await service.updateItem(
         endpointUrl: 'users/password/change',
@@ -349,38 +328,31 @@ class UserProvider extends ChangeNotifier {
         itemData: updatedData,
         withAuth: true,
       );
-
-      log("response.statusCode => ${response.statusCode}");
-      log("response.isOk => ${response.isOk}");
-      log("response.body => ${response.body}");
-
       if (response.isOk) {
         final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
             response.body, (json) => json as Map<String, dynamic>);
-
-        log("apiResponse1 ==> $apiResponse");
-        log("apiResponse.data ==> ${apiResponse.data}");
-        log("apiResponse.success ==> ${apiResponse.success}");
-        log("apiResponse.message ==> ${apiResponse.message}");
-
         if (apiResponse.success == true) {
-          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password changed successfully.');
           return null;
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Update failed: ${apiResponse.message}');
-          return apiResponse.message;
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password change failed. Please try again.');
+          return apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password change failed. Please try again.';
         }
       } else {
-        final errorMsg =
-            response.body?['message'] ?? response.statusText ?? 'Unknown error';
-        SnackBarHelper.showErrorSnackBar('Error: $errorMsg');
-        return errorMsg;
+        SnackBarHelper.showErrorSnackBar(
+            'Password change failed. Please try again.');
+        return 'Password change failed. Please try again.';
       }
     } catch (e) {
-      log('Exception while updating profile: $e');
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-      return 'An error occurred: $e';
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -390,27 +362,20 @@ class UserProvider extends ChangeNotifier {
       "email": email,
       // "itemId": itemId,
     };
-
-    log("updatedData  => ${updatedData}");
-
     try {
       final response = await service.addItem(
         endpointUrl: 'users/password/reset/send-otp',
         itemData: updatedData,
         // withAuth: true,
       );
-      log("OTP send response1 => $response");
-      log("OTP send response.body => ${response.body}");
-      log("OTP send response.statusCode => ${response.statusCode}");
       final resData = response.body;
       if (resData['success'] == true) {
-        return null; // null means success
+        return null;
       } else {
-        return resData['message'] ?? 'Unknown error';
+        return resData['message'] ?? 'Failed to send OTP. Please try again.';
       }
     } catch (e) {
-      log("OTP send error => $e");
-      return e.toString(); // Return error string
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -419,28 +384,20 @@ class UserProvider extends ChangeNotifier {
       "email": email,
       "otp": otp,
     };
-
-    log("Verifying OTP with data1 => $updatedData");
-
     try {
       final response = await service.addItem(
         endpointUrl: 'users/password/reset/verify-otp-only',
         itemData: updatedData,
       );
-
-      log("OTP verify response2 => $response");
-      log("OTP send response2 => $response");
-      log("OTP send response.body2 => ${response.body}");
-      log("OTP send response.statusCode2 => ${response.statusCode}");
       final resData = response.body;
       if (resData['success'] == true) {
-        return null; // success
+        return null;
       } else {
-        return resData['message'] ?? "Something went wrong";
+        return resData['message'] ??
+            'OTP verification failed. Please try again.';
       }
     } catch (e) {
-      log("OTP verify error => $e");
-      return e.toString(); // Return error string
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 
@@ -451,44 +408,36 @@ class UserProvider extends ChangeNotifier {
       "otp": otp,
       "newPassword": newPassword,
     };
-
-    log("Verifying OTP with data2 => $updatedData");
-
     try {
       final response = await service.addItem(
         endpointUrl: 'users/password/reset/verify-otp',
         itemData: updatedData,
       );
-
-      final resData = response.body;
-      log("response1x ==> ${response.body}");
       if (response.isOk) {
         final apiResponse = ApiResponse<Map<String, dynamic>>.fromJson(
             response.body, (json) => json as Map<String, dynamic>);
-
-        log("apiResponse1 ==> $apiResponse");
-        log("apiResponse.data1 ==> ${apiResponse.data}");
-        log("apiResponse.success1 ==> ${apiResponse.success}");
-        log("apiResponse.message1 ==> ${apiResponse.message}");
-
         if (apiResponse.success == true) {
-          SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+          SnackBarHelper.showSuccessSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password reset successfully.');
           return null;
         } else {
-          SnackBarHelper.showErrorSnackBar(
-              'Update failed: ${apiResponse.message}');
-          return apiResponse.message;
+          SnackBarHelper.showErrorSnackBar(apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password reset failed. Please try again.');
+          return apiResponse.message.isNotEmpty
+              ? apiResponse.message
+              : 'Password reset failed. Please try again.';
         }
       } else {
-        final errorMsg =
-            response.body?['message'] ?? response.statusText ?? 'Unknown error';
-        SnackBarHelper.showErrorSnackBar('Error: $errorMsg');
-        return errorMsg;
+        SnackBarHelper.showErrorSnackBar(
+            'Password reset failed. Please try again.');
+        return 'Password reset failed. Please try again.';
       }
     } catch (e) {
-      log("OTP verify error => $e");
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-      return 'An error occurred: $e';
+      SnackBarHelper.showErrorSnackBar(
+          'An unexpected error occurred. Please try again later.');
+      return 'An unexpected error occurred. Please try again later.';
     }
   }
 }
