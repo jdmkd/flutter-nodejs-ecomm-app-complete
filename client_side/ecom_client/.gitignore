@@ -1,5 +1,7 @@
 .env
 
+.cursorrules
+
 # Flutter & Dart
 .dart_tool/
 .packages
