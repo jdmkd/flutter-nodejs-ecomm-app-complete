@@ -45,10 +45,37 @@ android {
             ), 'proguard-rules.pro'
         }
     }
+
+    // Configure all dependencies to use modern Java versions
+    configurations.all {
+        resolutionStrategy {
+            force 'org.jetbrains.kotlin:kotlin-stdlib:2.1.0'
+            force 'org.jetbrains.kotlin:kotlin-stdlib-common:2.1.0'
+        }
+    }
 }
 
+// Configure Java compilation for all tasks to use modern Java and show proper warnings
 tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ["-Xlint:deprecation"]
+    options.compilerArgs += [
+        "-Xlint:deprecation",
+        "-Xlint:unchecked"
+    ]
+    // Force all Java compilation to use Java 21
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
+}
+
+// Configure Kotlin compilation
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).configureEach {
+    kotlinOptions {
+        jvmTarget = "21"
+        // Enable modern Kotlin features
+        freeCompilerArgs += [
+            "-Xjvm-default=all",
+            "-opt-in=kotlin.RequiresOptIn"
+        ]
+    }
 }
 
 flutter {

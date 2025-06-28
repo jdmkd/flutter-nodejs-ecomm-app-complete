@@ -10,9 +10,11 @@
 -keep class com.stripe.android.** { *; }
 -keepclassmembers class com.stripe.android.** { *; }
 
-# --- Razorpay SDK ---
+# --- Razorpay SDK - Keep only necessary classes for modern APIs ---
 -keep class com.razorpay.** { *; }
 -keepclassmembers class com.razorpay.** { *; }
+# Keep modern Razorpay interfaces
+-keep interface com.razorpay.** { *; }
 
 # --- OneSignal SDK ---
 -keep class com.onesignal.** { *; }
@@ -71,6 +73,47 @@
 -keepclassmembers class * {
     public <methods>;
     public <fields>;
+}
+
+# --- Modern Android configuration for Java 21 compatibility ---
+-keepattributes *Annotation*
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+
+# --- Keep native methods ---
+-keepclasseswithmembernames class * {
+    native <methods>;
+}
+
+# --- Keep enum classes ---
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
+# --- Keep Parcelable classes ---
+-keep class * implements android.os.Parcelable {
+    public static final android.os.Parcelable$Creator *;
+}
+
+# --- Keep Serializable classes ---
+-keepclassmembers class * implements java.io.Serializable {
+    static final long serialVersionUID;
+    private static final java.io.ObjectStreamField[] serialPersistentFields;
+    private void writeObject(java.io.ObjectOutputStream);
+    private void readObject(java.io.ObjectInputStream);
+    java.lang.Object writeReplace();
+    java.lang.Object readResolve();
+}
+
+# --- Keep R classes ---
+-keep class **.R$* {
+    public static <fields>;
+}
+
+# --- Keep WebView ---
+-keepclassmembers class * {
+    @android.webkit.JavascriptInterface <methods>;
 }
 
 # --- End of rules ---
