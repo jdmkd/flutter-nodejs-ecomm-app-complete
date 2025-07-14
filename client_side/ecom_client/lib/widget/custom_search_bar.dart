@@ -4,11 +4,7 @@ class CustomSearchBar extends StatefulWidget {
   final TextEditingController controller;
   final void Function(String)? onChanged;
 
-  const CustomSearchBar({
-    super.key,
-    required this.controller,
-    this.onChanged,
-  });
+  const CustomSearchBar({super.key, required this.controller, this.onChanged});
 
   @override
   CustomSearchBarState createState() => CustomSearchBarState();
@@ -64,7 +60,7 @@ class CustomSearchBarState extends State<CustomSearchBar> {
                   widget.controller.clear();
                   _focusNode.unfocus();
                 },
-                child: const Icon(Icons.close),
+                child: const Icon(Icons.close, color: Colors.black45),
               ),
             ],
           ),

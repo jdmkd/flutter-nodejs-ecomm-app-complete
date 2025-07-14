@@ -9,9 +9,9 @@ class BottomNavyBarItem {
   final Color inactiveColor; // Updated field name
 
   const BottomNavyBarItem(
-      this.title,
-      this.icon,
-      this.activeColor,
-      [this.inactiveColor = Colors.grey] // Updated field name
-      );
+    this.title,
+    this.icon,
+    this.activeColor, [
+    this.inactiveColor = Colors.grey, // Updated field name
+  ]);
 }

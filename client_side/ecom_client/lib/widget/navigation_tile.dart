@@ -6,11 +6,7 @@ class NavigationTile extends StatelessWidget {
   final IconData icon;
   final String title;
 
-  const NavigationTile({
-    super.key,
-    required this.icon,
-    required this.title,
-  });
+  const NavigationTile({super.key, required this.icon, required this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +17,7 @@ class NavigationTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 20),
-          child: Row(
+          child: Column(
             children: [
               Container(
                 padding: const EdgeInsets.all(5),
@@ -36,9 +32,10 @@ class NavigationTile extends StatelessWidget {
                 child: Text(
                   title,
                   style: const TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
-                      color: Colors.black87),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black87,
+                  ),
                 ),
               ),
               const Icon(Icons.arrow_forward_ios, color: Colors.black87),

@@ -25,10 +25,8 @@ class AppTheme {
     elevatedButtonTheme: ElevatedButtonThemeData(
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(12),
-        backgroundColor: const Color(0xFFf16b26),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
-        ),
+        backgroundColor: Colors.blueAccent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
     ),
 
@@ -36,8 +34,9 @@ class AppTheme {
       style: TextButton.styleFrom(foregroundColor: Colors.deepOrange),
     ),
 
-    iconTheme:
-        const IconThemeData(color: Colors.black), // Ensure icons are visible
+    iconTheme: const IconThemeData(
+      color: Colors.black,
+    ), // Ensure icons are visible
 
     textTheme: const TextTheme(
       displayLarge: TextStyle(
@@ -64,9 +63,9 @@ class AppTheme {
       titleLarge: TextStyle(fontSize: 12),
     ),
 
-    bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+    bottomNavigationBarTheme: BottomNavigationBarThemeData(
       backgroundColor: Colors.white,
-      selectedItemColor: Colors.deepOrange,
+      selectedItemColor: Colors.indigoAccent[400],
       unselectedItemColor: Colors.grey,
     ),
   );

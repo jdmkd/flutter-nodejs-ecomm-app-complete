@@ -31,7 +31,7 @@ class ProductGridView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 9 / 15, // Slightly adjusted for better alignment
+          childAspectRatio: 9 / 15, // Increased height to prevent overflow
           // childAspectRatio: 0.65, // Better for card + image + text + button
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,

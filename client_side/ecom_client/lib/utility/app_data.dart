@@ -39,25 +39,25 @@ class AppData {
     const BottomNavyBarItem(
       "Home",
       Icon(Icons.home),
-      Color(0xFFEC6813),
+      Colors.indigoAccent,
       Color(0xFFBDBDBD), // Inactive color
     ),
     const BottomNavyBarItem(
       "Favorite",
       Icon(Icons.favorite),
-      Color(0xFFEC6813),
+      Colors.indigoAccent,
       Color(0xFFBDBDBD), // Inactive color
     ),
     const BottomNavyBarItem(
       "Cart",
       Icon(Icons.shopping_cart),
-      Color(0xFFEC6813),
+      Colors.indigoAccent,
       Color(0xFFBDBDBD), // Inactive color
     ),
     const BottomNavyBarItem(
       "Profile",
       Icon(Icons.person),
-      Color(0xFFEC6813),
+      Colors.indigoAccent,
       Color(0xFFBDBDBD), // Inactive color
     ),
   ];
