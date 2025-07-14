@@ -1,132 +1,228 @@
 import '../../../core/data/data_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../../../../utility/app_data.dart';
 
-class PosterSection extends StatelessWidget {
+class PosterSection extends StatefulWidget {
   const PosterSection({super.key});
+
+  @override
+  State<PosterSection> createState() => _PosterSectionState();
+}
+
+class _PosterSectionState extends State<PosterSection> {
+  int _currentPage = 0;
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 180, // Ensures consistent height
+      height: 190,
       child: Consumer<DataProvider>(
         builder: (context, dataProvider, child) {
-          return ListView.builder(
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 4),
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: dataProvider.posters.length,
-            itemBuilder: (_, index) {
-              return Padding(
-                padding: const EdgeInsets.only(right: 15),
-                child: Container(
-                  width: 330, // Balanced width for content and image
-                  decoration: BoxDecoration(
-                    color:
-                        AppData.randomPosterBgColors[index].withOpacity(0.85),
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.12),
-                        blurRadius: 8,
-                        offset: const Offset(4, 4),
+          final posters = dataProvider.posters;
+          if (posters.isEmpty) return const SizedBox.shrink();
+          return Column(
+            children: [
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  itemCount: posters.length,
+                  onPageChanged: (index) {
+                    setState(() => _currentPage = index);
+                  },
+                  itemBuilder: (context, index) {
+                    final poster = posters[index];
+                    final double cardWidth =
+                        MediaQuery.of(context).size.width -
+                        24; // 12px padding on each side
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 2,
+                        vertical: 8,
                       ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(
-                            left: 15, top: 15, bottom: 15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 140, // Fixed width to prevent overflow
-                              child: Text(
-                                '${dataProvider.posters[index].posterName}',
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
-                                    ?.copyWith(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 22,
-                                    ),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            ElevatedButton(
-                              onPressed: () {},
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.white,
-                                elevation: 3,
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18, vertical: 8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-                              ),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  const Icon(Icons.shopping_cart,
-                                      color: Colors.black, size: 18),
-                                  const SizedBox(width: 6),
-                                  Text(
-                                    "Get Now",
-                                    style: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ],
-                              ),
+                      child: Container(
+                        width: cardWidth,
+                        margin: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                        ), // Give shadow room
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.14),
+                              blurRadius: 8,
+                              spreadRadius: 0,
+                              offset: const Offset(0, 6),
                             ),
                           ],
                         ),
-                      ),
-                      const Spacer(),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(15),
-                        child: Container(
-                          width: 130, // Fixed width
-                          height: 130, // Fixed height
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Image.network(
-                            '${dataProvider.posters[index].imageUrl}',
-                            fit: BoxFit.cover,
-                            alignment: Alignment.center,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) return child;
-                              return Center(
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              // Poster image
+                              poster.imageUrl != null &&
+                                      poster.imageUrl!.isNotEmpty
+                                  ? Image.network(
+                                      poster.imageUrl!,
+                                      fit: BoxFit.cover,
+                                      loadingBuilder:
+                                          (context, child, loadingProgress) {
+                                            if (loadingProgress == null)
+                                              return child;
+                                            return Center(
+                                              child: CircularProgressIndicator(
+                                                value:
+                                                    loadingProgress
+                                                            .expectedTotalBytes !=
+                                                        null
+                                                    ? loadingProgress
+                                                              .cumulativeBytesLoaded /
+                                                          loadingProgress
+                                                              .expectedTotalBytes!
+                                                    : null,
+                                              ),
+                                            );
+                                          },
+                                      errorBuilder:
+                                          (context, error, stackTrace) {
+                                            return Container(
+                                              color: Colors.grey[200],
+                                              child: const Icon(
+                                                Icons.broken_image,
+                                                color: Colors.red,
+                                              ),
+                                            );
+                                          },
+                                    )
+                                  : Container(
+                                      color: Colors.grey[200],
+                                      child: const Icon(
+                                        Icons.broken_image,
+                                        color: Colors.red,
+                                      ),
+                                    ),
+                              // Subtle dark gradient at the bottom
+                              Align(
+                                alignment: Alignment.bottomCenter,
+                                child: Container(
+                                  height: 70,
+                                  decoration: BoxDecoration(
+                                    gradient: LinearGradient(
+                                      begin: Alignment.bottomCenter,
+                                      end: Alignment.topCenter,
+                                      colors: [
+                                        Colors.black.withOpacity(0.55),
+                                        Colors.transparent,
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                              );
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return const Icon(Icons.broken_image,
-                                  color: Colors.red);
-                            },
+                              ),
+                              // Poster name and button at the bottom left
+                              Positioned(
+                                left: 16,
+                                bottom: 16,
+                                right: 16,
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        poster.posterName ?? '',
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 18,
+                                          shadows: [
+                                            Shadow(
+                                              color: Colors.black54,
+                                              blurRadius: 6,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 10),
+                                    ElevatedButton(
+                                      onPressed: () {},
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Colors.white,
+                                        elevation: 0,
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 14,
+                                          vertical: 8,
+                                        ),
+                                        minimumSize: Size.zero,
+                                        tapTargetSize:
+                                            MaterialTapTargetSize.shrinkWrap,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                            20,
+                                          ),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.shopping_cart,
+                                            color: Colors.black,
+                                            size: 16,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          const Text(
+                                            "Get Now",
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 13,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                      const SizedBox(width: 15),
-                    ],
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                  posters.length,
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    margin: const EdgeInsets.symmetric(horizontal: 3),
+                    width: _currentPage == index ? 16 : 7,
+                    height: 7,
+                    decoration: BoxDecoration(
+                      color: _currentPage == index
+                          ? Colors.indigoAccent[400]
+                          : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
                   ),
                 ),
-              );
-            },
+              ),
+            ],
           );
         },
       ),
