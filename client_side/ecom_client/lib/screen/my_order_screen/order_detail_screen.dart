@@ -20,9 +20,12 @@ class OrderDetailScreen extends StatelessWidget {
     final coupon = order.couponCode;
     final statusColor = _getStatusColor(order.orderStatus ?? '');
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text('Order Details',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text(
+          'Order Details',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
       ),
       body: Consumer<DataProvider>(
         builder: (context, dataProvider, child) {
@@ -40,15 +43,20 @@ class OrderDetailScreen extends StatelessWidget {
                 // Refined Cancel Order Button (medium size, still prominent)
                 if (_canCancelOrder(order))
                   Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 2,
+                      horizontal: 0,
+                    ),
                     child: SizedBox(
                       width: double.infinity,
                       child: ConstrainedBox(
                         constraints: const BoxConstraints(minHeight: 44),
                         child: ElevatedButton.icon(
-                          icon: const Icon(Icons.cancel,
-                              color: Colors.white, size: 22),
+                          icon: const Icon(
+                            Icons.cancel,
+                            color: Colors.white,
+                            size: 22,
+                          ),
                           label: const Padding(
                             padding: EdgeInsets.symmetric(vertical: 10),
                             child: Text(
@@ -77,7 +85,8 @@ class OrderDetailScreen extends StatelessWidget {
                               builder: (context) => AlertDialog(
                                 title: const Text('Cancel Order'),
                                 content: const Text(
-                                    'Are you sure you want to cancel this order?'),
+                                  'Are you sure you want to cancel this order?',
+                                ),
                                 actions: [
                                   TextButton(
                                     onPressed: () =>
@@ -107,7 +116,9 @@ class OrderDetailScreen extends StatelessWidget {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 16, vertical: 8),
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
                       decoration: BoxDecoration(
                         color: statusColor.withOpacity(0.15),
                         borderRadius: BorderRadius.circular(8),
@@ -122,8 +133,11 @@ class OrderDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 16),
-                    Icon(Icons.calendar_today,
-                        size: 18, color: Colors.grey[600]),
+                    Icon(
+                      Icons.calendar_today,
+                      size: 18,
+                      color: Colors.grey[600],
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       order.orderDate ?? '',
@@ -140,11 +154,14 @@ class OrderDetailScreen extends StatelessWidget {
                     Text(
                       'Payment: ',
                       style: TextStyle(
-                          fontWeight: FontWeight.w600,
-                          color: Colors.indigo[700]),
+                        fontWeight: FontWeight.w600,
+                        color: Colors.indigo[700],
+                      ),
                     ),
-                    Text(order.paymentMethod ?? '',
-                        style: const TextStyle(fontWeight: FontWeight.w500)),
+                    Text(
+                      order.paymentMethod ?? '',
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 18),
@@ -171,32 +188,44 @@ class OrderDetailScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              Icon(Icons.local_shipping,
-                                  color: AppColor.darkOrange),
+                              Icon(
+                                Icons.local_shipping,
+                                color: AppColor.darkOrange,
+                              ),
                               const SizedBox(width: 8),
-                              const Text('Shipping Address',
-                                  style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 16)),
+                              const Text(
+                                'Shipping Address',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 16,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: 8),
                           Text(
-                              '${shipping.street ?? ''}, ${shipping.city ?? ''}, ${shipping.state ?? ''}',
-                              style: const TextStyle(fontSize: 15)),
+                            '${shipping.street ?? ''}, ${shipping.city ?? ''}, ${shipping.state ?? ''}',
+                            style: const TextStyle(fontSize: 15),
+                          ),
                           Text(
-                              '${shipping.country ?? ''} - ${shipping.postalCode ?? ''}',
-                              style: const TextStyle(fontSize: 15)),
+                            '${shipping.country ?? ''} - ${shipping.postalCode ?? ''}',
+                            style: const TextStyle(fontSize: 15),
+                          ),
                           if (shipping.phone != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Row(
                                 children: [
-                                  Icon(Icons.phone,
-                                      size: 16, color: AppColor.darkGrey),
+                                  Icon(
+                                    Icons.phone,
+                                    size: 16,
+                                    color: AppColor.darkGrey,
+                                  ),
                                   const SizedBox(width: 4),
-                                  Text(shipping.phone!,
-                                      style: const TextStyle(fontSize: 14)),
+                                  Text(
+                                    shipping.phone!,
+                                    style: const TextStyle(fontSize: 14),
+                                  ),
                                 ],
                               ),
                             ),
@@ -228,12 +257,18 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.shopping_bag,
-                                color: AppColor.darkOrange),
+                            Icon(
+                              Icons.shopping_bag,
+                              color: AppColor.darkOrange,
+                            ),
                             const SizedBox(width: 8),
-                            const Text('Order Items',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            const Text(
+                              'Order Items',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 8),
@@ -265,19 +300,23 @@ class OrderDetailScreen extends StatelessWidget {
                                           errorBuilder:
                                               (context, error, stackTrace) =>
                                                   Container(
-                                            width: 56,
-                                            height: 56,
-                                            color: Colors.grey[200],
-                                            child: const Icon(Icons.image,
-                                                color: Colors.grey),
-                                          ),
+                                                    width: 56,
+                                                    height: 56,
+                                                    color: Colors.grey[200],
+                                                    child: const Icon(
+                                                      Icons.image,
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
                                         )
                                       : Container(
                                           width: 56,
                                           height: 56,
                                           color: Colors.grey[200],
-                                          child: const Icon(Icons.image,
-                                              color: Colors.grey),
+                                          child: const Icon(
+                                            Icons.image,
+                                            color: Colors.grey,
+                                          ),
                                         ),
                                 ),
                                 const SizedBox(width: 12),
@@ -286,27 +325,38 @@ class OrderDetailScreen extends StatelessWidget {
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Text(item.productName ?? '',
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.w600,
-                                              fontSize: 15)),
+                                      Text(
+                                        item.productName ?? '',
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15,
+                                        ),
+                                      ),
                                       if (item.variant != null &&
                                           item.variant!.isNotEmpty)
-                                        Text('Variant: ${item.variant}',
-                                            style: const TextStyle(
-                                                fontSize: 13,
-                                                color: Colors.grey)),
-                                      Text('Qty: ${item.quantity}',
-                                          style: const TextStyle(fontSize: 13)),
+                                        Text(
+                                          'Variant: ${item.variant}',
+                                          style: const TextStyle(
+                                            fontSize: 13,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
+                                      Text(
+                                        'Qty: ${item.quantity}',
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
                                     ],
                                   ),
                                 ),
                                 const SizedBox(width: 8),
-                                Text('₹${item.price?.toStringAsFixed(2) ?? ''}',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15,
-                                        color: Colors.green)),
+                                Text(
+                                  '₹${item.price?.toStringAsFixed(2) ?? ''}',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15,
+                                    color: Colors.green,
+                                  ),
+                                ),
                               ],
                             ),
                           );
@@ -323,7 +373,8 @@ class OrderDetailScreen extends StatelessWidget {
                     color: Colors.grey[100],
                     elevation: 0,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     child: Padding(
                       padding: const EdgeInsets.all(16),
                       child: Row(
@@ -331,9 +382,12 @@ class OrderDetailScreen extends StatelessWidget {
                           Icon(Icons.discount, color: AppColor.darkGrey),
                           const SizedBox(width: 8),
                           if (coupon.couponCode != null)
-                            Text('Coupon: ${coupon.couponCode}',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w600)),
+                            Text(
+                              'Coupon: ${coupon.couponCode}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                         ],
                       ),
                     ),
@@ -360,19 +414,28 @@ class OrderDetailScreen extends StatelessWidget {
                       children: [
                         Row(
                           children: [
-                            Icon(Icons.receipt_long,
-                                color: AppColor.darkOrange),
+                            Icon(
+                              Icons.receipt_long,
+                              color: AppColor.darkOrange,
+                            ),
                             const SizedBox(width: 8),
-                            const Text('Order Summary',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold, fontSize: 16)),
+                            const Text(
+                              'Order Summary',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
+                            ),
                           ],
                         ),
                         const SizedBox(height: 8),
                         if (orderTotal != null) ...[
                           _summaryRow('Subtotal', orderTotal.subtotal),
-                          _summaryRow('Discount', orderTotal.discount,
-                              isDiscount: true),
+                          _summaryRow(
+                            'Discount',
+                            orderTotal.discount,
+                            isDiscount: true,
+                          ),
                           _summaryRow('Total', orderTotal.total, isTotal: true),
                         ] else ...[
                           _summaryRow('Total', order.totalPrice, isTotal: true),
@@ -390,16 +453,22 @@ class OrderDetailScreen extends StatelessWidget {
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                     icon: const Icon(Icons.location_on),
                     label: const Text('Track Order'),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                        builder: (_) => TrackingScreen(url: order.trackingUrl!),
-                      ));
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) =>
+                              TrackingScreen(url: order.trackingUrl!),
+                        ),
+                      );
                     },
                   ),
                 const SizedBox(height: 16),
@@ -415,14 +484,18 @@ class OrderDetailScreen extends StatelessWidget {
                           side: const BorderSide(color: Colors.deepOrange),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           textStyle: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                                content: Text('Reorder placed! (Demo)')),
+                              content: Text('Reorder placed! (Demo)'),
+                            ),
                           );
                         },
                       ),
@@ -437,9 +510,12 @@ class OrderDetailScreen extends StatelessWidget {
                           side: const BorderSide(color: Colors.indigo),
                           padding: const EdgeInsets.symmetric(vertical: 14),
                           textStyle: const TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 15),
+                            fontWeight: FontWeight.bold,
+                            fontSize: 15,
+                          ),
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(10)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
                         onPressed: () {
                           showDialog(
@@ -447,7 +523,8 @@ class OrderDetailScreen extends StatelessWidget {
                             builder: (context) => AlertDialog(
                               title: const Text('Contact Support'),
                               content: const Text(
-                                  'For support, email us at support@example.com'),
+                                'For support, email us at support@example.com',
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () => Navigator.pop(context),
@@ -470,11 +547,16 @@ class OrderDetailScreen extends StatelessWidget {
                       foregroundColor: Colors.indigo,
                       side: const BorderSide(color: Colors.indigo),
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 32, vertical: 16),
+                        horizontal: 32,
+                        vertical: 16,
+                      ),
                       textStyle: const TextStyle(
-                          fontWeight: FontWeight.bold, fontSize: 16),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                     onPressed: () {
                       Navigator.of(context).push(
@@ -493,23 +575,30 @@ class OrderDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _summaryRow(String label, double? value,
-      {bool isDiscount = false, bool isTotal = false}) {
+  Widget _summaryRow(
+    String label,
+    double? value, {
+    bool isDiscount = false,
+    bool isTotal = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label,
-              style: TextStyle(
-                  fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
-                  fontSize: isTotal ? 16 : 14)),
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
+              fontSize: isTotal ? 16 : 14,
+            ),
+          ),
           Text(
             value == null
                 ? '-'
                 : (isDiscount
-                    ? '- ₹${value.toStringAsFixed(2)}'
-                    : '₹${value.toStringAsFixed(2)}'),
+                      ? '- ₹${value.toStringAsFixed(2)}'
+                      : '₹${value.toStringAsFixed(2)}'),
             style: TextStyle(
               fontWeight: isTotal ? FontWeight.bold : FontWeight.w500,
               fontSize: isTotal ? 16 : 14,
@@ -559,8 +648,10 @@ class OrderDetailScreen extends StatelessWidget {
 class _OrderStatusTimeline extends StatelessWidget {
   final String currentStatus;
   final bool isCancelled;
-  const _OrderStatusTimeline(
-      {required this.currentStatus, required this.isCancelled});
+  const _OrderStatusTimeline({
+    required this.currentStatus,
+    required this.isCancelled,
+  });
 
   static const List<String> statuses = [
     'pending',
@@ -603,11 +694,12 @@ class _OrderStatusTimeline extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text('Order Progress',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          'Order Progress',
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
+        ),
         const SizedBox(height: 10),
         SizedBox(
           height: 90, // enough for icon + label + status
@@ -620,14 +712,15 @@ class _OrderStatusTimeline extends StatelessWidget {
                 final Color segmentColor = isCancelled
                     ? statusColors['cancelled']!
                     : (rightIndex <= currentIndex && !isCancelled)
-                        ? statusColors[statuses[rightIndex]]!
-                        : Colors.grey[300]!;
+                    ? statusColors[statuses[rightIndex]]!
+                    : Colors.grey[300]!;
                 return Expanded(
                   child: Align(
                     alignment: Alignment.topCenter,
                     child: Container(
                       margin: const EdgeInsets.only(
-                          top: 15), // icon radius (42/2 or 34/2)
+                        top: 15,
+                      ), // icon radius (42/2 or 34/2)
                       height: 6.0,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(2),
@@ -645,10 +738,10 @@ class _OrderStatusTimeline extends StatelessWidget {
                 final Color color = isCancelled
                     ? statusColors['cancelled']!
                     : isCompleted
-                        ? statusColors[status]!
-                        : isActive
-                            ? statusColors[status]!
-                            : Colors.grey[300]!;
+                    ? statusColors[status]!
+                    : isActive
+                    ? statusColors[status]!
+                    : Colors.grey[300]!;
                 return SizedBox(
                   width: 70,
                   child: Column(
@@ -660,9 +753,8 @@ class _OrderStatusTimeline extends StatelessWidget {
                         height: isActive ? 42 : 34,
                         decoration: BoxDecoration(
                           color: color.withOpacity(
-                              isActive || isCompleted || isCancelled
-                                  ? 1.0
-                                  : 0.13),
+                            isActive || isCompleted || isCancelled ? 1.0 : 0.13,
+                          ),
                           border: Border.all(
                             color: color,
                             width: isActive ? 3 : 1.5,
@@ -696,8 +788,9 @@ class _OrderStatusTimeline extends StatelessWidget {
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: isActive ? 13.5 : 12.5,
-                          fontWeight:
-                              isActive ? FontWeight.bold : FontWeight.normal,
+                          fontWeight: isActive
+                              ? FontWeight.bold
+                              : FontWeight.normal,
                           color: color,
                         ),
                       ),
@@ -709,8 +802,9 @@ class _OrderStatusTimeline extends StatelessWidget {
                                 child: Text(
                                   'Completed',
                                   style: TextStyle(
-                                      fontSize: 11,
-                                      color: color.withOpacity(0.7)),
+                                    fontSize: 11,
+                                    color: color.withOpacity(0.7),
+                                  ),
                                 ),
                               )
                             : null,
@@ -729,11 +823,14 @@ class _OrderStatusTimeline extends StatelessWidget {
               children: [
                 Icon(Icons.cancel, color: statusColors['cancelled'], size: 18),
                 const SizedBox(width: 7),
-                Text('Order Cancelled',
-                    style: TextStyle(
-                        color: statusColors['cancelled'],
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14)),
+                Text(
+                  'Order Cancelled',
+                  style: TextStyle(
+                    color: statusColors['cancelled'],
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
               ],
             ),
           ),
