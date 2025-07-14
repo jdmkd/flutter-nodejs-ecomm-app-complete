@@ -33,64 +33,51 @@ class _HomeScreenState extends State<HomeScreen> {
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Scaffold(
           backgroundColor: Colors.white,
-          bottomNavigationBar: BottomNavyBar(
-            itemCornerRadius: 10,
-            selectedIndex: newIndex,
-            // showElevation: true,
-            backgroundColor: Colors.white,
-            curve: Curves.easeInOut,
-            items: AppData.bottomNavyBarItems.map(
-              (item) {
-                return BottomNavyBarItem(
-                  icon: Padding(
-                    padding:
-                        const EdgeInsets.all(0), // Space between icon and title
-
-                    child: Icon(
-                      item.icon.icon,
-                      size: 28, // Fixed size for icon
-                      color: newIndex ==
-                              AppData.bottomNavyBarItems.indexOf(item)
-                          ? item.activeColor // Active color when selected
-                          : item
-                              .inactiveColor, // Inactive color when not selected
-                    ),
-                  ),
-                  title: Text(
-                    item.title,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12, // Text size for the title
-                      color:
-                          newIndex == AppData.bottomNavyBarItems.indexOf(item)
-                              ? item.activeColor
-                              : item.inactiveColor,
-                    ),
-                  ),
-                  activeColor: item.activeColor,
-                  inactiveColor: item.inactiveColor,
-                );
+          bottomNavigationBar: Container(
+            decoration: const BoxDecoration(
+              border: Border(
+                top: BorderSide(
+                  color: Color(0xFFE0E0E0), // Subtle grey
+                  width: 1,
+                ),
+              ),
+            ),
+            child: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
+              backgroundColor: Colors.white,
+              currentIndex: newIndex,
+              selectedItemColor: Colors.indigoAccent[400],
+              unselectedItemColor: Color(0xFFBDBDBD),
+              // iconSize: 26, // Smaller or larger for height
+              // selectedFontSize: 15, // Adjust for label size
+              // unselectedFontSize: 13,
+              onTap: (currentIndex) {
+                setState(() {
+                  newIndex = currentIndex;
+                });
               },
-            ).toList(),
-            onItemSelected: (currentIndex) {
-              setState(() {
-                newIndex = currentIndex;
-              });
-            },
+              items: AppData.bottomNavyBarItems.map((item) {
+                return BottomNavigationBarItem(
+                  icon: item.icon,
+                  label: item.title,
+                );
+              }).toList(),
+            ),
           ),
           body: PageTransitionSwitcher(
             duration: const Duration(seconds: 1),
-            transitionBuilder: (
-              Widget child,
-              Animation<double> animation,
-              Animation<double> secondaryAnimation,
-            ) {
-              return FadeThroughTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                child: child,
-              );
-            },
+            transitionBuilder:
+                (
+                  Widget child,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
+                ) {
+                  return FadeThroughTransition(
+                    animation: animation,
+                    secondaryAnimation: secondaryAnimation,
+                    child: child,
+                  );
+                },
             child: HomeScreen.screens[newIndex],
           ),
         ),

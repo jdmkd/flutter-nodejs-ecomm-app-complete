@@ -12,22 +12,23 @@ import 'package:provider/provider.dart';
 import '../../widget/horizondal_list.dart';
 import '../../widget/product_grid_view.dart';
 
-
 class ProductBySubCategoryScreen extends StatelessWidget {
   final SubCategory selectedSubCategory;
 
-  const ProductBySubCategoryScreen(
-      {super.key, required this.selectedSubCategory});
-  
+  const ProductBySubCategoryScreen({
+    super.key,
+    required this.selectedSubCategory,
+  });
+
   @override
   Widget build(BuildContext context) {
     log("AddressDataProvider ===>>> ${selectedSubCategory}");
     log("AddressDataProvider ===>>> ${selectedSubCategory.name}");
     Future.delayed(Duration.zero, () {
       context.proBySubCProvider.filterProductBySubCategory(selectedSubCategory);
-
     });
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: CustomScrollView(
           slivers: [
@@ -37,14 +38,16 @@ class ProductBySubCategoryScreen extends StatelessWidget {
               title: Text(
                 "${selectedSubCategory.name}",
                 style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.darkOrange),
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                  color: AppColor.darkOrange,
+                ),
               ),
               expandedHeight: 190.0,
               flexibleSpace: LayoutBuilder(
                 builder: (context, constraints) {
-                  var top = constraints.biggest.height -
+                  var top =
+                      constraints.biggest.height -
                       MediaQuery.of(context).padding.top;
                   return Stack(
                     children: [
@@ -58,7 +61,8 @@ class ProductBySubCategoryScreen extends StatelessWidget {
                               builder: (context, proByCatProvider, child) {
                                 return Padding(
                                   padding: const EdgeInsets.symmetric(
-                                      vertical: 10.0),
+                                    vertical: 10.0,
+                                  ),
                                   child: HorizontalList(
                                     items: proByCatProvider.subCategories,
                                     itemToString: (SubCategory? val) =>
@@ -83,11 +87,13 @@ class ProductBySubCategoryScreen extends StatelessWidget {
                                     items: const ['Low To High', 'High To Low'],
                                     onChanged: (val) {
                                       if (val?.toLowerCase() == 'low to high') {
-                                        context.proByCProvider
-                                            .sortProducts(ascending: true);
+                                        context.proByCProvider.sortProducts(
+                                          ascending: true,
+                                        );
                                       } else {
-                                        context.proByCProvider
-                                            .sortProducts(ascending: false);
+                                        context.proByCProvider.sortProducts(
+                                          ascending: false,
+                                        );
                                       }
                                     },
                                     displayItem: (val) => val,
@@ -97,20 +103,22 @@ class ProductBySubCategoryScreen extends StatelessWidget {
                                   child: Consumer<ProductBySubCategoryProvider>(
                                     builder:
                                         (context, proByCatProvider, child) {
-                                      return MultiSelectDropDown<Brand>(
-                                        hintText: 'Filter By Brands',
-                                        items: proByCatProvider.brands,
-                                        onSelectionChanged: (val) {
-                                          proByCatProvider.selectedBrands = val;
-                                          context.proByCProvider
-                                              .filterProductByBrand();
-                                          proByCatProvider.updateUI();
+                                          return MultiSelectDropDown<Brand>(
+                                            hintText: 'Filter By Brands',
+                                            items: proByCatProvider.brands,
+                                            onSelectionChanged: (val) {
+                                              proByCatProvider.selectedBrands =
+                                                  val;
+                                              context.proByCProvider
+                                                  .filterProductByBrand();
+                                              proByCatProvider.updateUI();
+                                            },
+                                            displayItem: (val) =>
+                                                val.name ?? '',
+                                            selectedItems:
+                                                proByCatProvider.selectedBrands,
+                                          );
                                         },
-                                        displayItem: (val) => val.name ?? '',
-                                        selectedItems:
-                                            proByCatProvider.selectedBrands,
-                                      );
-                                    },
                                   ),
                                 ),
                               ],
