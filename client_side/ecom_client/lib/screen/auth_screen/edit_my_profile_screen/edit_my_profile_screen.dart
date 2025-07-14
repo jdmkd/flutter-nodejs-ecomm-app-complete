@@ -93,13 +93,15 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
 
     if (name.isEmpty || name.length < 3) {
       SnackBarHelper.showErrorSnackBar(
-          "Please enter a valid name (min 3 characters)");
+        "Please enter a valid name (min 3 characters)",
+      );
       return;
     }
 
     if (phone.isEmpty || phone.length != 10 || int.tryParse(phone) == null) {
       SnackBarHelper.showErrorSnackBar(
-          "Please enter a valid 10-digit mobile number");
+        "Please enter a valid 10-digit mobile number",
+      );
       return;
     }
 
@@ -126,9 +128,9 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
 
   void _changeProfilePhoto() {
     // Logic to change image
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Change photo tapped!')),
-    );
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Change photo tapped!')));
   }
 
   void _navigateToResetPassword() {
@@ -144,7 +146,7 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F9FF),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.blueAccent,
         title: const Text(
@@ -194,12 +196,10 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                   readOnly: true,
                   enabled: false,
                   keyboardType: TextInputType.emailAddress,
-                  decoration:
-                      _buildInputDecoration('Email Address', Icons.email)
-                          .copyWith(
-                    fillColor: Colors.grey.shade100,
-                    filled: true,
-                  ),
+                  decoration: _buildInputDecoration(
+                    'Email Address',
+                    Icons.email,
+                  ).copyWith(fillColor: Colors.grey.shade100, filled: true),
                 ),
                 const SizedBox(height: 16),
 
@@ -207,8 +207,10 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                 TextFormField(
                   controller: _phoneController,
                   keyboardType: TextInputType.phone,
-                  decoration:
-                      _buildInputDecoration('Phone Number', Icons.phone),
+                  decoration: _buildInputDecoration(
+                    'Phone Number',
+                    Icons.phone,
+                  ),
                   validator: (value) =>
                       value!.isEmpty ? 'Please enter your phone number' : null,
                 ),
@@ -228,7 +230,8 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                 GestureDetector(
                   onTap: () async {
                     FocusScope.of(context).requestFocus(
-                        FocusNode()); // Prevents keyboard from opening
+                      FocusNode(),
+                    ); // Prevents keyboard from opening
                     DateTime currentDate = DateTime.now();
 
                     final DateTime? pickedDate = await showDatePicker(
@@ -239,15 +242,18 @@ class _EditMyProfileScreenState extends State<EditMyProfileScreen> {
                     );
 
                     if (pickedDate != null) {
-                      _dateOfBirthController.text =
-                          DateFormat('dd-MM-yyyy').format(pickedDate);
+                      _dateOfBirthController.text = DateFormat(
+                        'dd-MM-yyyy',
+                      ).format(pickedDate);
                     }
                   },
                   child: AbsorbPointer(
                     child: TextFormField(
                       controller: _dateOfBirthController,
-                      decoration:
-                          _buildInputDecoration('DOB', Icons.date_range),
+                      decoration: _buildInputDecoration(
+                        'DOB',
+                        Icons.date_range,
+                      ),
                       // validator: (value) {
                       //   if (value == null || value.isEmpty) {
                       //     return 'Please enter your Date of Birth';

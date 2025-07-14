@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../auth_screen/my_profile_screen/my_profile_screen.dart';
 import '../auth_screen/login_screen/login_screen.dart';
-import '../my_address_screen/my_address_screen.dart';
+import '../address_screen/address_management_screen.dart';
 import '../my_order_screen/my_order_screen.dart';
 import '../../utility/app_color.dart';
 import '../../widget/navigation_tile.dart';
@@ -15,8 +15,10 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Explicitly enable system UI overlays
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
 
     // Ensure the status bar is visible
     // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -32,48 +34,73 @@ class ProfileScreen extends StatelessWidget {
         title: const Text(
           "My Account",
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
         centerTitle: true,
       ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Center(
-            child: Column(
-              children: [
-                const CircleAvatar(
-                  radius: 50,
-                  backgroundImage: AssetImage('assets/images/profile_pic.png'),
-                ),
-                const SizedBox(height: 10),
-                Text(
-                  "${context.userProvider.getLoginUsr()?.name}",
-                  style: const TextStyle(
-                      fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ],
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.profileProvider.retrieveSavedAddress();
+        },
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 20),
+            Center(
+              child: Column(
+                children: [
+                  const CircleAvatar(
+                    radius: 50,
+                    backgroundImage: AssetImage(
+                      'assets/images/profile_pic.png',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Text(
+                    "${context.userProvider.getLoginUsr()?.name}",
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: 30),
-          Expanded(
-            child: ListView(
-              children: [
-                _buildProfileOption(Icons.account_circle, 'My Profile',
-                    const MyProfileScreen()),
-                _buildProfileOption(
-                    Icons.list, 'My Orders', const MyOrderScreen()),
-                _buildProfileOption(
-                    Icons.location_on, 'My Addresses', const MyAddressPage()),
-                _buildProfileOption(Icons.settings, 'Settings', null),
-                _buildProfileOption(Icons.help_outline, 'Help & Support', null),
-                const SizedBox(height: 30),
-                _buildLogoutButton(context),
-              ],
+            const SizedBox(height: 30),
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildProfileOption(
+                    Icons.account_circle,
+                    'My Profile',
+                    const MyProfileScreen(),
+                  ),
+                  _buildProfileOption(
+                    Icons.list,
+                    'My Orders',
+                    const MyOrderScreen(),
+                  ),
+                  _buildProfileOption(
+                    Icons.location_on,
+                    'My Addresses',
+                    const AddressManagementScreen(),
+                  ),
+                  _buildProfileOption(Icons.settings, 'Settings', null),
+                  _buildProfileOption(
+                    Icons.help_outline,
+                    'Help & Support',
+                    null,
+                  ),
+                  const SizedBox(height: 30),
+                  _buildLogoutButton(context),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -82,13 +109,16 @@ class ProfileScreen extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: Icon(icon, color: AppColor.darkOrange),
+          leading: Icon(icon, color: Colors.blueAccent[700]),
           title: Text(
             title,
             style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
           ),
-          trailing:
-              const Icon(Icons.arrow_forward_ios, size: 18, color: Colors.grey),
+          trailing: const Icon(
+            Icons.arrow_forward_ios,
+            size: 18,
+            color: Colors.grey,
+          ),
           onTap: () {
             if (screen != null) {
               Get.to(screen);
@@ -105,18 +135,21 @@ class ProfileScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.redAccent,
+          backgroundColor: Colors.red[400],
           foregroundColor: Colors.white,
           padding: const EdgeInsets.symmetric(vertical: 14),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
         ),
         onPressed: () {
           context.userProvider.logOutUser();
           Get.offAll(LoginScreen());
         },
-        child: const Text('Logout',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+        child: const Text(
+          'Logout',
+          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
       ),
     );
   }

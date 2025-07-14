@@ -33,7 +33,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF3F4F6),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.indigo,
         elevation: 0,
@@ -63,8 +63,9 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                       children: [
                         CircleAvatar(
                           radius: 60,
-                          backgroundImage:
-                              const AssetImage('assets/images/profile_pic.png'),
+                          backgroundImage: const AssetImage(
+                            'assets/images/profile_pic.png',
+                          ),
                           backgroundColor: Colors.white,
                         ),
                         Positioned(
@@ -73,10 +74,13 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                           child: CircleAvatar(
                             radius: 18,
                             backgroundColor: Colors.indigo,
-                            child: const Icon(Icons.edit,
-                                color: Colors.white, size: 18),
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                              size: 18,
+                            ),
                           ),
-                        )
+                        ),
                       ],
                     ),
                     const SizedBox(height: 16),
@@ -93,10 +97,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                     const SizedBox(height: 4),
                     Text(
                       user?.email ?? 'email@example.com',
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
                     ),
 
                     const SizedBox(height: 30),
@@ -112,30 +113,39 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                             color: Colors.black12,
                             blurRadius: 10,
                             offset: Offset(0, 4),
-                          )
+                          ),
                         ],
                       ),
                       child: Column(
                         children: [
-                          buildInfoTile(Icons.phone, 'Phone Number',
-                              user?.phone ?? '9898989898'),
+                          buildInfoTile(
+                            Icons.phone,
+                            'Phone Number',
+                            user?.phone ?? '9898989898',
+                          ),
                           const Divider(),
                           buildInfoTile(
-                              Icons.location_on_outlined,
-                              'Current Location',
-                              user?.currentAddress ?? 'Ahmedabad, Gujarat'),
+                            Icons.location_on_outlined,
+                            'Current Location',
+                            user?.currentAddress ?? 'Ahmedabad, Gujarat',
+                          ),
                           const Divider(),
                           buildInfoTile(
-                              Icons.cake_outlined,
-                              'Date of Birth',
-                              user?.dateOfBirth != null &&
-                                      user!.dateOfBirth!.isNotEmpty
-                                  ? DateFormat('dd-MM-yyyy').format(
-                                      DateTime.parse(user?.dateOfBirth ?? ''))
-                                  : ''),
+                            Icons.cake_outlined,
+                            'Date of Birth',
+                            user?.dateOfBirth != null &&
+                                    user!.dateOfBirth!.isNotEmpty
+                                ? DateFormat('dd-MM-yyyy').format(
+                                    DateTime.parse(user?.dateOfBirth ?? ''),
+                                  )
+                                : '',
+                          ),
                           const Divider(),
-                          buildInfoTile(Icons.person, 'Gender',
-                              user!.gender?.capitalize ?? ''),
+                          buildInfoTile(
+                            Icons.person,
+                            'Gender',
+                            user!.gender?.capitalize ?? '',
+                          ),
                         ],
                       ),
                     ),
@@ -216,7 +226,7 @@ class _MyProfileScreenState extends State<MyProfileScreen> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
