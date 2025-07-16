@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart' hide Category;
 import 'package:get/get.dart';
@@ -18,6 +19,14 @@ import '../../utility/snack_bar_helper.dart';
 
 class DataProvider extends ChangeNotifier {
   HttpService service = HttpService();
+
+  bool isLoading = true;
+  bool isOrderLoading = false;
+  bool isInitialized = false; // Track if data has been loaded at least once
+
+  // Order filters
+  String? orderStatusFilter;
+  DateTimeRange? dateRangeFilter;
 
   List<Category> _allCategories = [];
   List<Category> _filteredCategories = [];
@@ -46,11 +55,47 @@ class DataProvider extends ChangeNotifier {
   List<Order> get orders => _filteredOrders;
 
   DataProvider() {
-    getAllProduct();
-    getAllCategory();
-    getAllSubCategory();
-    getAllBrands();
-    getAllPosters();
+    // Initialize data loading
+    _initializeData();
+  }
+
+  // Initialize data loading with proper error handling
+  Future<void> _initializeData() async {
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      await fetchAllData();
+
+      isInitialized = true;
+    } catch (e) {
+      // Even if there's an error, we should stop loading to show the UI
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchAllData() async {
+    print('DataProvider: fetchAllData called');
+    try {
+      isLoading = true;
+      notifyListeners();
+
+      log('DataProvider: Fetching all data...');
+      await Future.wait([
+        getAllProduct(),
+        getAllCategory(),
+        getAllSubCategory(),
+        getAllBrands(),
+        getAllPosters(),
+      ]);
+    } catch (e) {
+      print('DataProvider: Error in fetchAllData: $e');
+      rethrow;
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   Future<List<Category>> getAllCategory({bool showSnack = false}) async {
@@ -59,17 +104,21 @@ class DataProvider extends ChangeNotifier {
       if (response.isOk) {
         ApiResponse<List<Category>> apiResponse =
             ApiResponse<List<Category>>.fromJson(
-          response.body,
-          (json) =>
-              (json as List).map((item) => Category.fromJson(item)).toList(),
-        );
+              response.body,
+              (json) => (json as List)
+                  .map((item) => Category.fromJson(item))
+                  .toList(),
+            );
         _allCategories = apiResponse.data ?? [];
-        _filteredCategories =
-            List.from(_allCategories); // Initialize filtered list with all data
+        _filteredCategories = List.from(
+          _allCategories,
+        ); // Initialize filtered list with all data
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        log('DataProvider: Categories loaded: ${_allCategories.length}');
       }
     } catch (e) {
+      log('DataProvider: Error loading categories: $e');
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
       rethrow;
     }
@@ -94,17 +143,21 @@ class DataProvider extends ChangeNotifier {
       if (response.isOk) {
         ApiResponse<List<SubCategory>> apiResponse =
             ApiResponse<List<SubCategory>>.fromJson(
-          response.body,
-          (json) =>
-              (json as List).map((item) => SubCategory.fromJson(item)).toList(),
-        );
+              response.body,
+              (json) => (json as List)
+                  .map((item) => SubCategory.fromJson(item))
+                  .toList(),
+            );
         _allSubCategories = apiResponse.data ?? [];
         _filteredSubCategories = List.from(
-            _allSubCategories); // Initialize filtered list with all data
+          _allSubCategories,
+        ); // Initialize filtered list with all data
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        log('DataProvider: SubCategories loaded: ${_allSubCategories.length}');
       }
     } catch (e) {
+      log('DataProvider: Error loading subcategories: $e');
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
       rethrow;
     }
@@ -129,16 +182,20 @@ class DataProvider extends ChangeNotifier {
       if (response.isOk) {
         ApiResponse<List<Brand>> apiResponse =
             ApiResponse<List<Brand>>.fromJson(
-          response.body,
-          (json) => (json as List).map((item) => Brand.fromJson(item)).toList(),
-        );
+              response.body,
+              (json) =>
+                  (json as List).map((item) => Brand.fromJson(item)).toList(),
+            );
         _allBrands = apiResponse.data ?? [];
-        _filteredBrands =
-            List.from(_allBrands); // Initialize filtered list with all data
+        _filteredBrands = List.from(
+          _allBrands,
+        ); // Initialize filtered list with all data
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        log('DataProvider: Brands loaded: ${_allBrands.length}');
       }
     } catch (e) {
+      log('DataProvider: Error loading brands: $e');
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
       rethrow;
     }
@@ -159,21 +216,25 @@ class DataProvider extends ChangeNotifier {
 
   Future<void> getAllProduct({bool showSnack = false}) async {
     try {
-      log("getAllProducts1");
       Response response = await service.getItems(endpointUrl: 'products');
-      
+
       ApiResponse<List<Product>> apiResponse =
           ApiResponse<List<Product>>.fromJson(
-        response.body,
-        (json) => (json as List).map((item) => Product.fromJson(item)).toList(),
-      );
+            response.body,
+            (json) =>
+                (json as List).map((item) => Product.fromJson(item)).toList(),
+          );
       _allProducts = apiResponse.data ?? [];
-      _filteredProducts =
-          List.from(_allProducts); // Initialize with original data
+      _filteredProducts = List.from(
+        _allProducts,
+      ); // Initialize with original data
       notifyListeners();
       if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+      log('DataProvider: Products loaded: ${_allProducts.length}');
     } catch (e) {
+      log('DataProvider: Error loading products: $e');
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
+      rethrow;
     }
   }
 
@@ -184,15 +245,18 @@ class DataProvider extends ChangeNotifier {
       final lowerKeyword = keyword.toLowerCase();
 
       _filteredProducts = _allProducts.where((product) {
-        final productNameContainsKeyword =
-            (product.name ?? '').toLowerCase().contains(lowerKeyword);
-        final categoryNameContainsKeyword = product.proSubCategoryId?.name
-                ?.toLowerCase()
-                .contains(lowerKeyword) ??
+        final productNameContainsKeyword = (product.name ?? '')
+            .toLowerCase()
+            .contains(lowerKeyword);
+        final categoryNameContainsKeyword =
+            product.proSubCategoryId?.name?.toLowerCase().contains(
+              lowerKeyword,
+            ) ??
             false;
-        final subCategoryNameContainsKeyword = product.proSubCategoryId?.name
-                ?.toLowerCase()
-                .contains(lowerKeyword) ??
+        final subCategoryNameContainsKeyword =
+            product.proSubCategoryId?.name?.toLowerCase().contains(
+              lowerKeyword,
+            ) ??
             false;
 
         //? You can add more conditions here if there are more fields to match against
@@ -210,16 +274,18 @@ class DataProvider extends ChangeNotifier {
       if (response.isOk) {
         ApiResponse<List<Poster>> apiResponse =
             ApiResponse<List<Poster>>.fromJson(
-          response.body,
-          (json) =>
-              (json as List).map((item) => Poster.fromJson(item)).toList(),
-        );
+              response.body,
+              (json) =>
+                  (json as List).map((item) => Poster.fromJson(item)).toList(),
+            );
         _allPosters = apiResponse.data ?? [];
         _filteredPosters = List.from(_allPosters);
         notifyListeners();
         if (showSnack) SnackBarHelper.showSuccessSnackBar(apiResponse.message);
+        log('DataProvider: Posters loaded: ${_allPosters.length}');
       }
     } catch (e) {
+      log('DataProvider: Error loading posters: $e');
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
       rethrow;
     }
@@ -236,7 +302,8 @@ class DataProvider extends ChangeNotifier {
 
     if (finalDiscountedPrice > originalPrice) {
       throw ArgumentError(
-          'Discounted price must not be greater than the original price.');
+        'Discounted price must not be greater than the original price.',
+      );
     }
 
     double discount =
@@ -246,18 +313,24 @@ class DataProvider extends ChangeNotifier {
     return discount;
   }
 
-  Future<List<Order>> getAllOrderByUser(User? user,
-      {bool showSnack = false}) async {
+  Future<List<Order>> getAllOrderByUser(
+    User? user, {
+    bool showSnack = false,
+  }) async {
     try {
+      isOrderLoading = true;
+      notifyListeners();
       String userId = user?.sId ?? '';
-      Response response =
-          await service.getItems(endpointUrl: 'orders/orderByUserId/$userId');
+      Response response = await service.getItems(
+        endpointUrl: 'orders/orderByUserId/$userId',
+      );
       if (response.isOk) {
         ApiResponse<List<Order>> apiResponse =
             ApiResponse<List<Order>>.fromJson(
-          response.body,
-          (json) => (json as List).map((item) => Order.fromJson(item)).toList(),
-        );
+              response.body,
+              (json) =>
+                  (json as List).map((item) => Order.fromJson(item)).toList(),
+            );
         print(apiResponse.message);
         _allOrders = apiResponse.data ?? [];
         _filteredOrders = List.from(_allOrders);
@@ -267,7 +340,71 @@ class DataProvider extends ChangeNotifier {
     } catch (e) {
       if (showSnack) SnackBarHelper.showErrorSnackBar(e.toString());
       rethrow;
+    } finally {
+      isOrderLoading = false;
+      notifyListeners();
     }
     return _filteredOrders;
+  }
+
+  // Setters for filters
+  void setOrderStatusFilter(String? status) {
+    orderStatusFilter = status;
+    notifyListeners();
+  }
+
+  void setDateRangeFilter(DateTimeRange? range) {
+    dateRangeFilter = range;
+    notifyListeners();
+  }
+
+  // Filtered orders getter
+  List<Order> get filteredOrders {
+    List<Order> filtered = List.from(_filteredOrders);
+    if (orderStatusFilter != null && orderStatusFilter!.isNotEmpty) {
+      filtered = filtered
+          .where((order) => order.orderStatus == orderStatusFilter)
+          .toList();
+    }
+    if (dateRangeFilter != null) {
+      filtered = filtered.where((order) {
+        if (order.orderDate == null) return false;
+        final orderDate = DateTime.tryParse(order.orderDate!);
+        if (orderDate == null) return false;
+        return orderDate.isAfter(
+              dateRangeFilter!.start.subtract(const Duration(days: 1)),
+            ) &&
+            orderDate.isBefore(
+              dateRangeFilter!.end.add(const Duration(days: 1)),
+            );
+      }).toList();
+    }
+    return filtered;
+  }
+
+  // Cancel an order by updating its status to 'cancelled'
+  Future<void> cancelOrder(String orderId) async {
+    try {
+      isOrderLoading = true;
+      notifyListeners();
+      final response = await service.updateItem(
+        endpointUrl: 'orders/update',
+        itemId: orderId,
+        itemData: {"orderStatus": "cancelled"},
+        withAuth: true,
+      );
+      if (response.isOk) {
+        SnackBarHelper.showSuccessSnackBar('Order cancelled successfully.');
+        // Refresh orders after cancellation
+        await fetchAllData();
+      } else {
+        SnackBarHelper.showErrorSnackBar('Failed to cancel order.');
+      }
+    } catch (e) {
+      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
+    } finally {
+      isOrderLoading = false;
+      notifyListeners();
+    }
   }
 }
