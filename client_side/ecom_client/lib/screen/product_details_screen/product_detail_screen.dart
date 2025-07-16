@@ -42,6 +42,7 @@ class ProductDetailScreen extends StatelessWidget {
 
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.white,
         extendBodyBehindAppBar: true,
         appBar: AppBar(
           backgroundColor: Colors.transparent,
@@ -59,19 +60,9 @@ class ProductDetailScreen extends StatelessWidget {
               Container(
                 height: height * 0.35,
                 width: width,
-                decoration: BoxDecoration(
-                  color: const Color(0xFFE5E6E8),
-                  // borderRadius: const BorderRadius.only(
-                  //   bottomRight: Radius.circular(200),
-                  //   bottomLeft: Radius.circular(200),
-                  // ),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, 2),
-                      blurRadius: 1,
-                    ),
-                  ],
+                decoration: const BoxDecoration(
+                  color: Color(0xFFE5E6E8),
+                  // No borderRadius, no boxShadow for flat look
                 ),
                 child: CarouselSlider(items: product!.images ?? []),
               ),
@@ -84,10 +75,10 @@ class ProductDetailScreen extends StatelessWidget {
                     //? product name
                     Text(
                       '${product!.name}',
-                      style: Theme.of(context)
-                          .textTheme
-                          .displayMedium
-                          ?.copyWith(fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 10),
 
@@ -102,30 +93,40 @@ class ProductDetailScreen extends StatelessWidget {
                           product!.offerPrice != null
                               ? "\₹${product!.offerPrice}"
                               : "\₹${product!.price}",
-                          style: Theme.of(context)
-                              .textTheme
-                              .displayLarge
-                              ?.copyWith(fontWeight: FontWeight.bold),
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(width: 3),
                         Visibility(
                           visible: product!.offerPrice != product!.price,
                           child: Text(
-                            "\₹₹${product!.price}",
+                            "\₹${product!.price}",
                             style: const TextStyle(
                               decoration: TextDecoration.lineThrough,
                               color: Colors.grey,
                               fontWeight: FontWeight.w500,
+                              fontSize: 15,
                             ),
                           ),
                         ),
-                        const Spacer(),
-                        Text(
-                          product!.quantity != 0
-                              ? "Available stock : ${product!.quantity}"
-                              : "Not available",
-                          style: const TextStyle(fontWeight: FontWeight.w500),
-                        )
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              product!.quantity != 0
+                                  ? "Available stock : ${product!.quantity}"
+                                  : "Not available",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
 
@@ -135,9 +136,10 @@ class ProductDetailScreen extends StatelessWidget {
                         ? Text(
                             'Available ${product!.proVariantTypeId?.type}',
                             style: const TextStyle(
-                                color: Colors.black,
-                                fontWeight: FontWeight.w600,
-                                fontSize: 15),
+                              color: Colors.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
                           )
                         : const SizedBox(),
                     Consumer<ProductDetailProvider>(
@@ -156,9 +158,7 @@ class ProductDetailScreen extends StatelessWidget {
                     //? product description
                     Text(
                       "About",
-                      style: Theme.of(context)
-                          .textTheme
-                          .headlineMedium
+                      style: Theme.of(context).textTheme.headlineMedium
                           ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
@@ -170,9 +170,9 @@ class ProductDetailScreen extends StatelessWidget {
                       child: ElevatedButton(
                         onPressed: product!.quantity != 0
                             ? () {
-                                context
-                                    .read<ProductDetailProvider>()
-                                    .addToCart(product!);
+                                context.read<ProductDetailProvider>().addToCart(
+                                  product!,
+                                );
                               }
                             : null,
                         style: ElevatedButton.styleFrom(
@@ -180,14 +180,22 @@ class ProductDetailScreen extends StatelessWidget {
                               ? Colors.blue
                               : Colors.grey,
                           padding: const EdgeInsets.symmetric(vertical: 16),
+                          elevation: 0, // No shadow
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(
+                              Radius.circular(6),
+                            ), // No radius
+                          ),
                         ),
-                        child: const Text("Add to cart",
-                            style: TextStyle(color: Colors.white)),
+                        child: const Text(
+                          "Add to cart",
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),

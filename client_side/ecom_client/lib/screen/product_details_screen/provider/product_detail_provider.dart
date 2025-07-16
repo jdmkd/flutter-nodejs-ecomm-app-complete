@@ -27,12 +27,13 @@ class ProductDetailProvider extends ChangeNotifier {
 
     flutterCart.addToCart(
       cartModel: CartModel(
-          productId: '${product.sId}',
-          productName: '${product.name}',
-          // productImages: ['${product.images.safeElementAt(0)?.url}'],
-          productImages: [imageUrl],
-          variants: [ProductVariant(price: price ?? 0, color: selectedVariant)],
-          productDetails: '${product.description}'),
+        productId: '${product.sId}',
+        productName: '${product.name}',
+        // productImages: ['${product.images.safeElementAt(0)?.url}'],
+        productImages: [imageUrl],
+        variants: [ProductVariant(price: price ?? 0, color: selectedVariant)],
+        productDetails: '${product.description}',
+      ),
     );
 
     selectedVariant = null;

@@ -12,15 +12,19 @@ class FavoriteScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Explicitly enable system UI overlays
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
 
     // Ensure the status bar is visible
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Adjust color as needed
-      statusBarIconBrightness:
-          Brightness.dark, // Use Brightness.light for light theme
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Adjust color as needed
+        statusBarIconBrightness:
+            Brightness.dark, // Use Brightness.light for light theme
+      ),
+    );
 
     Future.delayed(Duration.zero, () {
       context.favoriteProvider.loadFavoriteItems();
@@ -34,11 +38,18 @@ class FavoriteScreen extends StatelessWidget {
         title: const Text(
           "Favorites",
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
+        child: RefreshIndicator(
+          onRefresh: () async {
+            context.favoriteProvider.loadFavoriteItems();
+          },
           child: Consumer<FavoriteProvider>(
             builder: (context, favoriteProvider, child) {
               if (favoriteProvider.favoriteProduct.isEmpty) {
@@ -49,7 +60,9 @@ class FavoriteScreen extends StatelessWidget {
                 child: ProductGridView(items: favoriteProvider.favoriteProduct),
               );
             },
-          )),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -85,7 +98,10 @@ Widget _buildEmptyFavorites() {
             "You can add an item to your favourites by clicking ♥ icon.",
             textAlign: TextAlign.center,
             style: TextStyle(
-                fontSize: 16, color: Colors.grey, fontWeight: FontWeight.bold),
+              fontSize: 16,
+              color: Colors.grey,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ],
       ),
