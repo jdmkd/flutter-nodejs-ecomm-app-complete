@@ -1,3 +1,5 @@
+import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecom_client/screen/my_order_screen/provider/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
@@ -7,6 +9,7 @@ import '../tracking_screen/tracking_screen.dart';
 import 'invoice_screen.dart';
 import '../../utility/app_color.dart';
 import 'package:intl/intl.dart';
+import '../../../models/address.dart';
 
 class OrderDetailScreen extends StatelessWidget {
   final Order order;
@@ -14,7 +17,41 @@ class OrderDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final shipping = order.shippingAddress;
+    return ChangeNotifierProvider<OrderProvider>(
+      create: (_) => OrderProvider(),
+      child: _OrderDetailScreenContent(order: order),
+    );
+  }
+}
+
+class _OrderDetailScreenContent extends StatefulWidget {
+  final Order order;
+  const _OrderDetailScreenContent({required this.order});
+
+  @override
+  State<_OrderDetailScreenContent> createState() =>
+      _OrderDetailScreenContentState();
+}
+
+class _OrderDetailScreenContentState extends State<_OrderDetailScreenContent> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final orderProvider = Provider.of<OrderProvider>(context, listen: false);
+      orderProvider.fetchAddresses(
+        shippingAddressID: widget.order.shippingAddressID,
+        billingAddressID: widget.order.billingAddressID,
+      );
+
+      print("in initState!!");
+      print("orderProvider :: $orderProvider");
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final order = widget.order;
     final items = order.items ?? [];
     final orderTotal = order.orderTotal;
     final coupon = order.couponCode;
@@ -27,8 +64,8 @@ class OrderDetailScreen extends StatelessWidget {
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Consumer<DataProvider>(
-        builder: (context, dataProvider, child) {
+      body: Consumer2<DataProvider, OrderProvider>(
+        builder: (context, dataProvider, orderProvider, child) {
           return Container(
             color: Colors.grey[100],
             child: ListView(
@@ -165,10 +202,12 @@ class OrderDetailScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 18),
-                // Shipping Address
-                if (shipping != null)
+                // Shipping Address Section
+                if (orderProvider.isLoading)
+                  Center(child: CircularProgressIndicator()),
+                if (!orderProvider.isLoading &&
+                    orderProvider.shippingAddress != null)
                   Container(
-                    // margin: const EdgeInsets.only(bottom: 18),
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -204,14 +243,14 @@ class OrderDetailScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 8),
                           Text(
-                            '${shipping.street ?? ''}, ${shipping.city ?? ''}, ${shipping.state ?? ''}',
+                            '${orderProvider.shippingAddress?.street ?? ''}, ${orderProvider.shippingAddress?.city ?? ''}, ${orderProvider.shippingAddress?.state ?? ''}',
                             style: const TextStyle(fontSize: 15),
                           ),
                           Text(
-                            '${shipping.country ?? ''} - ${shipping.postalCode ?? ''}',
+                            '${orderProvider.shippingAddress?.country ?? ''} - ${orderProvider.shippingAddress?.postalCode ?? ''}',
                             style: const TextStyle(fontSize: 15),
                           ),
-                          if (shipping.phone != null)
+                          if (orderProvider.shippingAddress?.phone != null)
                             Padding(
                               padding: const EdgeInsets.only(top: 4),
                               child: Row(
@@ -223,7 +262,7 @@ class OrderDetailScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 4),
                                   Text(
-                                    shipping.phone!,
+                                    orderProvider.shippingAddress!.phone!,
                                     style: const TextStyle(fontSize: 14),
                                   ),
                                 ],
@@ -233,6 +272,9 @@ class OrderDetailScreen extends StatelessWidget {
                       ),
                     ),
                   ),
+                if (!orderProvider.isLoading &&
+                    orderProvider.shippingAddress == null)
+                  const Text('Shipping address not available.'),
                 const SizedBox(height: 18),
                 // Divider(thickness: 1.2, color: Colors.grey[300]),
                 // Order Items
