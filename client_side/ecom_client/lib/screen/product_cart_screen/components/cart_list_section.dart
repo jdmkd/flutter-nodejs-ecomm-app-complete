@@ -6,10 +6,7 @@ import 'package:flutter_cart/model/cart_model.dart';
 class CartListSection extends StatelessWidget {
   final List<CartModel> cartProducts;
 
-  const CartListSection({
-    super.key,
-    required this.cartProducts,
-  });
+  const CartListSection({super.key, required this.cartProducts});
 
   @override
   Widget build(BuildContext context) {
@@ -83,10 +80,10 @@ class CartListSection extends StatelessWidget {
                       /// Price
                       Text(
                         '₹${cartItem.variants.safeElementAt(0)?.price ?? 0}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
-                          color: Color(0xFFEC6813),
+                          color: Colors.grey[700],
                         ),
                       ),
 
@@ -109,8 +106,9 @@ class CartListSection extends StatelessWidget {
                                   context.cartProvider.updateCart(cartItem, -1),
                             ),
                             Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
                               child: Text(
                                 '${cartItem.quantity}',
                                 style: const TextStyle(

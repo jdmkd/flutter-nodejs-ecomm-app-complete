@@ -9,14 +9,12 @@ class EmptyCart extends StatelessWidget {
       child: Column(
         children: [
           Expanded(
-            child: Center(
-              child: Image.asset('assets/images/empty_cart.png'),
-            ),
+            child: Center(child: Image.asset('assets/images/empty_cart.png')),
           ),
           const Text(
             "Empty cart",
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-          )
+          ),
         ],
       ),
     );

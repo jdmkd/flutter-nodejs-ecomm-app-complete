@@ -9,6 +9,7 @@ import '../../utility/app_color.dart';
 import 'components/buy_now_bottom_sheet.dart';
 import 'components/cart_list_section.dart';
 import 'components/empty_cart.dart';
+import 'checkout_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -16,13 +17,17 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Ensure status bar is visible
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
-        overlays: SystemUiOverlay.values);
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Change color if needed
-      statusBarIconBrightness: Brightness.dark, // Light or dark icons
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent, // Change color if needed
+        statusBarIconBrightness: Brightness.dark, // Light or dark icons
+      ),
+    );
 
     Future.delayed(Duration.zero, () {
       context.cartProvider.getCartItems();
@@ -35,72 +40,98 @@ class CartScreen extends StatelessWidget {
         title: const Text(
           "My Cart",
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: Colors.black),
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
         ),
       ),
-      body: Consumer<CartProvider>(
-        builder: (context, cartProvider, child) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              cartProvider.myCartItems.isEmpty
-                  ? const EmptyCart()
-                  : Consumer<CartProvider>(
-                      builder: (context, cartProvider, child) {
-                        return CartListSection(
-                            cartProducts: cartProvider.myCartItems);
-                      },
-                    ),
+      body: RefreshIndicator(
+        onRefresh: () async {
+          context.cartProvider.getCartItems();
+        },
+        child: Consumer<CartProvider>(
+          builder: (context, cartProvider, child) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                cartProvider.myCartItems.isEmpty
+                    ? const EmptyCart()
+                    : Consumer<CartProvider>(
+                        builder: (context, cartProvider, child) {
+                          return CartListSection(
+                            cartProducts: cartProvider.myCartItems,
+                          );
+                        },
+                      ),
 
-              //? total price section
-              Container(
-                margin: const EdgeInsets.only(bottom: 15),
-                padding: const EdgeInsets.symmetric(horizontal: 30),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total",
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w400),
-                    ),
-                    AnimatedSwitcherWrapper(
-                      child: Text(
-                        "\₹${context.cartProvider.getCartSubTotal()}",
-                        // key: ValueKey<double>(cartProvider.getCartSubTotal()),
-                        style: const TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.black,
+                //? total price section
+                Container(
+                  margin: const EdgeInsets.only(bottom: 15),
+                  padding: const EdgeInsets.symmetric(horizontal: 30),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        "Total",
+                        style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.w400,
                         ),
                       ),
-                    )
-                  ],
-                ),
-              ),
-              //? buy now button
-              SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding:
-                      const EdgeInsets.only(left: 30, right: 30, bottom: 20),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.blue,
-                        padding: const EdgeInsets.all(20)),
-                    onPressed: context.cartProvider.myCartItems.isEmpty
-                        ? null
-                        : () {
-                            showCustomBottomSheet(context);
-                          },
-                    child: const Text("Buy Now",
-                        style: TextStyle(color: Colors.white, fontSize: 18)),
+                      AnimatedSwitcherWrapper(
+                        child: Text(
+                          "\₹${context.cartProvider.getCartSubTotal()}",
+                          // key: ValueKey<double>(cartProvider.getCartSubTotal()),
+                          style: const TextStyle(
+                            fontSize: 25,
+                            fontWeight: FontWeight.w900,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-              )
-            ],
-          );
-        },
+                //? checkout button
+                SizedBox(
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 20,
+                    ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.blueAccent[400],
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 15,
+                          horizontal: 5,
+                        ),
+                      ),
+                      onPressed: context.cartProvider.myCartItems.isEmpty
+                          ? null
+                          : () {
+                              // Navigate to the new checkout screen
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const CheckoutScreen(),
+                                ),
+                              );
+                            },
+                      child: const Text(
+                        "Proceed to Checkout",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
