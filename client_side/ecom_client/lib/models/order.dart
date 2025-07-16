@@ -1,4 +1,6 @@
 class Order {
+  String? shippingAddressID;
+  String? billingAddressID;
   ShippingAddress? shippingAddress;
   OrderTotal? orderTotal;
   String? sId;
@@ -12,21 +14,26 @@ class Order {
   String? orderDate;
   int? iV;
 
-  Order(
-      {this.shippingAddress,
-      this.orderTotal,
-      this.sId,
-      this.userID,
-      this.orderStatus,
-      this.items,
-      this.totalPrice,
-      this.paymentMethod,
-      this.couponCode,
-      this.trackingUrl,
-      this.orderDate,
-      this.iV});
+  Order({
+    this.shippingAddressID,
+    this.billingAddressID,
+    this.shippingAddress,
+    this.orderTotal,
+    this.sId,
+    this.userID,
+    this.orderStatus,
+    this.items,
+    this.totalPrice,
+    this.paymentMethod,
+    this.couponCode,
+    this.trackingUrl,
+    this.orderDate,
+    this.iV,
+  });
 
   Order.fromJson(Map<String, dynamic> json) {
+    shippingAddressID = json['shippingAddressID'];
+    billingAddressID = json['billingAddressID'];
     shippingAddress = json['shippingAddress'] != null
         ? new ShippingAddress.fromJson(json['shippingAddress'])
         : null;
@@ -34,8 +41,9 @@ class Order {
         ? new OrderTotal.fromJson(json['orderTotal'])
         : null;
     sId = json['_id'];
-    userID =
-        json['userID'] != null ? new UserID.fromJson(json['userID']) : null;
+    userID = json['userID'] != null
+        ? new UserID.fromJson(json['userID'])
+        : null;
     orderStatus = json['orderStatus'];
     if (json['items'] != null) {
       items = <Items>[];
@@ -56,6 +64,8 @@ class Order {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['shippingAddressID'] = this.shippingAddressID;
+    data['billingAddressID'] = this.billingAddressID;
     if (this.shippingAddress != null) {
       data['shippingAddress'] = this.shippingAddress!.toJson();
     }
@@ -90,13 +100,14 @@ class ShippingAddress {
   String? postalCode;
   String? country;
 
-  ShippingAddress(
-      {this.phone,
-      this.street,
-      this.city,
-      this.state,
-      this.postalCode,
-      this.country});
+  ShippingAddress({
+    this.phone,
+    this.street,
+    this.city,
+    this.state,
+    this.postalCode,
+    this.country,
+  });
 
   ShippingAddress.fromJson(Map<String, dynamic> json) {
     phone = json['phone'];
@@ -168,13 +179,14 @@ class Items {
   String? variant;
   String? sId;
 
-  Items(
-      {this.productID,
-      this.productName,
-      this.quantity,
-      this.price,
-      this.variant,
-      this.sId});
+  Items({
+    this.productID,
+    this.productName,
+    this.quantity,
+    this.price,
+    this.variant,
+    this.sId,
+  });
 
   Items.fromJson(Map<String, dynamic> json) {
     productID = json['productID'];
@@ -203,8 +215,12 @@ class CouponCode {
   String? discountType;
   int? discountAmount;
 
-  CouponCode(
-      {this.sId, this.couponCode, this.discountType, this.discountAmount});
+  CouponCode({
+    this.sId,
+    this.couponCode,
+    this.discountType,
+    this.discountAmount,
+  });
 
   CouponCode.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
