@@ -16,6 +16,7 @@ import 'screen/product_cart_screen/provider/cart_provider.dart';
 import 'screen/product_details_screen/provider/product_detail_provider.dart';
 import 'screen/product_favorite_screen/provider/favorite_provider.dart';
 import 'screen/profile_screen/provider/profile_provider.dart';
+import 'screen/address_screen/provider/address_provider.dart';
 import 'utility/app_theme.dart';
 import 'utility/extensions.dart';
 import 'package:flutter_cart/cart.dart';
@@ -25,15 +26,24 @@ import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'dart:ui' show PointerDeviceKind;
 import 'package:provider/provider.dart';
 import 'core/data/data_provider.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'utility/snack_bar_helper.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: ".env");
+
+  // Load environment variables with error handling
+  try {
+    await dotenv.load(fileName: ".env");
+  } catch (e) {
+    log("Warning: Could not load .env file: $e");
+    log("Using default configuration");
+  }
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // optional
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
+      statusBarColor: Colors.white,
       statusBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light,
     ),
@@ -51,7 +61,7 @@ Future<void> main() async {
 
   log("AppConfig.baseUrl ==> ${AppConfig.baseUrl}");
 
-// enable Device Preview Mode
+  // enable Device Preview Mode
   const bool enablePreviewMode = false;
 
   runApp(
@@ -59,21 +69,30 @@ Future<void> main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => DataProvider()),
         ChangeNotifierProvider(
-            create: (context) => UserProvider(context.dataProvider)),
+          create: (context) => UserProvider(context.dataProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) => ProfileProvider(context.dataProvider)),
+          create: (context) => ProfileProvider(context.dataProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) =>
-                ProductByCategoryProvider(context.dataProvider)),
+          create: (context) => ProductByCategoryProvider(context.dataProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) =>
-                ProductBySubCategoryProvider(context.dataProvider)),
+          create: (context) =>
+              ProductBySubCategoryProvider(context.dataProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) => ProductDetailProvider(context.dataProvider)),
+          create: (context) => ProductDetailProvider(context.dataProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) => CartProvider(context.userProvider)),
+          create: (context) => CartProvider(context.userProvider),
+        ),
         ChangeNotifierProvider(
-            create: (context) => FavoriteProvider(context.dataProvider)),
+          create: (context) => FavoriteProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => AddressProvider(context.userProvider),
+        ),
       ],
       // child: const MyApp(),
       child: kReleaseMode || !enablePreviewMode
@@ -83,8 +102,26 @@ Future<void> main() async {
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MyApp extends StatefulWidget {
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    _checkInternet();
+  }
+
+  Future<void> _checkInternet() async {
+    final connectivityResult = await Connectivity().checkConnectivity();
+    if (connectivityResult == ConnectivityResult.none) {
+      SnackBarHelper.showErrorSnackBar(
+        'No internet connection. Please check your network.',
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,22 +130,16 @@ class MyApp extends StatelessWidget {
     return GetMaterialApp(
       useInheritedMediaQuery: true,
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightAppTheme,
+      theme: ThemeData(
+        primarySwatch: Colors.amber,
+        scaffoldBackgroundColor: Colors.white, // Ensures white background
+        canvasColor: Colors.white, // Ensures all surfaces are white
+      ),
+      themeMode: ThemeMode.system,
       scrollBehavior: const MaterialScrollBehavior().copyWith(
         dragDevices: {PointerDeviceKind.mouse, PointerDeviceKind.touch},
       ),
       home: user?.sId == null ? LoginScreen() : const HomeScreen(),
     );
-  }
-}
-
-class MyAppContent extends StatelessWidget {
-  const MyAppContent({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final user = context.userProvider.getLoginUsr();
-
-    return user?.sId == null ? LoginScreen() : const HomeScreen();
   }
 }
