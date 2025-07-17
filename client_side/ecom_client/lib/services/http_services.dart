@@ -103,9 +103,22 @@ class HttpService {
   Future<Response> deleteItem({
     required String endpointUrl,
     required String itemId,
+    bool withAuth = false,
   }) async {
     try {
-      return await GetConnect().delete('$baseUrl/$endpointUrl/$itemId');
+      final headers = <String, String>{'Content-Type': 'application/json'};
+
+      if (withAuth) {
+        final box = GetStorage();
+        final token = box.read('auth_token');
+        if (token != null) {
+          headers['Authorization'] = 'Bearer $token';
+        }
+      }
+      return await GetConnect().delete(
+        '$baseUrl/$endpointUrl/$itemId',
+        headers: headers,
+      );
     } catch (e) {
       log('HttpService: Error in deleteItem: $e');
       return Response(

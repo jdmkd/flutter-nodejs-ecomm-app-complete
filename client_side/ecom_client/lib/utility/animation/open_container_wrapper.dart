@@ -14,14 +14,22 @@ class OpenContainerWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OpenContainer(
-      transitionDuration: const Duration(milliseconds: 850),
+      transitionDuration: const Duration(milliseconds: 650),
+      transitionType: ContainerTransitionType.fadeThrough,
       openColor: Colors.white,
       closedColor: Colors.white,
-      closedElevation: 0,
+      closedElevation: 6,
+      openElevation: 6,
       closedShape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(6),
         side: BorderSide.none,
       ),
+      openShape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(6),
+        side: BorderSide.none,
+      ),
+      clipBehavior: Clip.antiAlias,
+
       closedBuilder: (_, VoidCallback openContainer) {
         return InkWell(onTap: openContainer, child: child);
       },
