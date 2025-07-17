@@ -25,14 +25,15 @@ class AddressCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 1,
+      elevation: 6, // Increased elevation for more prominent shadow
       color: Colors.white,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16), // Slightly more rounded
         side: isSelectionMode
             ? BorderSide(color: AppColor.darkOrange.withOpacity(0.3), width: 1)
             : BorderSide.none,
       ),
+      shadowColor: Colors.black.withOpacity(0.9), // Subtle shadow color
       child: InkWell(
         onTap: isSelectionMode ? onSelect : null,
         borderRadius: BorderRadius.circular(12),
@@ -151,13 +152,18 @@ class AddressCard extends StatelessWidget {
                   children: [
                     if (onEdit != null)
                       Expanded(
-                        child: OutlinedButton.icon(
+                        child: ElevatedButton.icon(
                           onPressed: onEdit,
                           icon: const Icon(Icons.edit, size: 16),
                           label: const Text('Edit'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColor.darkOrange,
-                            side: BorderSide(color: AppColor.darkOrange),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.blue,
+                            foregroundColor: Colors.white,
+                            elevation: 2,
+                            shadowColor: Colors.blue.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 8),
                           ),
                         ),
@@ -166,13 +172,18 @@ class AddressCard extends StatelessWidget {
                       const SizedBox(width: 8),
                     if (onDelete != null)
                       Expanded(
-                        child: OutlinedButton.icon(
+                        child: ElevatedButton.icon(
                           onPressed: onDelete,
                           icon: const Icon(Icons.delete, size: 16),
                           label: const Text('Delete'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.red,
-                            side: const BorderSide(color: Colors.red),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            foregroundColor: Colors.white,
+                            elevation: 2,
+                            shadowColor: Colors.red.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 8),
                           ),
                         ),
@@ -181,13 +192,18 @@ class AddressCard extends StatelessWidget {
                       if (onEdit != null || onDelete != null)
                         const SizedBox(width: 8),
                       Expanded(
-                        child: OutlinedButton.icon(
+                        child: ElevatedButton.icon(
                           onPressed: onSetDefault,
                           icon: const Icon(Icons.star_border, size: 16),
                           label: const Text('Set Default'),
-                          style: OutlinedButton.styleFrom(
-                            foregroundColor: Colors.amber[700],
-                            side: BorderSide(color: Colors.amber[700]!),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColor.darkOrange,
+                            foregroundColor: Colors.white,
+                            elevation: 2,
+                            shadowColor: AppColor.darkOrange.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                             padding: const EdgeInsets.symmetric(vertical: 8),
                           ),
                         ),

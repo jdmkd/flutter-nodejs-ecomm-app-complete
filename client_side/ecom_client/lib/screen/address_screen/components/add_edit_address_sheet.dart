@@ -106,8 +106,9 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
               color: Colors.white,
-              borderRadius:
-                  const BorderRadius.vertical(top: Radius.circular(20)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(20),
+              ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.grey.withOpacity(0.1),
@@ -177,9 +178,7 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
                       hint: 'Enter your phone number',
                       icon: Icons.phone_outlined,
                       keyboardType: TextInputType.phone,
-                      inputFormatters: [
-                        FilteringTextInputFormatter.digitsOnly,
-                      ],
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
                           return 'Please enter your phone number';
@@ -310,7 +309,7 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
                               _isDefault = value;
                             });
                           },
-                          activeColor: AppColor.darkOrange,
+                          activeColor: Colors.blueAccent,
                           contentPadding: EdgeInsets.zero,
                         );
                       },
@@ -324,18 +323,20 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
                       child: Consumer<AddressProvider>(
                         builder: (context, addressProvider, child) {
                           return ElevatedButton(
-                            onPressed: addressProvider.isAdding ||
+                            onPressed:
+                                addressProvider.isAdding ||
                                     addressProvider.isUpdating
                                 ? null
                                 : _saveAddress,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColor.darkOrange,
+                              backgroundColor: Colors.green,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: addressProvider.isAdding ||
+                            child:
+                                addressProvider.isAdding ||
                                     addressProvider.isUpdating
                                 ? const SizedBox(
                                     height: 20,
@@ -343,7 +344,8 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.white),
+                                        Colors.white,
+                                      ),
                                     ),
                                   )
                                 : Text(
@@ -401,20 +403,17 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
               margin: const EdgeInsets.only(right: 12),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               decoration: BoxDecoration(
-                color: isSelected ? AppColor.darkOrange : Colors.grey[100],
+                color: isSelected ? Colors.green : Colors.grey[100],
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: isSelected ? AppColor.darkOrange : Colors.grey[300]!,
+                  color: isSelected ? Colors.green : Colors.grey[300]!,
                   width: 1,
                 ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(
-                    type['icon'],
-                    style: const TextStyle(fontSize: 20),
-                  ),
+                  Text(type['icon'], style: const TextStyle(fontSize: 20)),
                   const SizedBox(width: 8),
                   Text(
                     type['label'],
@@ -461,7 +460,7 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: AppColor.darkOrange, width: 2),
+          borderSide: BorderSide(color: Colors.green, width: 2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
@@ -473,8 +472,10 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
         ),
         filled: true,
         fillColor: Colors.grey[50],
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 16,
+          vertical: 12,
+        ),
       ),
     );
   }
@@ -484,8 +485,10 @@ class _AddEditAddressSheetState extends State<AddEditAddressSheet> {
       return;
     }
 
-    final addressProvider =
-        Provider.of<AddressProvider>(context, listen: false);
+    final addressProvider = Provider.of<AddressProvider>(
+      context,
+      listen: false,
+    );
 
     final address = Address(
       sId: widget.address?.sId,

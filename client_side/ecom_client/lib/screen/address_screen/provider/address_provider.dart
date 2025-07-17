@@ -34,18 +34,14 @@ class AddressProvider extends ChangeNotifier {
       _isLoading = true;
       notifyListeners();
       final UserID = _userProvider.getLoginUsr()?.sId ?? '';
-      print('AddressProvider: Fetching user addresses...');
+
       final response = await service.getItems(
         endpointUrl: 'address/getAllAddressByUserID/$UserID',
         withAuth: true,
       );
-      print("response  : ${response}");
-      print("response.header ${response.headers}");
-      print("response.doby ${response.body}");
-      print("response.request ${response.request}");
-      print("response.bodyString ${response.bodyString}");
+
       if (response.isOk) {
-        print("response.isOk ${response.isOk}");
+        
         ApiResponse<List<Address>> apiResponse =
             ApiResponse<List<Address>>.fromJson(
               response.body,
@@ -58,11 +54,6 @@ class AddressProvider extends ChangeNotifier {
         _defaultAddress = _addresses
             .where((addr) => addr.isDefault == true)
             .firstOrNull;
-
-        print('AddressProvider: Fetched ${_addresses.length} addresses');
-        print(
-          'AddressProvider: Default address: ${_defaultAddress?.displayName}',
-        );
 
         notifyListeners();
       } else {
@@ -83,7 +74,6 @@ class AddressProvider extends ChangeNotifier {
   // Get default address
   Future<void> getDefaultAddress() async {
     try {
-      print('AddressProvider: Fetching default address...');
       final response = await service.getItems(
         endpointUrl: 'address/default',
         withAuth: true,
@@ -96,9 +86,6 @@ class AddressProvider extends ChangeNotifier {
         );
 
         _defaultAddress = apiResponse.data;
-        print(
-          'AddressProvider: Default address fetched: ${_defaultAddress?.displayName}',
-        );
         notifyListeners();
       } else {
         print('AddressProvider: No default address found');
@@ -115,7 +102,6 @@ class AddressProvider extends ChangeNotifier {
   // Get address by ID
   Future<Address?> getAddressById(String addressId) async {
     try {
-      print('AddressProvider: Fetching address by ID: $addressId');
       final response = await service.getItems(
         endpointUrl: 'address/$addressId',
         withAuth: true,
@@ -127,9 +113,6 @@ class AddressProvider extends ChangeNotifier {
           (json) => Address.fromJsonObject(json),
         );
 
-        print(
-          'AddressProvider: Address fetched: ${apiResponse.data?.displayName}',
-        );
         return apiResponse.data;
       } else {
         print('AddressProvider: Address not found');
@@ -162,7 +145,6 @@ class AddressProvider extends ChangeNotifier {
         'isDefault': address.isDefault ?? false,
       };
 
-      print('AddressProvider: Adding new address...');
       final response = await service.addItem(
         endpointUrl: 'address',
         itemData: addressData,
@@ -188,9 +170,6 @@ class AddressProvider extends ChangeNotifier {
             _defaultAddress = newAddress;
           }
 
-          print(
-            'AddressProvider: Address added successfully: ${newAddress.displayName}',
-          );
           SnackBarHelper.showSuccessSnackBar('Address added successfully');
           notifyListeners();
           return true;
@@ -232,7 +211,6 @@ class AddressProvider extends ChangeNotifier {
         'isDefault': address.isDefault ?? false,
       };
 
-      print('AddressProvider: Updating address: ${address.sId}');
       final response = await service.updateItem(
         endpointUrl: 'address',
         itemId: address.sId!,
@@ -265,9 +243,6 @@ class AddressProvider extends ChangeNotifier {
             }
           }
 
-          print(
-            'AddressProvider: Address updated successfully: ${updatedAddress.displayName}',
-          );
           SnackBarHelper.showSuccessSnackBar('Address updated successfully');
           notifyListeners();
           return true;
@@ -294,7 +269,6 @@ class AddressProvider extends ChangeNotifier {
       _isDeleting = true;
       notifyListeners();
 
-      print('AddressProvider: Deleting address: $addressId');
       final response = await service.deleteItem(
         endpointUrl: 'address',
         itemId: addressId,
@@ -308,7 +282,6 @@ class AddressProvider extends ChangeNotifier {
           _defaultAddress = _addresses.isNotEmpty ? _addresses.first : null;
         }
 
-        print('AddressProvider: Address deleted successfully');
         SnackBarHelper.showSuccessSnackBar('Address deleted successfully');
         notifyListeners();
         return true;
@@ -331,8 +304,6 @@ class AddressProvider extends ChangeNotifier {
   // Set address as default
   Future<bool> setDefaultAddress(String addressId) async {
     try {
-      print('AddressProvider: Setting address as default: $addressId');
-      print("setDefaultAddress called in flutter!!!");
       // Prepare address data
       final addressData = {
         'userID': _userProvider.getLoginUsr()?.sId ?? '',
@@ -345,8 +316,6 @@ class AddressProvider extends ChangeNotifier {
         itemData: addressData,
         withAuth: true,
       );
-      print("response.body :: ${response.body}");
-      print("response.headers :: ${response.headers}");
 
       if (response.isOk) {
         // Update local state
@@ -357,7 +326,6 @@ class AddressProvider extends ChangeNotifier {
             .where((addr) => addr.sId == addressId)
             .firstOrNull;
 
-        print('AddressProvider: Default address set successfully');
         SnackBarHelper.showSuccessSnackBar('Default address updated');
         notifyListeners();
         return true;

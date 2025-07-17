@@ -24,10 +24,17 @@ class AddressManagementScreen extends StatefulWidget {
       _AddressManagementScreenState();
 }
 
-class _AddressManagementScreenState extends State<AddressManagementScreen> {
+class _AddressManagementScreenState extends State<AddressManagementScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
   @override
   void initState() {
     super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 1),
+    )..repeat();
     // Load addresses when screen initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final addressProvider = Provider.of<AddressProvider>(
@@ -36,6 +43,12 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
       );
       addressProvider.getUserAddresses();
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
@@ -66,112 +79,151 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
       ),
       body: Consumer<AddressProvider>(
         builder: (context, addressProvider, child) {
-          if (addressProvider.isLoading) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      AppColor.darkOrange,
-                    ),
-                  ),
-                  SizedBox(height: 16),
-                  Text(
-                    'Loading addresses...',
-                    style: TextStyle(fontSize: 16, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          if (addressProvider.addresses.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          return RefreshIndicator(
-            onRefresh: () async {
-              await addressProvider.refreshAddresses();
-            },
-            child: SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Default Address Section
-                  if (addressProvider.defaultAddress != null) ...[
-                    _buildSectionHeader(
-                      'Default Address',
-                      Icons.star,
-                      Colors.amber,
-                    ),
-                    const SizedBox(height: 12),
-                    AddressCard(
-                      address: addressProvider.defaultAddress!,
-                      isDefault: true,
-                      isSelectionMode: widget.isSelectionMode,
-                      onEdit: () => _showEditAddressSheet(
-                        addressProvider.defaultAddress!,
-                      ),
-                      onDelete: () => _showDeleteConfirmation(
-                        addressProvider.defaultAddress!,
-                      ),
-                      onSetDefault: null, // Already default
-                      onSelect: widget.isSelectionMode
-                          ? () {
-                              widget.onAddressSelected?.call(
-                                addressProvider.defaultAddress!,
-                              );
-                              Navigator.pop(
-                                context,
-                                addressProvider.defaultAddress!,
-                              );
-                            }
-                          : null,
-                    ),
-                    const SizedBox(height: 24),
-                  ],
-
-                  // Other Addresses Section
-                  if (addressProvider.addresses
-                      .where((addr) => addr.isDefault != true)
-                      .isNotEmpty) ...[
-                    _buildSectionHeader(
-                      'Other Addresses',
-                      Icons.location_on,
-                      Colors.blue,
-                    ),
-                    const SizedBox(height: 12),
-                    ...addressProvider.addresses
-                        .where((addr) => addr.isDefault != true)
-                        .map(
-                          (address) => Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: AddressCard(
-                              address: address,
-                              isDefault: false,
-                              isSelectionMode: widget.isSelectionMode,
-                              onEdit: () => _showEditAddressSheet(address),
-                              onDelete: () => _showDeleteConfirmation(address),
-                              onSetDefault: () => _setAsDefault(address),
-                              onSelect: widget.isSelectionMode
-                                  ? () {
-                                      widget.onAddressSelected?.call(address);
-                                      Navigator.pop(context, address);
-                                    }
-                                  : null,
-                            ),
+          return Column(
+            children: [
+              if (addressProvider.isLoading)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: SizedBox(
+                    width: double.infinity,
+                    height: 6,
+                    child: AnimatedBuilder(
+                      animation: _controller,
+                      builder: (context, child) {
+                        return Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(4),
+                            boxShadow: [
+                              BoxShadow(
+                                color: const Color(
+                                  0xFFEC6813,
+                                ).withOpacity(0.25),
+                                blurRadius: 12,
+                                offset: const Offset(0, 4),
+                              ),
+                            ],
                           ),
-                        )
-                        .toList(),
-                  ],
-
-                  const SizedBox(height: 100), // Bottom padding for FAB
-                ],
+                          child: LinearProgressIndicator(
+                            value: (_controller.value + 0.2) % 1.0,
+                            color: const Color(0xFFEC6813),
+                            backgroundColor: const Color(
+                              0xFFEC6813,
+                            ).withOpacity(0.15),
+                            minHeight: 6,
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: addressProvider.isLoading
+                    ? SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.blueAccent,
+                          ),
+                        ),
+                      )
+                    : addressProvider.addresses.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: () async {
+                          await addressProvider.refreshAddresses();
+                        },
+                        child: SingleChildScrollView(
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Default Address Section
+                              if (addressProvider.defaultAddress != null) ...[
+                                _buildSectionHeader(
+                                  'Default Address',
+                                  Icons.star,
+                                  Colors.amber,
+                                ),
+                                const SizedBox(height: 12),
+                                AddressCard(
+                                  address: addressProvider.defaultAddress!,
+                                  isDefault: true,
+                                  isSelectionMode: widget.isSelectionMode,
+                                  onEdit: () => _showEditAddressSheet(
+                                    addressProvider.defaultAddress!,
+                                  ),
+                                  onDelete: () => _showDeleteConfirmation(
+                                    addressProvider.defaultAddress!,
+                                  ),
+                                  onSetDefault: null, // Already default
+                                  onSelect: widget.isSelectionMode
+                                      ? () {
+                                          widget.onAddressSelected?.call(
+                                            addressProvider.defaultAddress!,
+                                          );
+                                          Navigator.pop(
+                                            context,
+                                            addressProvider.defaultAddress!,
+                                          );
+                                        }
+                                      : null,
+                                ),
+                                const SizedBox(height: 24),
+                              ],
+                              // Other Addresses Section
+                              if (addressProvider.addresses
+                                  .where((addr) => addr.isDefault != true)
+                                  .isNotEmpty) ...[
+                                _buildSectionHeader(
+                                  'Other Addresses',
+                                  Icons.location_on,
+                                  Colors.blue,
+                                ),
+                                const SizedBox(height: 12),
+                                ...addressProvider.addresses
+                                    .where((addr) => addr.isDefault != true)
+                                    .map(
+                                      (address) => Padding(
+                                        padding: const EdgeInsets.only(
+                                          bottom: 12,
+                                        ),
+                                        child: AddressCard(
+                                          address: address,
+                                          isDefault: false,
+                                          isSelectionMode:
+                                              widget.isSelectionMode,
+                                          onEdit: () =>
+                                              _showEditAddressSheet(address),
+                                          onDelete: () =>
+                                              _showDeleteConfirmation(address),
+                                          onSetDefault: () =>
+                                              _setAsDefault(address),
+                                          onSelect: widget.isSelectionMode
+                                              ? () {
+                                                  widget.onAddressSelected
+                                                      ?.call(address);
+                                                  Navigator.pop(
+                                                    context,
+                                                    address,
+                                                  );
+                                                }
+                                              : null,
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ],
+                              const SizedBox(
+                                height: 100,
+                              ), // Bottom padding for FAB
+                            ],
+                          ),
+                        ),
+                      ),
               ),
-            ),
+            ],
           );
         },
       ),
@@ -179,7 +231,7 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
           ? null
           : FloatingActionButton.extended(
               onPressed: () => _showAddAddressSheet(),
-              backgroundColor: Colors.blue,
+              backgroundColor: Colors.green,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.add),
               label: const Text('Add Address'),
@@ -213,7 +265,7 @@ class _AddressManagementScreenState extends State<AddressManagementScreen> {
             icon: const Icon(Icons.add),
             label: const Text('Add Address'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColor.darkOrange,
+              backgroundColor: Colors.green,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
