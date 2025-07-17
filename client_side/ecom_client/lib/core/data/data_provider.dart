@@ -381,30 +381,4 @@ class DataProvider extends ChangeNotifier {
     }
     return filtered;
   }
-
-  // Cancel an order by updating its status to 'cancelled'
-  Future<void> cancelOrder(String orderId) async {
-    try {
-      isOrderLoading = true;
-      notifyListeners();
-      final response = await service.updateItem(
-        endpointUrl: 'orders/update',
-        itemId: orderId,
-        itemData: {"orderStatus": "cancelled"},
-        withAuth: true,
-      );
-      if (response.isOk) {
-        SnackBarHelper.showSuccessSnackBar('Order cancelled successfully.');
-        // Refresh orders after cancellation
-        await fetchAllData();
-      } else {
-        SnackBarHelper.showErrorSnackBar('Failed to cancel order.');
-      }
-    } catch (e) {
-      SnackBarHelper.showErrorSnackBar('An error occurred: $e');
-    } finally {
-      isOrderLoading = false;
-      notifyListeners();
-    }
-  }
 }

@@ -9,6 +9,7 @@ import 'package:ecom_client/screen/product_by_subcategory_screen/provider/produc
 import 'package:ecom_client/utility/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:media_store_plus/media_store_plus.dart';
 import 'screen/home_screen.dart';
 import 'screen/auth_screen/login_screen/provider/user_provider.dart';
 import 'screen/product_by_category_screen/provider/product_by_category_provider.dart';
@@ -35,9 +36,11 @@ Future<void> main() async {
   // Load environment variables with error handling
   try {
     await dotenv.load(fileName: ".env");
+    await MediaStore.ensureInitialized();
+    MediaStore.appFolder = 'Invoices';
   } catch (e) {
     log("Warning: Could not load .env file: $e");
-    log("Using default configuration");
+    log("Warning: MediaStore.ensureInitialized()");
   }
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge); // optional
@@ -96,8 +99,8 @@ Future<void> main() async {
       ],
       // child: const MyApp(),
       child: kReleaseMode || !enablePreviewMode
-          ? const MyApp()
-          : const FramePreviewWrapper(child: MyApp()),
+          ? MyApp()
+          : FramePreviewWrapper(child: MyApp()),
     ),
   );
 }
