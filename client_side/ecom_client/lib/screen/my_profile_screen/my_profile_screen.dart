@@ -2,8 +2,8 @@ import 'package:ecom_client/models/user.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import '../login_screen/provider/user_provider.dart';
-import '../edit_my_profile_screen/edit_my_profile_screen.dart';
+import '../auth_screen/login_screen/provider/user_provider.dart';
+import 'edit_my_profile_screen/edit_my_profile_screen.dart';
 import 'package:intl/intl.dart';
 
 class MyProfileScreen extends StatefulWidget {

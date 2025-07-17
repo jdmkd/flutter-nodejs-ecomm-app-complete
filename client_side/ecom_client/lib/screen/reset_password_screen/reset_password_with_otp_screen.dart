@@ -1,8 +1,8 @@
 import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/auth_screen/my_profile_screen/my_profile_screen.dart';
-import 'package:ecom_client/screen/auth_screen/reset_password_screen/change_password_screen.dart';
-import 'package:ecom_client/screen/auth_screen/reset_password_screen/reset_password_screen.dart';
+import 'package:ecom_client/screen/my_profile_screen/my_profile_screen.dart';
+import 'package:ecom_client/screen/reset_password_screen/change_password_screen.dart';
+import 'package:ecom_client/screen/reset_password_screen/reset_password_screen.dart';
 import 'package:ecom_client/screen/home_screen.dart';
 import 'package:ecom_client/utility/button.dart';
 import 'package:ecom_client/utility/snack_bar_helper.dart';
