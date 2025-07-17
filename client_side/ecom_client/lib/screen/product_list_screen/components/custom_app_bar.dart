@@ -1,7 +1,7 @@
 import 'package:ecom_client/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import '../../../widget/custom_search_bar.dart';
-import '../../auth_screen/my_profile_screen/my_profile_screen.dart';
+import '../../my_profile_screen/my_profile_screen.dart';
 import '../../profile_screen/profile_screen.dart';
 import './sub_category_selector.dart';
 import '../../../models/sub_category.dart';

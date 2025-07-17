@@ -291,6 +291,8 @@ class _ProductListScreenState extends State<ProductListScreen> {
                                                 ),
                                           ),
                                           const SizedBox(height: 10),
+
+                                          // product cards
                                           ProductGridView(
                                             items: productsToShow,
                                           ),
