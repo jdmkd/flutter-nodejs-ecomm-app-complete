@@ -6,10 +6,7 @@ import '../utility/animation/open_container_wrapper.dart';
 import 'product_grid_tile.dart';
 
 class ProductGridView extends StatelessWidget {
-  const ProductGridView({
-    super.key,
-    required this.items,
-  });
+  const ProductGridView({super.key, required this.items});
 
   final List<Product> items;
 
@@ -19,10 +16,12 @@ class ProductGridView extends StatelessWidget {
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     // Set status bar color and brightness
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Make it transparent or set a color
-      statusBarIconBrightness: Brightness.dark, // Change to light if needed
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Colors.white, // Make it transparent or set a color
+        statusBarIconBrightness: Brightness.dark, // Change to light if needed
+      ),
+    );
     return Padding(
       padding: const EdgeInsets.all(0),
       child: GridView.builder(
@@ -31,8 +30,7 @@ class ProductGridView extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 9 / 15, // Increased height to prevent overflow
-          // childAspectRatio: 0.65, // Better for card + image + text + button
+          childAspectRatio: 9 / 14,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
         ),
@@ -40,13 +38,17 @@ class ProductGridView extends StatelessWidget {
           Product product = items[index];
           return ConstrainedBox(
             constraints: const BoxConstraints(
-                minHeight: 250, maxHeight: 350), // Ensures uniform height
+              minHeight: 250,
+              maxHeight: 350,
+            ), // Ensures uniform height
+
             child: OpenContainerWrapper(
               nextScreen: ProductDetailScreen(product),
               child: ProductGridTile(
                 product: product,
                 index: index,
-                isPriceOff: product.offerPrice != null &&
+                isPriceOff:
+                    product.offerPrice != null &&
                     product.offerPrice != product.price,
               ),
             ),
