@@ -6,97 +6,98 @@
 -keep class io.flutter.** { *; }
 -keep class io.flutter.plugins.** { *; }
 
+# --- Google Play Services ---
+-keep class com.google.android.gms.** { *; }
+-keep class com.google.android.apps.nbu.paisa.** { *; }
+-keep class com.google.android.play.core.** { *; }
+
+# --- Google Play Core Split Install (required for Flutter) ---
+-keep class com.google.android.play.core.splitcompat.** { *; }
+-keep class com.google.android.play.core.splitinstall.** { *; }
+-keep class com.google.android.play.core.tasks.** { *; }
+
+# --- Google Crypto Tink ---
+-keep class com.google.crypto.tink.** { *; }
+
 # --- Stripe SDK ---
 -keep class com.stripe.android.** { *; }
 -keepclassmembers class com.stripe.android.** { *; }
 
-# --- Razorpay SDK - Keep only necessary classes for modern APIs ---
+# --- Razorpay SDK ---
 -keep class com.razorpay.** { *; }
 -keepclassmembers class com.razorpay.** { *; }
-# Keep modern Razorpay interfaces
 -keep interface com.razorpay.** { *; }
 
 # --- OneSignal SDK ---
 -keep class com.onesignal.** { *; }
 -keepclassmembers class com.onesignal.** { *; }
 
-# --- PDF/Printing (pdf, printing) ---
+# --- PDF/Printing ---
 -keep class org.apache.pdfbox.** { *; }
--keep class org.bouncycastle.** { *; }
--keep class org.bouncycastle.jcajce.provider.** { *; }
--keep class org.bouncycastle.jce.provider.** { *; }
 -keep class com.itextpdf.** { *; }
 -keep class com.tom_roush.pdfbox.** { *; }
 
-# --- GetX, Provider, GetStorage, flutter_cart ---
+# --- BouncyCastle (handle conflicts) ---
+-keep class org.bouncycastle.** { *; }
+-keepclassmembers class org.bouncycastle.** { *; }
+-dontwarn org.bouncycastle.**
+
+# --- Flutter Plugins ---
 -keep class io.flutter.plugins.get.** { *; }
 -keep class io.flutter.plugins.getstorage.** { *; }
 -keep class io.flutter.plugins.provider.** { *; }
 -keep class io.flutter.plugins.fluttercart.** { *; }
-
-# --- device_frame_plus (if any native code) ---
 -keep class io.flutter.plugins.deviceframeplus.** { *; }
 
-# --- Custom Model Classes (for serialization/deserialization) ---
+# --- Custom App Classes ---
 -keep class com.example.ecom_client.** { *; }
-
-# --- Annotations (for Razorpay, Stripe, etc.) ---
--keep class proguard.annotation.Keep { *; }
--keep class proguard.annotation.KeepClassMembers { *; }
 
 # --- General Android/Flutter Reflection Support ---
 -keepattributes *Annotation*
 -keepattributes Signature,InnerClasses,EnclosingMethod,SourceFile,LineNumberTable
 
-# --- Keep Gson/JSON Serialization (if used) ---
+# --- JSON Serialization ---
 -keep class com.google.gson.** { *; }
 -keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
 }
 
-# --- Keep Application, Activities, Services, BroadcastReceivers, ContentProviders ---
+# --- Android Components ---
 -keep class * extends android.app.Application { *; }
 -keep class * extends android.app.Activity { *; }
 -keep class * extends android.app.Service { *; }
 -keep class * extends android.content.BroadcastReceiver { *; }
 -keep class * extends android.content.ContentProvider { *; }
 
-# --- Keep all native methods (JNI) ---
+# --- Native Methods ---
 -keepclasseswithmembernames class * {
     native <methods>;
 }
 
-# --- Keep enums (for reflection) ---
+# --- Enums ---
 -keepclassmembers enum * { *; }
 
-# --- Keep all public methods and fields for classes used via reflection (safe for most Flutter plugins) ---
+# --- Public Methods and Fields ---
 -keepclassmembers class * {
     public <methods>;
     public <fields>;
 }
 
-# --- Modern Android configuration for Java 21 compatibility ---
--keepattributes *Annotation*
--keepattributes SourceFile,LineNumberTable
+# --- Exception Classes ---
 -keep public class * extends java.lang.Exception
 
-# --- Keep native methods ---
--keepclasseswithmembernames class * {
-    native <methods>;
-}
-
-# --- Keep enum classes ---
+# --- Enum Classes ---
 -keepclassmembers enum * {
     public static **[] values();
     public static ** valueOf(java.lang.String);
 }
 
-# --- Keep Parcelable classes ---
+# --- Parcelable Classes ---
 -keep class * implements android.os.Parcelable {
     public static final android.os.Parcelable$Creator *;
 }
 
-# --- Keep Serializable classes ---
+# --- Serializable Classes ---
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;
@@ -106,14 +107,37 @@
     java.lang.Object readResolve();
 }
 
-# --- Keep R classes ---
+# --- R Classes ---
 -keep class **.R$* {
     public static <fields>;
 }
 
-# --- Keep WebView ---
+# --- WebView ---
 -keepclassmembers class * {
     @android.webkit.JavascriptInterface <methods>;
 }
 
-# --- End of rules ---
+# --- NimbusDS JOSE ---
+-keep class com.nimbusds.** { *; }
+-keepclassmembers class com.nimbusds.** { *; }
+
+# --- React Native Stripe SDK ---
+-keep class com.reactnativestripesdk.** { *; }
+-keepclassmembers class com.reactnativestripesdk.** { *; }
+
+# --- ProGuard Annotations ---
+-keep @proguard.annotation.Keep class * { *; }
+-keepclassmembers class * {
+    @proguard.annotation.Keep *;
+}
+-keepclassmembers class * {
+    @proguard.annotation.KeepClassMembers *;
+}
+
+# --- Missing Classes Handling ---
+-dontwarn com.google.android.apps.nbu.paisa.**
+-dontwarn com.google.android.play.core.splitcompat.**
+-dontwarn com.google.android.play.core.splitinstall.**
+-dontwarn com.google.android.play.core.tasks.**
+-dontwarn com.stripe.android.pushProvisioning.**
+-dontwarn proguard.annotation.**
