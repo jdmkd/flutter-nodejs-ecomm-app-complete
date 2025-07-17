@@ -9,14 +9,14 @@ const middlewareConfig = (app) => {
   // Enable compression in production
   if (process.env.NODE_ENV === "production") {
     app.use(compression());
-    console.log("✅ Compression enabled");
+    console.log("Compression enabled!!");
   }
 
   // CORS config
   const corsOptions = {
     origin:
       process.env.NODE_ENV === "production"
-        ? "https://your-production-domain.com"
+        ? `${process.env.PRODUCTION_DOMAIN}`
         : "*",
   };
   app.use(cors(corsOptions));
