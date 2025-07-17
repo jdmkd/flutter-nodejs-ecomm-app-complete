@@ -311,10 +311,16 @@ class _MyOrderScreenState extends State<MyOrderScreen>
                                   status: order.orderStatus ?? 'pending',
                                   total: order.totalPrice,
                                   thumbnailUrl: imageUrl,
-                                  onTap: () {
-                                    Get.to(
+                                  onTap: () async {
+                                    final result = await Get.to(
                                       () => OrderDetailScreen(order: order),
                                     );
+                                    if (result == 'order_cancelled') {
+                                      final user = context.userProvider
+                                          .getLoginUsr();
+                                      await context.dataProvider
+                                          .getAllOrderByUser(user);
+                                    }
                                   },
                                 ),
                               ],

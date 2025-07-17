@@ -1,3 +1,5 @@
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:ecom_client/screen/order_screen/pdf_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
@@ -15,8 +17,14 @@ import 'package:permission_handler/permission_handler.dart';
 import 'dart:io';
 import 'provider/order_provider.dart';
 import '../../../models/address.dart';
-import 'package:media_store_plus/media_store_plus.dart';
 import '../../../utility/snack_bar_helper.dart';
+import 'package:flutter/foundation.dart';
+import 'package:media_store_plus/media_store_plus.dart';
+import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:open_file/open_file.dart';
+import 'package:share_plus/share_plus.dart';
 
 class InvoiceScreen extends StatelessWidget {
   final Order order;
@@ -415,6 +423,7 @@ class _InvoiceScreenContent extends StatelessWidget {
                                     SnackBarHelper.showSuccessSnackBar(
                                       'Invoice downloaded to: $filePath',
                                     );
+                                    showInvoiceActions(context, filePath);
                                   } else {
                                     SnackBarHelper.showErrorSnackBar(
                                       'Storage permission denied or failed to save invoice.',
@@ -967,23 +976,96 @@ class _InvoiceScreenContent extends StatelessWidget {
   }
 }
 
+void showInvoiceActions(BuildContext context, String filePath) {
+  showModalBottomSheet(
+    context: context,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+    ),
+    builder: (context) => SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              width: 40,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 16),
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf, color: Colors.indigo),
+              title: const Text('Open in App'),
+              onTap: () async {
+                Navigator.of(context).pop();
+                String? realFilePath = filePath;
+                if (filePath.startsWith('content://')) {
+                  realFilePath = await copyContentUriToFile(
+                    filePath,
+                    'invoice.pdf',
+                  );
+                }
+                if (realFilePath != null) {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => PdfViewerScreen(filePath: realFilePath!),
+                    ),
+                  );
+                } else {
+                  SnackBarHelper.showErrorSnackBar('Failed to open PDF.');
+                }
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.open_in_new, color: Colors.blue),
+              title: const Text('Open with Other App'),
+              onTap: () {
+                Navigator.of(context).pop();
+                OpenFile.open(filePath);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.share, color: Colors.green),
+              title: const Text('Share Invoice'),
+              onTap: () {
+                Navigator.of(context).pop();
+                Share.shareFiles([filePath], text: 'Here is your invoice PDF.');
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.close, color: Colors.red),
+              title: const Text('Close'),
+              onTap: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
+}
+
 Future<String?> savePdfToDownloads(Uint8List pdfBytes, String fileName) async {
   try {
     if (Platform.isAndroid) {
-      // Explicitly request storage permission
-      final status = await Permission.storage.request();
-      if (!status.isGranted) {
-        return null;
-      }
+      final tempDir = await getTemporaryDirectory();
+      final tempFilePath = '${tempDir.path}/$fileName';
+      final tempFile = File(tempFilePath);
+      await tempFile.writeAsBytes(pdfBytes);
+
+      await MediaStore.ensureInitialized();
       final mediaStore = MediaStore();
-      final file = await mediaStore.saveFile(
-        fileName: fileName,
-        bytes: pdfBytes,
+      final saveInfo = await mediaStore.saveFile(
+        tempFilePath: tempFilePath,
         dirType: DirType.download,
+        dirName: DirName.download,
         relativePath: 'Invoices', // Optional subfolder
-        mimeType: 'application/pdf',
       );
-      return file?.path;
+
+      return saveInfo?.uri.toString();
     } else if (Platform.isIOS) {
       final appDir = await getApplicationDocumentsDirectory();
       final filePath = '${appDir.path}/$fileName';
@@ -991,7 +1073,6 @@ Future<String?> savePdfToDownloads(Uint8List pdfBytes, String fileName) async {
       await file.writeAsBytes(pdfBytes);
       return filePath;
     } else {
-      // Other platforms: try downloads, else app documents
       Directory? downloadsDir;
       try {
         downloadsDir = await getDownloadsDirectory();
@@ -1003,6 +1084,26 @@ Future<String?> savePdfToDownloads(Uint8List pdfBytes, String fileName) async {
       return filePath;
     }
   } catch (e) {
+    print('Error saving PDF: $e');
+    return null;
+  }
+}
+
+Future<String?> copyContentUriToFile(String uri, String fileName) async {
+  try {
+    const MethodChannel _channel = MethodChannel('content_uri_file');
+    final tempDir = await getTemporaryDirectory();
+    final tempFilePath = '${tempDir.path}/$fileName';
+    final result = await _channel.invokeMethod('copyContentUriToFile', {
+      'uri': uri,
+      'filePath': tempFilePath,
+    });
+    if (result == true) {
+      return tempFilePath;
+    }
+    return null;
+  } catch (e) {
+    print('Error copying content URI to file: $e');
     return null;
   }
 }

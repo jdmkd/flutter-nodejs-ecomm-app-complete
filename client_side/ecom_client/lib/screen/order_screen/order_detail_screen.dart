@@ -1,5 +1,5 @@
 import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/my_order_screen/provider/order_provider.dart';
+import 'package:ecom_client/screen/order_screen/provider/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
@@ -139,8 +139,12 @@ class _OrderDetailScreenContentState extends State<_OrderDetailScreenContent> {
                               ),
                             );
                             if (confirm == true) {
-                              await dataProvider.cancelOrder(order.sId!);
-                              Navigator.of(context).pop();
+                              await Provider.of<OrderProvider>(
+                                context,
+                                listen: false,
+                              ).cancelOrder(order.sId!);
+                              await _refreshOrderDetails();
+                              Navigator.of(context).pop('order_cancelled');
                             }
                           },
                         ),
@@ -684,6 +688,31 @@ class _OrderDetailScreenContentState extends State<_OrderDetailScreenContent> {
     if (orderDate == null) return false;
     final now = DateTime.now();
     return now.difference(orderDate).inDays < 5;
+  }
+
+  Future<void> _refreshOrderDetails() async {
+    // Direct HTTP call to fetch order by ID
+    final httpService = Provider.of<OrderProvider>(
+      context,
+      listen: false,
+    ).service;
+    final response = await httpService.getItems(
+      endpointUrl: 'orders/${widget.order.sId}',
+      withAuth: true,
+    );
+    if (response.isOk && response.body != null) {
+      final updatedOrder = Order.fromJson(response.body['data']);
+      setState(() {
+        widget.order.orderStatus = updatedOrder.orderStatus;
+        widget.order.items = updatedOrder.items;
+        widget.order.orderTotal = updatedOrder.orderTotal;
+        widget.order.paymentMethod = updatedOrder.paymentMethod;
+        widget.order.couponCode = updatedOrder.couponCode;
+        widget.order.trackingUrl = updatedOrder.trackingUrl;
+        widget.order.orderDate = updatedOrder.orderDate;
+        // Add more fields as needed
+      });
+    }
   }
 }
 
