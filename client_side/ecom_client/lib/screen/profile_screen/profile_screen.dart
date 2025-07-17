@@ -2,10 +2,10 @@ import 'package:ecom_client/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import '../auth_screen/my_profile_screen/my_profile_screen.dart';
+import '../my_profile_screen/my_profile_screen.dart';
 import '../auth_screen/login_screen/login_screen.dart';
 import '../address_screen/address_management_screen.dart';
-import '../my_order_screen/my_order_screen.dart';
+import '../order_screen/my_order_screen.dart';
 import '../../utility/app_color.dart';
 import '../../widget/navigation_tile.dart';
 
