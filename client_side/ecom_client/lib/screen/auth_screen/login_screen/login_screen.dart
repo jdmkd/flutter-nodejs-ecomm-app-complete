@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:ecom_client/screen/auth_screen/login_screen/resend_otp_screen.dart';
-import 'package:ecom_client/screen/auth_screen/reset_password_screen/reset_password_with_otp_screen.dart';
+import 'package:ecom_client/screen/reset_password_screen/reset_password_with_otp_screen.dart';
 import 'package:ecom_client/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
