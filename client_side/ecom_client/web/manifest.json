@@ -1,6 +1,6 @@
 {
-    "name": "ecom_client",
-    "short_name": "ecom_client",
+    "name": "ecotte",
+    "short_name": "ecotte",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
