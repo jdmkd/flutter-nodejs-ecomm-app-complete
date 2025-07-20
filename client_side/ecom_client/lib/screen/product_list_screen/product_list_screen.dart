@@ -50,6 +50,21 @@ class _ProductListScreenState extends State<ProductListScreen> {
   final TextEditingController maxPriceController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    // Ensure data is fetched on first build if not already loaded
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final dataProvider = Provider.of<DataProvider>(context, listen: false);
+      if (!dataProvider.isInitialized ||
+          dataProvider.products.isEmpty ||
+          dataProvider.subCategories.isEmpty ||
+          dataProvider.posters.isEmpty) {
+        await dataProvider.fetchAllData();
+      }
+    });
+  }
+
+  @override
   void dispose() {
     minPriceController.dispose();
     maxPriceController.dispose();
@@ -74,7 +89,7 @@ class _ProductListScreenState extends State<ProductListScreen> {
         ];
         return SafeArea(
           child: Scaffold(
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.grey[50],
             appBar: CustomAppBar(
               subcategories: displaySubCategories,
               selectedSubCategoryIndex: selectedSubCategoryIndex,

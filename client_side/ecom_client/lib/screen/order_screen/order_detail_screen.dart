@@ -1,5 +1,5 @@
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/order_screen/provider/order_provider.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/screen/order_screen/provider/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
@@ -57,8 +57,9 @@ class _OrderDetailScreenContentState extends State<_OrderDetailScreenContent> {
     final coupon = order.couponCode;
     final statusColor = _getStatusColor(order.orderStatus ?? '');
     return Scaffold(
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.grey[50],
       appBar: AppBar(
+        backgroundColor: Colors.grey[200],
         title: const Text(
           'Order Details',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -67,7 +68,7 @@ class _OrderDetailScreenContentState extends State<_OrderDetailScreenContent> {
       body: Consumer2<DataProvider, OrderProvider>(
         builder: (context, dataProvider, orderProvider, child) {
           return Container(
-            color: Colors.grey[100],
+            // color: Colors.grey[50],
             child: ListView(
               padding: const EdgeInsets.all(20),
               children: [

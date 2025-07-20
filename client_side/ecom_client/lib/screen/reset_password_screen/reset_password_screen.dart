@@ -1,12 +1,12 @@
 import 'dart:developer';
 
-import 'package:ecom_client/models/user.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/my_profile_screen/my_profile_screen.dart';
-import 'package:ecom_client/screen/reset_password_screen/reset_password_with_otp_screen.dart';
-import 'package:ecom_client/utility/button.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/models/user.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/screen/my_profile_screen/my_profile_screen.dart';
+import 'package:ecotte/screen/reset_password_screen/reset_password_with_otp_screen.dart';
+import 'package:ecotte/utility/button.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,8 +57,11 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
     setState(() => _isLoading = true);
     log("Resetting password for ==>>>>>> $email");
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final errorMessage =
-        await userProvider.resetPasswordWithOtp(email, widget.otp, newPassword);
+    final errorMessage = await userProvider.resetPasswordWithOtp(
+      email,
+      widget.otp,
+      newPassword,
+    );
 
     setState(() => _isLoading = false);
 
@@ -84,7 +87,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   void _navigateToResendEmailScreen() async {
     Navigator.of(context).push(
       MaterialPageRoute(
-          builder: (context) => const ResetPasswordWithOtpScreen()),
+        builder: (context) => const ResetPasswordWithOtpScreen(),
+      ),
     );
     // Navigator.of(context).pop();
   }
@@ -105,10 +109,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       canPop: false, // prevents back navigation
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
-            'Reset Password',
-            style: TextStyle(color: Colors.white),
-          ),
+          title: Text('Reset Password', style: TextStyle(color: Colors.white)),
           backgroundColor: Colors.blueAccent,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
@@ -165,8 +166,10 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   TextFormField(
                     controller: _newPassController,
                     obscureText: true,
-                    decoration:
-                        _buildInputDecoration('New Password', Icons.lock),
+                    decoration: _buildInputDecoration(
+                      'New Password',
+                      Icons.lock,
+                    ),
                     validator: (value) {
                       if (value!.isEmpty) return 'Enter a new password';
                       if (value.length < 6)
@@ -181,7 +184,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     controller: _confirmPassController,
                     obscureText: true,
                     decoration: _buildInputDecoration(
-                        'Confirm Password', Icons.lock_reset),
+                      'Confirm Password',
+                      Icons.lock_reset,
+                    ),
                     validator: (value) => value != _newPassController.text
                         ? 'Passwords do not match'
                         : null,
@@ -198,7 +203,9 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                       child: Text(
                         "Reset Password",
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                   ),

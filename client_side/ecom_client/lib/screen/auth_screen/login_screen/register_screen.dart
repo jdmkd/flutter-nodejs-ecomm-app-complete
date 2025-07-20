@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'provider/user_provider.dart'; // Ensure correct import
 import 'login_screen.dart'; // Your Login Screen
-// import 'package:ecom_client/screens/otp_verification_screen.dart';
+// import 'package:ecotte/screens/otp_verification_screen.dart';
 import 'otp_verification_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -29,27 +29,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final confirmPassword = _confirmPasswordController.text;
 
     if (password.isEmpty || email.isEmpty || name.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Please fill in all fields!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Please fill in all fields!')));
       return;
     }
 
     if (password != confirmPassword) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Passwords do not match!')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Passwords do not match!')));
       return;
     }
 
     setState(() => _isLoading = true);
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    final errorMessage = await userProvider.register(
-      name,
-      email,
-      password,
-    );
+    final errorMessage = await userProvider.register(name, email, password);
 
     setState(() => _isLoading = false);
 
@@ -59,9 +55,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
         MaterialPageRoute(builder: (context) => OTPVerificationScreen(email)),
       );
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(errorMessage)));
     }
   }
 
@@ -145,14 +141,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
                 SizedBox(height: 15),
                 GestureDetector(
                   onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => LoginScreen())),
+                    MaterialPageRoute(builder: (context) => LoginScreen()),
+                  ),
                   child: RichText(
                     text: TextSpan(
                       text: 'Already have an account? ',
@@ -197,14 +195,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
           suffixIcon: toggleObscure != null
               ? IconButton(
                   icon: Icon(
-                      obscureText ? Icons.visibility_off : Icons.visibility,
-                      color: Colors.grey),
+                    obscureText ? Icons.visibility_off : Icons.visibility,
+                    color: Colors.grey,
+                  ),
                   onPressed: toggleObscure,
                 )
               : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),

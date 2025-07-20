@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:device_frame_plus/device_frame_plus.dart';
-import 'package:ecom_client/screen/home_screen.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
-import 'package:ecom_client/utility/extensions.dart';
+import 'package:ecotte/screen/home_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/utility/extensions.dart';
 import 'package:get/get.dart'; // if not already
 
 class FramePreviewWrapper extends StatefulWidget {
@@ -49,90 +49,98 @@ class _FramePreviewWrapperState extends State<FramePreviewWrapper> {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 color: Colors.grey[200],
-                child: LayoutBuilder(builder: (context, constraints) {
-                  final isSmallScreen = constraints.maxWidth < 600;
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    final isSmallScreen = constraints.maxWidth < 600;
 
-                  return Center(
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
-                      child: Wrap(
-                        alignment: WrapAlignment.start,
-                        crossAxisAlignment: WrapCrossAlignment.center,
-                        spacing: 3,
-                        runSpacing: 5,
-                        children: [
-                          const Text("Platform:"),
-                          // const SizedBox(height: 10),
-                          DropdownButton<String>(
-                            value: selectedPlatform,
-                            onChanged: (newPlatform) {
-                              if (newPlatform == null) return;
-                              setState(() {
-                                selectedPlatform = newPlatform;
-                                selectedDevice = deviceMap[newPlatform]!.first;
-                              });
-                            },
-                            items: deviceMap.keys
-                                .map((platform) => DropdownMenuItem(
+                    return Center(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 30, 0, 0),
+                        child: Wrap(
+                          alignment: WrapAlignment.start,
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          spacing: 3,
+                          runSpacing: 5,
+                          children: [
+                            const Text("Platform:"),
+                            // const SizedBox(height: 10),
+                            DropdownButton<String>(
+                              value: selectedPlatform,
+                              onChanged: (newPlatform) {
+                                if (newPlatform == null) return;
+                                setState(() {
+                                  selectedPlatform = newPlatform;
+                                  selectedDevice =
+                                      deviceMap[newPlatform]!.first;
+                                });
+                              },
+                              items: deviceMap.keys
+                                  .map(
+                                    (platform) => DropdownMenuItem(
                                       value: platform,
                                       child: Text(platform),
-                                    ))
-                                .toList(),
-                          ),
-                          // const SizedBox(width: 10),
-                          const Text("Device:"),
-                          // const SizedBox(width: 2),
-                          DropdownButton<DeviceInfo>(
-                            value: selectedDevice,
-                            onChanged: (newDevice) {
-                              if (newDevice == null) return;
-                              setState(() => selectedDevice = newDevice);
-                            },
-                            items: deviceMap[selectedPlatform]!
-                                .map((device) => DropdownMenuItem(
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            // const SizedBox(width: 10),
+                            const Text("Device:"),
+                            // const SizedBox(width: 2),
+                            DropdownButton<DeviceInfo>(
+                              value: selectedDevice,
+                              onChanged: (newDevice) {
+                                if (newDevice == null) return;
+                                setState(() => selectedDevice = newDevice);
+                              },
+                              items: deviceMap[selectedPlatform]!
+                                  .map(
+                                    (device) => DropdownMenuItem(
                                       value: device,
                                       child: Text(device.name),
-                                    ))
-                                .toList(),
-                          ),
-                          const Spacer(),
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Text("Enable Preview:"),
-                              Switch(
-                                value: enableDeviceSelection,
-                                onChanged: (val) {
-                                  setState(() => enableDeviceSelection = val);
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
+                                    ),
+                                  )
+                                  .toList(),
+                            ),
+                            const Spacer(),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text("Enable Preview:"),
+                                Switch(
+                                  value: enableDeviceSelection,
+                                  onChanged: (val) {
+                                    setState(() => enableDeviceSelection = val);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
               ),
             Expanded(
               child: Container(
                 color: Colors.white,
                 child: Center(
                   child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: enableDeviceSelection
-                          ? DeviceFrame(
-                              device: selectedDevice,
-                              isFrameVisible: true,
-                              orientation: Orientation.portrait,
-                              screen: widget.child,
-                            )
-                          : DeviceFrame(
-                              device: defaultDevice,
-                              isFrameVisible: true,
-                              orientation: Orientation.portrait,
-                              screen: widget.child,
-                            )),
+                    padding: const EdgeInsets.all(8.0),
+                    child: enableDeviceSelection
+                        ? DeviceFrame(
+                            device: selectedDevice,
+                            isFrameVisible: true,
+                            orientation: Orientation.portrait,
+                            screen: widget.child,
+                          )
+                        : DeviceFrame(
+                            device: defaultDevice,
+                            isFrameVisible: true,
+                            orientation: Orientation.portrait,
+                            screen: widget.child,
+                          ),
+                  ),
                 ),
               ),
             ),

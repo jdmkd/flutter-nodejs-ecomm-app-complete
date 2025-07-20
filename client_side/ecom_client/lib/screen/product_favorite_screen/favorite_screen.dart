@@ -1,4 +1,4 @@
-import 'package:ecom_client/utility/extensions.dart';
+import 'package:ecotte/utility/extensions.dart';
 import 'package:flutter/services.dart';
 import 'provider/favorite_provider.dart';
 import 'package:flutter/material.dart';
@@ -31,21 +31,21 @@ class FavoriteScreen extends StatelessWidget {
     });
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
         title: const Text(
           "Favorites",
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             fontWeight: FontWeight.bold,
             color: Colors.black,
           ),
         ),
       ),
       body: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
         child: RefreshIndicator(
           onRefresh: () async {
             context.favoriteProvider.loadFavoriteItems();

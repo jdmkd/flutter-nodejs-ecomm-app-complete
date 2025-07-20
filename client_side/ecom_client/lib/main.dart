@@ -1,12 +1,12 @@
 import 'dart:developer';
-import 'package:ecom_client/presentation/device_frame_preview.dart';
+import 'package:ecotte/presentation/device_frame_preview.dart';
 // import 'package:device_frame_plus/src/devices/devices.dart';
 import 'package:device_frame_plus/device_frame_plus.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart' show kReleaseMode;
-import 'package:ecom_client/screen/product_by_subcategory_screen/provider/product_by_subcategory_provider.dart';
-import 'package:ecom_client/utility/constants.dart';
+import 'package:ecotte/screen/product_by_subcategory_screen/provider/product_by_subcategory_provider.dart';
+import 'package:ecotte/utility/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:media_store_plus/media_store_plus.dart';

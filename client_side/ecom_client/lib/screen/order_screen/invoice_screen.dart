@@ -1,5 +1,5 @@
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:ecom_client/screen/order_screen/pdf_viewer_screen.dart';
+import 'package:ecotte/screen/order_screen/pdf_viewer_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/order.dart';
@@ -56,8 +56,9 @@ class _InvoiceScreenContent extends StatelessWidget {
         final orderTotal = order.orderTotal;
         final coupon = order.couponCode;
         return Scaffold(
-          backgroundColor: Colors.white,
+          // backgroundColor: Colors.white,
           appBar: AppBar(
+            backgroundColor: Colors.grey[50],
             title: const Text(
               'Invoice',
               style: TextStyle(fontWeight: FontWeight.bold),

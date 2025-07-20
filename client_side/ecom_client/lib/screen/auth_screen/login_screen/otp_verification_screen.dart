@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/resend_otp_screen.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/resend_otp_screen.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/services.dart';
@@ -18,8 +18,10 @@ class OTPVerificationScreen extends StatefulWidget {
 }
 
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
-  final List<TextEditingController> _controllers =
-      List.generate(4, (_) => TextEditingController());
+  final List<TextEditingController> _controllers = List.generate(
+    4,
+    (_) => TextEditingController(),
+  );
   final List<FocusNode> _focusNodes = List.generate(4, (_) => FocusNode());
 
   @override
@@ -78,8 +80,11 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
       log("email ==> ${widget.email}");
       final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-      final errorMessage =
-          await userProvider.verifyOtp(widget.email, otp, context);
+      final errorMessage = await userProvider.verifyOtp(
+        widget.email,
+        otp,
+        context,
+      );
     } else {
       SnackBarHelper.showErrorSnackBar("Please enter all 4 digits of the OTP.");
     }
@@ -112,9 +117,7 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
           border: InputBorder.none,
         ),
         onChanged: (value) => _onOtpChanged(index, value),
-        inputFormatters: [
-          FilteringTextInputFormatter.digitsOnly,
-        ],
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         onTap: () {
           // Select all text when the box is tapped for easier overwrite
           _controllers[index].selection = TextSelection(
@@ -131,8 +134,10 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const Text("OTP Verification",
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "OTP Verification",
+          style: TextStyle(color: Colors.white),
+        ),
         centerTitle: true,
         backgroundColor: Colors.indigo.shade500,
         foregroundColor: Colors.white,
@@ -165,17 +170,21 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                   onPressed: _verifyOtp,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 50, vertical: 16),
+                      horizontal: 50,
+                      vertical: 16,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     backgroundColor: Colors.indigo,
                   ),
                   child: const Text(
                     "Verify OTP",
                     style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20),
@@ -185,7 +194,8 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (_) => ResendOtpScreen(widget.email)),
+                        builder: (_) => ResendOtpScreen(widget.email),
+                      ),
                     );
                   },
                   // child: const Text(

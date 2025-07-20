@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:ecom_client/screen/auth_screen/login_screen/resend_otp_screen.dart';
-import 'package:ecom_client/screen/reset_password_screen/reset_password_with_otp_screen.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/resend_otp_screen.dart';
+import 'package:ecotte/screen/reset_password_screen/reset_password_with_otp_screen.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../home_screen.dart';
@@ -84,10 +84,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -113,10 +115,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   SizedBox(height: 6),
                   Text(
                     'Login to continue',
-                    style: TextStyle(
-                      color: Colors.black54,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(color: Colors.black54, fontSize: 16),
                   ),
                   SizedBox(height: 25),
                   _buildTextField(
@@ -155,8 +154,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         // );
                         Navigator.of(context).push(
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  ResetPasswordWithOtpScreen()),
+                            builder: (context) => ResetPasswordWithOtpScreen(),
+                          ),
                         );
                       },
                       child: Text(
@@ -199,7 +198,8 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                            builder: (context) => RegisterScreen()),
+                          builder: (context) => RegisterScreen(),
+                        ),
                       );
                     },
                     child: RichText(
@@ -214,7 +214,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w700,
                               fontSize: 14,
                             ),
-                          )
+                          ),
                         ],
                       ),
                     ),
@@ -246,9 +246,7 @@ class _LoginScreenState extends State<LoginScreen> {
           hintText: hint,
           prefixIcon: Icon(icon, color: Colors.blueAccent),
           suffixIcon: suffixIcon,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
           contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         ),
       ),

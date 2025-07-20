@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.ecom_client"
+    namespace = "com.example.ecotte"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "29.0.13599879"
     // ndkVersion = flutter.ndkVersion
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.ecom_client"
+        applicationId = "com.example.ecotte"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -33,10 +33,10 @@ android {
     signingConfigs {
         release {
             // Production keystore configuration
-            storeFile = file("ecom_client.keystore")
-            storePassword = "ecom_client_2024"
-            keyAlias = "ecom_client_key"
-            keyPassword = "ecom_client_2024"
+            storeFile = file("ecotte.keystore")
+            storePassword = "ecotte_2024"
+            keyAlias = "ecotte_key"
+            keyPassword = "ecotte_2024"
         }
     }
 

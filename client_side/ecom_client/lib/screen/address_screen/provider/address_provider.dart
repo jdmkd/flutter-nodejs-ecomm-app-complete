@@ -41,7 +41,6 @@ class AddressProvider extends ChangeNotifier {
       );
 
       if (response.isOk) {
-        
         ApiResponse<List<Address>> apiResponse =
             ApiResponse<List<Address>>.fromJson(
               response.body,
@@ -148,6 +147,7 @@ class AddressProvider extends ChangeNotifier {
       final response = await service.addItem(
         endpointUrl: 'address',
         itemData: addressData,
+        withAuth: true,
       );
 
       if (response.isOk) {
@@ -272,6 +272,7 @@ class AddressProvider extends ChangeNotifier {
       final response = await service.deleteItem(
         endpointUrl: 'address',
         itemId: addressId,
+        withAuth: true,
       );
 
       if (response.isOk) {

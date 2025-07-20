@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 class ApplyCouponButton extends StatelessWidget {
   final Function() onPressed;
 
-  const ApplyCouponButton({
-    super.key,
-    required this.onPressed,
-  });
+  const ApplyCouponButton({super.key, required this.onPressed});
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +11,9 @@ class ApplyCouponButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         elevation: 2,
+        backgroundColor: Colors.green,
         foregroundColor: Colors.white,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
-        ),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
       ),
       child: const Text('Apply'),

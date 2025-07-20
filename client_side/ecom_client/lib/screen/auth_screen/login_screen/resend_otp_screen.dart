@@ -1,8 +1,8 @@
 import 'dart:developer';
 
-import 'package:ecom_client/screen/auth_screen/login_screen/otp_verification_screen.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/otp_verification_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,13 +57,16 @@ class _ResendOtpScreenState extends State<ResendOtpScreen> {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     final result = await userProvider.resendOtpAgainForVarifingRegisteredEmail(
-        widget.email, context);
+      widget.email,
+      context,
+    );
 
     if (result['success']) {
       SnackBarHelper.showSuccessSnackBar("${result['message']}");
       Navigator.of(context).pushAndRemoveUntil(
         MaterialPageRoute(
-            builder: (context) => OTPVerificationScreen(widget.email)),
+          builder: (context) => OTPVerificationScreen(widget.email),
+        ),
         (route) => false,
       );
     } else {
@@ -124,9 +127,12 @@ class _ResendOtpScreenState extends State<ResendOtpScreen> {
                       : null,
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 40, vertical: 14),
+                      horizontal: 40,
+                      vertical: 14,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                     backgroundColor: Colors.indigo,
                   ),
                   child: _isResending
@@ -134,17 +140,20 @@ class _ResendOtpScreenState extends State<ResendOtpScreen> {
                           height: 22,
                           width: 22,
                           child: CircularProgressIndicator(
-                              color: Colors.white, strokeWidth: 2),
+                            color: Colors.white,
+                            strokeWidth: 2,
+                          ),
                         )
                       : const Text(
                           "Resend Code",
                           style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600),
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                 ),
-              )
+              ),
             ],
           ),
         ),

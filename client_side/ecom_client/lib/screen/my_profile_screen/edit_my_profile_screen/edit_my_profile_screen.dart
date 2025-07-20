@@ -1,9 +1,9 @@
 import 'dart:developer';
 
-import 'package:ecom_client/models/order.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/reset_password_screen/reset_password_with_otp_screen.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/models/order.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/screen/reset_password_screen/reset_password_with_otp_screen.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';

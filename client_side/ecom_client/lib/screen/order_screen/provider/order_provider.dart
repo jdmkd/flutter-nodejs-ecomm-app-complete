@@ -1,4 +1,4 @@
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 
 import '../../auth_screen/login_screen/provider/user_provider.dart';
 import 'package:flutter/material.dart';

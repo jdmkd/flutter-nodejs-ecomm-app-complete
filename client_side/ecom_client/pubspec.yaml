@@ -1,5 +1,5 @@
-name: ecom_client
-description: "E-Commerce User App built in flutter using GetX"
+name: ecotte
+description: "E-Commerce User App built in flutter and backend powered by nodejs"
 publish_to: "none"
 
 version: 1.0.0+1
@@ -51,10 +51,14 @@ dev_dependencies:
   device_frame_plus: ^1.5.0
 
 flutter_launcher_icons:
-  android: "launcher_icon"
-  image_path: "assets/images/logo.png"
+  android: true
+  ios: true
+  web:
+    generate: true
+    image_path: "assets/Ecotte_app_logo.png"
+  image_path: "assets/Ecotte_app_logo.png"
   adaptive_icon_background: "#ffffff"
-  adaptive_icon_foreground: "assets/images/logo.png"
+  adaptive_icon_foreground: "assets/Ecotte_app_logo.png"
 
 flutter:
   uses-material-design: true

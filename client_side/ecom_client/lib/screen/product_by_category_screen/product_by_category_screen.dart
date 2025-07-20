@@ -1,4 +1,4 @@
-import 'package:ecom_client/utility/extensions.dart';
+import 'package:ecotte/utility/extensions.dart';
 
 import '../../models/brand.dart';
 import '../../models/category.dart';

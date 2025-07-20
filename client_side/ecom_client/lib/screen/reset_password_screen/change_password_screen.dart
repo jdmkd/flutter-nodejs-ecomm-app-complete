@@ -1,7 +1,7 @@
-import 'package:ecom_client/models/user.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/utility/button.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/models/user.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/utility/button.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -57,8 +57,11 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
     setState(() => _isLoading = true);
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final errorMessage =
-        await userProvider.changeUserPassword(oldPassword, newPassword, itemId);
+    final errorMessage = await userProvider.changeUserPassword(
+      oldPassword,
+      newPassword,
+      itemId,
+    );
 
     setState(() => _isLoading = false);
 
@@ -126,8 +129,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                 TextFormField(
                   controller: _oldPassController,
                   obscureText: true,
-                  decoration:
-                      _buildInputDecoration('Old Password', Icons.lock_outline),
+                  decoration: _buildInputDecoration(
+                    'Old Password',
+                    Icons.lock_outline,
+                  ),
                   validator: (value) =>
                       value!.isEmpty ? 'Enter your old password' : null,
                 ),
@@ -152,7 +157,9 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                   controller: _confirmPassController,
                   obscureText: true,
                   decoration: _buildInputDecoration(
-                      'Confirm Password', Icons.lock_reset),
+                    'Confirm Password',
+                    Icons.lock_reset,
+                  ),
                   validator: (value) => value != _newPassController.text
                       ? 'Passwords do not match'
                       : null,
@@ -168,8 +175,10 @@ class _ChangePasswordScreenState extends State<ChangePasswordScreen> {
                     style: buttonStyle,
                     child: Text(
                       "Reset Password",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),

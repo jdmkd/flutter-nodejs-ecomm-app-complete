@@ -50,7 +50,7 @@
 -keep class io.flutter.plugins.deviceframeplus.** { *; }
 
 # --- Custom App Classes ---
--keep class com.example.ecom_client.** { *; }
+-keep class com.example.ecotte.** { *; }
 
 # --- General Android/Flutter Reflection Support ---
 -keepattributes *Annotation*

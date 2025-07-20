@@ -1,5 +1,5 @@
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 
 class PasswordResetScreen extends StatefulWidget {
@@ -18,10 +18,9 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
       return;
     }
 
-    
-
     SnackBarHelper.showSuccessSnackBar(
-        'Password reset varification code sented to $email');
+      'Password reset varification code sented to $email',
+    );
   }
 
   @override
@@ -56,8 +55,10 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                     SizedBox(height: 20),
                     Text(
                       'Forgot your password?',
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                        fontSize: 22,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     SizedBox(height: 8),
                     Text(
@@ -74,8 +75,10 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         hintText: 'you@example.com',
                         border: OutlineInputBorder(),
                         prefixIcon: Icon(Icons.email),
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 14,
+                        ),
                       ),
                     ),
                     SizedBox(height: 24),
@@ -87,14 +90,16 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blueAccent,
                           shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8)),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
                         ),
                         child: Text(
                           'Send Reset Code',
                           style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ),

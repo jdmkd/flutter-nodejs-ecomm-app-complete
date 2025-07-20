@@ -86,6 +86,7 @@ class _MyOrderScreenState extends State<MyOrderScreen>
     final user = context.userProvider.getLoginUsr();
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey[50],
         title: const Text(
           "My Orders",
           style: TextStyle(
@@ -251,7 +252,7 @@ class _MyOrderScreenState extends State<MyOrderScreen>
                       }
                       return Container(
                         decoration: BoxDecoration(
-                          color: Colors.grey[100],
+                          color: Colors.grey[50],
                           borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(24),
                           ),

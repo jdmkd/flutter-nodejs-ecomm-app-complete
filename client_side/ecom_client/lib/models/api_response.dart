@@ -9,10 +9,17 @@ class ApiResponse<T> {
     Object? json,
     T Function(Object? json)? fromJsonT,
   ) {
-    final Map<String, dynamic> jsonMap = json as Map<String, dynamic>;
+    if (json == null || json is! Map<String, dynamic>) {
+      return ApiResponse<T>(
+        success: false,
+        message: 'Invalid or null response from server',
+        data: null,
+      );
+    }
+    final Map<String, dynamic> jsonMap = json;
     return ApiResponse<T>(
-      success: jsonMap['success'] as bool,
-      message: jsonMap['message'] as String,
+      success: jsonMap['success'] as bool? ?? false,
+      message: jsonMap['message'] as String? ?? 'No message',
       data: jsonMap['data'] != null && fromJsonT != null
           ? fromJsonT(jsonMap['data'])
           : null,

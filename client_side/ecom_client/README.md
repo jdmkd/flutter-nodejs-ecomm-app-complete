@@ -1,4 +1,4 @@
-# ecom_client
+# ecotte
 
 A new Flutter project.
 

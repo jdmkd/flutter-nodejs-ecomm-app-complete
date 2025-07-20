@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:ecom_client/models/sub_category.dart';
-import 'package:ecom_client/screen/product_by_subcategory_screen/product_by_subcategory_screen.dart';
+import 'package:ecotte/models/sub_category.dart';
+import 'package:ecotte/screen/product_by_subcategory_screen/product_by_subcategory_screen.dart';
 import '../../product_by_category_screen/product_by_category_screen.dart';
 import '../../../utility/animation/open_container_wrapper.dart';
 import 'package:flutter/material.dart';

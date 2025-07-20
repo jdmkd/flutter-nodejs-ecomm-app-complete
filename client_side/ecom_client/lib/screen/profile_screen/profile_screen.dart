@@ -1,4 +1,4 @@
-import 'package:ecom_client/utility/extensions.dart';
+import 'package:ecotte/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';

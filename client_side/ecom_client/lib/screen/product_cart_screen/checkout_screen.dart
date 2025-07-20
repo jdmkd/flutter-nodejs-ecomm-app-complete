@@ -41,7 +41,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Colors.grey[50],
       appBar: AppBar(
         title: const Text(
           'Checkout',
@@ -78,19 +78,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       children: [
                         // Address Section
                         _buildAddressSection(addressProvider),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
                         // Payment Method Section
                         _buildPaymentSection(cartProvider),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
                         // Coupon Section
                         _buildCouponSection(cartProvider),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
 
                         // Order Summary
                         _buildOrderSummary(cartProvider),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
                       ],
                     ),
                   ),
@@ -108,6 +108,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildAddressSection(AddressProvider addressProvider) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -288,6 +289,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildPaymentSection(CartProvider cartProvider) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -325,6 +327,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildCouponSection(CartProvider cartProvider) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -347,7 +350,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               children: [
                 Expanded(
                   child: CustomTextField(
-                    height: 50,
+                    height: 60,
                     labelText: 'Enter coupon code',
                     onSave: (value) {},
                     controller: cartProvider.couponController,
@@ -397,6 +400,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
 
   Widget _buildOrderSummary(CartProvider cartProvider) {
     return Card(
+      color: Colors.white,
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
@@ -474,7 +478,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     AddressProvider addressProvider,
   ) {
     return Container(
-      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [

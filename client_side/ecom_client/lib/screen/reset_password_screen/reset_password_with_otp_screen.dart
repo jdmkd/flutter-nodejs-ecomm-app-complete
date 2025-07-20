@@ -1,11 +1,11 @@
-import 'package:ecom_client/screen/auth_screen/login_screen/login_screen.dart';
-import 'package:ecom_client/screen/auth_screen/login_screen/provider/user_provider.dart';
-import 'package:ecom_client/screen/my_profile_screen/my_profile_screen.dart';
-import 'package:ecom_client/screen/reset_password_screen/change_password_screen.dart';
-import 'package:ecom_client/screen/reset_password_screen/reset_password_screen.dart';
-import 'package:ecom_client/screen/home_screen.dart';
-import 'package:ecom_client/utility/button.dart';
-import 'package:ecom_client/utility/snack_bar_helper.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/login_screen.dart';
+import 'package:ecotte/screen/auth_screen/login_screen/provider/user_provider.dart';
+import 'package:ecotte/screen/my_profile_screen/my_profile_screen.dart';
+import 'package:ecotte/screen/reset_password_screen/change_password_screen.dart';
+import 'package:ecotte/screen/reset_password_screen/reset_password_screen.dart';
+import 'package:ecotte/screen/home_screen.dart';
+import 'package:ecotte/utility/button.dart';
+import 'package:ecotte/utility/snack_bar_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -49,15 +49,17 @@ class _ResetPasswordWithOtpScreenState
     setState(() => _isLoading = true);
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    final errorMessage =
-        await userProvider.resetPasswordOtpSend(_emailController.text.trim());
+    final errorMessage = await userProvider.resetPasswordOtpSend(
+      _emailController.text.trim(),
+    );
 
     setState(() => _isLoading = false);
 
     if (errorMessage == null) {
       setState(() => _otpSent = true);
       SnackBarHelper.showSuccessSnackBar(
-          "OTP sent to ${_emailController.text}");
+        "OTP sent to ${_emailController.text}",
+      );
     } else {
       SnackBarHelper.showErrorSnackBar(errorMessage);
     }
@@ -77,8 +79,11 @@ class _ResetPasswordWithOtpScreenState
 
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(
-              builder: (context) => ResetPasswordScreen(
-                  _emailController.text.trim(), _otpController.text.trim())),
+            builder: (context) => ResetPasswordScreen(
+              _emailController.text.trim(),
+              _otpController.text.trim(),
+            ),
+          ),
         );
       } else {
         SnackBarHelper.showErrorSnackBar(errorMessage);
@@ -109,27 +114,21 @@ class _ResetPasswordWithOtpScreenState
     // Navigator.pushNamed(context, '/reset-password'); // Create this route
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => ChangePasswordScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => ChangePasswordScreen()),
     );
   }
 
   void _navigateToHomeScreen() {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => const HomeScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => const HomeScreen()),
     );
   }
 
   void _navigateToLoginScreen() {
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(
-        builder: (context) => LoginScreen(),
-      ),
+      MaterialPageRoute(builder: (context) => LoginScreen()),
       (route) => false,
     );
   }
@@ -200,25 +199,29 @@ class _ResetPasswordWithOtpScreenState
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: _sendOtp,
-                          style: buttonStyle,
-                          child: const Text("Send OTP")),
+                        onPressed: _sendOtp,
+                        style: buttonStyle,
+                        child: const Text("Send OTP"),
+                      ),
                     ),
                   if (_otpSent && !_otpVerified) ...[
                     const SizedBox(height: 16),
                     TextFormField(
                       controller: _otpController,
-                      decoration:
-                          _buildInputDecoration('Enter OTP', Icons.lock_clock),
+                      decoration: _buildInputDecoration(
+                        'Enter OTP',
+                        Icons.lock_clock,
+                      ),
                       keyboardType: TextInputType.number,
                     ),
                     const SizedBox(height: 12),
                     SizedBox(
                       width: double.infinity,
                       child: ElevatedButton(
-                          onPressed: _verifyOtp,
-                          style: buttonStyle,
-                          child: const Text("Verify OTP")),
+                        onPressed: _verifyOtp,
+                        style: buttonStyle,
+                        child: const Text("Verify OTP"),
+                      ),
                     ),
                   ],
                   const SizedBox(height: 12),

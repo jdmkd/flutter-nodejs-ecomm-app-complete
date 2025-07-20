@@ -4,10 +4,7 @@ class CompleteOrderButton extends StatelessWidget {
   final String? labelText;
   final Function()? onPressed;
 
-  const CompleteOrderButton({
-    super.key,
-    this.onPressed, this.labelText,
-  });
+  const CompleteOrderButton({super.key, this.onPressed, this.labelText});
 
   @override
   Widget build(BuildContext context) {
@@ -19,15 +16,16 @@ class CompleteOrderButton extends StatelessWidget {
           elevation: 2,
           foregroundColor: Colors.white,
           backgroundColor: Colors.green,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
         ),
         onPressed: onPressed,
-        child:  Text(
+        child: Text(
           labelText ?? 'Complete Order',
-          style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );
