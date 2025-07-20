@@ -1,6 +1,6 @@
 {
-    "name": "ecom_admin",
-    "short_name": "ecom_admin",
+    "name": "ecotte_admin",
+    "short_name": "ecotte_admin",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",

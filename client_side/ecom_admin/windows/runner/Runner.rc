@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "ecom_admin" "\0"
+            VALUE "FileDescription", "ecotte_admin" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "ecom_admin" "\0"
+            VALUE "InternalName", "ecotte_admin" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2025 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "ecom_admin.exe" "\0"
-            VALUE "ProductName", "ecom_admin" "\0"
+            VALUE "OriginalFilename", "ecotte_admin.exe" "\0"
+            VALUE "ProductName", "ecotte_admin" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

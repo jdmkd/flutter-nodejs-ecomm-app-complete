@@ -1,5 +1,5 @@
-name: ecom_admin
-description: "A new Flutter project."
+name: ecotte_admin
+description: "Ecotte Admin is a E-Commerce Admin panel app built in flutter and backend powered by nodejs."
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
@@ -7,7 +7,7 @@ publish_to: "none" # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ^3.6.1
+  sdk: ^3.8.1
 
 dependencies:
   flutter:
@@ -16,7 +16,7 @@ dependencies:
   cupertino_icons: ^1.0.3
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.17
-  fl_chart: ^0.70.2
+  fl_chart: ^1.0.0
   dropdown_button2: ^2.3.9
   image_picker_for_web: ^3.0.6
   image_picker: ^1.1.2
@@ -24,13 +24,35 @@ dependencies:
   get: ^4.6.6
   provider: ^6.1.2
   intl: ^0.20.2
-  permission_handler: ^11.4.0
+  permission_handler: ^12.0.1
   path: ^1.9.0
   http_parser: ^4.1.2
 
 dev_dependencies:
+  flutter_launcher_icons: ^0.14.4
+
+
   flutter_test:
     sdk: flutter
+
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  macos: 
+    generate: true
+    image_path: "assets/Ecotte_Admin_app_logo.png"
+  windows: 
+    generate: true
+    image_path: "assets/Ecotte_Admin_app_logo.png"
+  web:
+    generate: true
+    image_path: "assets/Ecotte_Admin_app_logo.png"
+  image_path: "assets/Ecotte_Admin_app_logo.png"
+  adaptive_icon_background: "#ffffff"
+  adaptive_icon_foreground: "assets/Ecotte_Admin_app_logo.png"
+
+
 
 flutter:
   uses-material-design: true
