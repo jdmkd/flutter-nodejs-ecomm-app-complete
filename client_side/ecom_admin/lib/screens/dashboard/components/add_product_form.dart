@@ -60,17 +60,18 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    log("🔁 AddProductForm rebuilt");
+    print("🔁 AddProductForm rebuilt");
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600; // Customize breakpoint as needed
     var size = MediaQuery.of(context).size;
 
-    context.dashBoardProvider.setDataForUpdateProduct(widget.product);
+    // REMOVE THIS LINE TO PREVENT FORM RESET ON EVERY REBUILD
+    // context.dashBoardProvider.setDataForUpdateProduct(widget.product);
 
     return Form(
       key: context.dashBoardProvider.addProductFormKey,
       child: Container(
-        width: size.width * 0.7,
+        width: size.width,
         padding: EdgeInsets.all(defaultPadding),
         decoration: BoxDecoration(
           color: bgColor,
@@ -79,6 +80,18 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Title at the top
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Text(
+                (widget.product == null ? 'ADD' : 'UPDATE') + ' Product',
+                style: TextStyle(
+                  color: primaryColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
             SizedBox(height: defaultPadding),
             Row(
               crossAxisAlignment: CrossAxisAlignment.end,
@@ -90,8 +103,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     return ProductImageCard(
                       labelText: 'Main Image',
                       imageFile: dashProvider.selectedMainImage,
-                      imageUrlForUpdateImage:
-                          widget.product?.images.safeElementAt(0)?.url,
+                      imageUrlForUpdateImage: widget.product?.images
+                          .safeElementAt(0)
+                          ?.url,
                       onTap: () async {
                         dashProvider.pickImage(imageCardNumber: 1);
                       },
@@ -107,8 +121,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     return ProductImageCard(
                       labelText: 'Second image',
                       imageFile: dashProvider.selectedSecondImage,
-                      imageUrlForUpdateImage:
-                          widget.product?.images.safeElementAt(1)?.url,
+                      imageUrlForUpdateImage: widget.product?.images
+                          .safeElementAt(1)
+                          ?.url,
                       onTap: () {
                         dashProvider.pickImage(imageCardNumber: 2);
                       },
@@ -124,8 +139,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     return ProductImageCard(
                       labelText: 'Third image',
                       imageFile: dashProvider.selectedThirdImage,
-                      imageUrlForUpdateImage:
-                          widget.product?.images.safeElementAt(2)?.url,
+                      imageUrlForUpdateImage: widget.product?.images
+                          .safeElementAt(2)
+                          ?.url,
                       onTap: () {
                         dashProvider.pickImage(imageCardNumber: 3);
                       },
@@ -141,8 +157,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     return ProductImageCard(
                       labelText: 'Fourth image',
                       imageFile: dashProvider.selectedFourthImage,
-                      imageUrlForUpdateImage:
-                          widget.product?.images.safeElementAt(3)?.url,
+                      imageUrlForUpdateImage: widget.product?.images
+                          .safeElementAt(3)
+                          ?.url,
                       onTap: () {
                         dashProvider.pickImage(imageCardNumber: 4);
                       },
@@ -158,8 +175,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     return ProductImageCard(
                       labelText: 'Fifth image',
                       imageFile: dashProvider.selectedFifthImage,
-                      imageUrlForUpdateImage:
-                          widget.product?.images.safeElementAt(4)?.url,
+                      imageUrlForUpdateImage: widget.product?.images
+                          .safeElementAt(4)
+                          ?.url,
                       onTap: () {
                         dashProvider.pickImage(imageCardNumber: 5);
                       },
@@ -198,7 +216,8 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                   return CustomDropdown(
                     key: ValueKey(dashProvider.selectedCategory?.sId),
                     initialValue: dashProvider.selectedCategory,
-                    hintText: dashProvider.selectedCategory?.name ??
+                    hintText:
+                        dashProvider.selectedCategory?.name ??
                         'Select category',
                     items: context.dataProvider.categories,
                     displayItem: (Category? category) => category?.name ?? '',
@@ -221,7 +240,8 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                 builder: (context, dashProvider, child) {
                   return CustomDropdown(
                     key: ValueKey(dashProvider.selectedSubCategory?.sId),
-                    hintText: dashProvider.selectedSubCategory?.name ??
+                    hintText:
+                        dashProvider.selectedSubCategory?.name ??
                         'Sub category',
                     items: dashProvider.subCategoriesByCategory,
                     initialValue: dashProvider.selectedSubCategory,
@@ -245,24 +265,25 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
               Consumer<DashBoardProvider>(
                 builder: (context, dashProvider, child) {
                   return CustomDropdown(
-                      key: ValueKey(dashProvider.selectedBrand?.sId),
-                      initialValue: dashProvider.selectedBrand,
-                      items: dashProvider.brandsBySubCategory,
-                      hintText:
-                          dashProvider.selectedBrand?.name ?? 'Select Brand',
-                      displayItem: (Brand? brand) => brand?.name ?? '',
-                      onChanged: (newValue) {
-                        if (newValue != null) {
-                          dashProvider.selectedBrand = newValue;
-                          // dashProvider.updateUI();
-                        }
-                      },
-                      validator: (value) {
-                        if (value == null) {
-                          return 'Please select brand';
-                        }
-                        return null;
-                      });
+                    key: ValueKey(dashProvider.selectedBrand?.sId),
+                    initialValue: dashProvider.selectedBrand,
+                    items: dashProvider.brandsBySubCategory,
+                    hintText:
+                        dashProvider.selectedBrand?.name ?? 'Select Brand',
+                    displayItem: (Brand? brand) => brand?.name ?? '',
+                    onChanged: (newValue) {
+                      if (newValue != null) {
+                        dashProvider.selectedBrand = newValue;
+                        // dashProvider.updateUI();
+                      }
+                    },
+                    validator: (value) {
+                      if (value == null) {
+                        return 'Please select brand';
+                      }
+                      return null;
+                    },
+                  );
                 },
               ),
             ] else ...[
@@ -275,15 +296,17 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                         return CustomDropdown(
                           key: ValueKey(dashProvider.selectedCategory?.sId),
                           initialValue: dashProvider.selectedCategory,
-                          hintText: dashProvider.selectedCategory?.name ??
+                          hintText:
+                              dashProvider.selectedCategory?.name ??
                               'Select category',
                           items: context.dataProvider.categories,
                           displayItem: (Category? category) =>
                               category?.name ?? '',
                           onChanged: (newValue) {
                             if (newValue != null) {
-                              context.dashBoardProvider
-                                  .filterSubcategory(newValue);
+                              context.dashBoardProvider.filterSubcategory(
+                                newValue,
+                              );
                               // dashProvider.updateUI();
                             }
                           },
@@ -303,7 +326,8 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                       builder: (context, dashProvider, child) {
                         return CustomDropdown(
                           key: ValueKey(dashProvider.selectedSubCategory?.sId),
-                          hintText: dashProvider.selectedSubCategory?.name ??
+                          hintText:
+                              dashProvider.selectedSubCategory?.name ??
                               'Sub category',
                           items: dashProvider.subCategoriesByCategory,
                           initialValue: dashProvider.selectedSubCategory,
@@ -330,24 +354,26 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                     child: Consumer<DashBoardProvider>(
                       builder: (context, dashProvider, child) {
                         return CustomDropdown(
-                            key: ValueKey(dashProvider.selectedBrand?.sId),
-                            initialValue: dashProvider.selectedBrand,
-                            items: dashProvider.brandsBySubCategory,
-                            hintText: dashProvider.selectedBrand?.name ??
-                                'Select Brand',
-                            displayItem: (Brand? brand) => brand?.name ?? '',
-                            onChanged: (newValue) {
-                              if (newValue != null) {
-                                dashProvider.selectedBrand = newValue;
-                                // dashProvider.updateUI();
-                              }
-                            },
-                            validator: (value) {
-                              if (value == null) {
-                                return 'Please select brand';
-                              }
-                              return null;
-                            });
+                          key: ValueKey(dashProvider.selectedBrand?.sId),
+                          initialValue: dashProvider.selectedBrand,
+                          items: dashProvider.brandsBySubCategory,
+                          hintText:
+                              dashProvider.selectedBrand?.name ??
+                              'Select Brand',
+                          displayItem: (Brand? brand) => brand?.name ?? '',
+                          onChanged: (newValue) {
+                            if (newValue != null) {
+                              dashProvider.selectedBrand = newValue;
+                              // dashProvider.updateUI();
+                            }
+                          },
+                          validator: (value) {
+                            if (value == null) {
+                              return 'Please select brand';
+                            }
+                            return null;
+                          },
+                        );
                       },
                     ),
                   ),
@@ -444,16 +470,18 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                       Consumer<DashBoardProvider>(
                         builder: (context, dashProvider, child) {
                           return CustomDropdown(
-                            key:
-                                ValueKey(dashProvider.selectedVariantType?.sId),
+                            key: ValueKey(
+                              dashProvider.selectedVariantType?.sId,
+                            ),
                             initialValue: dashProvider.selectedVariantType,
                             items: context.dataProvider.variantTypes,
                             displayItem: (VariantType? variantType) =>
                                 variantType?.name ?? '',
                             onChanged: (newValue) {
                               if (newValue != null) {
-                                context.dashBoardProvider
-                                    .filterVariant(newValue);
+                                context.dashBoardProvider.filterVariant(
+                                  newValue,
+                                );
                                 // dashProvider.updateUI();
                               }
                             },
@@ -466,9 +494,10 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                         builder: (context, dashProvider, child) {
                           final filteredSelectedItems = dashProvider
                               .selectedVariants
-                              .where((item) => dashProvider
-                                  .variantsByVariantType
-                                  .contains(item))
+                              .where(
+                                (item) => dashProvider.variantsByVariantType
+                                    .contains(item),
+                              )
                               .toList();
                           return MultiSelectDropDown(
                             items: dashProvider.variantsByVariantType,
@@ -490,15 +519,17 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                           builder: (context, dashProvider, child) {
                             return CustomDropdown(
                               key: ValueKey(
-                                  dashProvider.selectedVariantType?.sId),
+                                dashProvider.selectedVariantType?.sId,
+                              ),
                               initialValue: dashProvider.selectedVariantType,
                               items: context.dataProvider.variantTypes,
                               displayItem: (VariantType? variantType) =>
                                   variantType?.name ?? '',
                               onChanged: (newValue) {
                                 if (newValue != null) {
-                                  context.dashBoardProvider
-                                      .filterVariant(newValue);
+                                  context.dashBoardProvider.filterVariant(
+                                    newValue,
+                                  );
                                   // dashProvider.updateUI();
                                 }
                               },
@@ -513,9 +544,10 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                           builder: (context, dashProvider, child) {
                             final filteredSelectedItems = dashProvider
                                 .selectedVariants
-                                .where((item) => dashProvider
-                                    .variantsByVariantType
-                                    .contains(item))
+                                .where(
+                                  (item) => dashProvider.variantsByVariantType
+                                      .contains(item),
+                                )
                                 .toList();
                             return MultiSelectDropDown(
                               items: dashProvider.variantsByVariantType,
@@ -554,7 +586,9 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                   onPressed: () async {
                     // Validate and save the form
                     if (context
-                        .dashBoardProvider.addProductFormKey.currentState!
+                        .dashBoardProvider
+                        .addProductFormKey
+                        .currentState!
                         .validate()) {
                       context.dashBoardProvider.addProductFormKey.currentState!
                           .save();
@@ -566,6 +600,7 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
                 ),
               ],
             ),
+            SizedBox(height: defaultPadding),
           ],
         ),
       ),
@@ -577,44 +612,27 @@ class _ProductSubmitFormState extends State<ProductSubmitForm>
 void showAddProductForm(BuildContext context, Product? product) {
   final dashProvider = context.read<DashBoardProvider>();
 
-  // Store the form in a variable with a stable key
   final formWidget = ProductSubmitForm(
     key: const ValueKey("AddProductForm"),
     product: product,
   );
 
-  showDialog(
+  showModalBottomSheet(
     context: context,
-    barrierDismissible: false,
-    builder: (BuildContext context) {
+    isScrollControlled: true,
+    backgroundColor: bgColor,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
+    builder: (context) {
       final screenHeight = MediaQuery.of(context).size.height;
-      final dialogHeight = screenHeight * 0.8; // 80% of screen height
-
-      return StatefulBuilder(builder: (context, setState) {
-        return AlertDialog(
-          backgroundColor: bgColor,
-          contentPadding: EdgeInsets.zero,
-          title: Center(
-            child: Text(
-              (product == null ? 'ADD' : 'UPDATE') + ' Product'.toUpperCase(),
-              style: TextStyle(color: primaryColor),
-            ),
-          ),
-          content: SizedBox(
-            height: dialogHeight,
-            width: double.maxFinite,
-            child: SingleChildScrollView(
-              // keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.manual,
-              // child: ProductSubmitForm(product: product),
-              // child: ProductSubmitForm(
-              //   key: const PageStorageKey('product_submit_form'),
-              //   product: product,
-              // ),
-              child: formWidget, // <- Uses stable key & prevents loss
-            ),
-          ),
-        );
-      });
+      return Container(
+        height: screenHeight * 0.8, // 80% of the screen height
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+        ),
+        child: SingleChildScrollView(child: formWidget),
+      );
     },
   );
 }

@@ -1,4 +1,4 @@
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 
 import '../../../core/data/data_provider.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -34,11 +34,12 @@ class Chart extends StatelessWidget {
                   builder: (context, dataProvider, child) {
                     return Text(
                       '${context.dataProvider.calculateOrdersWithStatus()}',
-                      style: Theme.of(context).textTheme.headlineMedium!.copyWith(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        height: 0.5,
-                      ),
+                      style:
+                          Theme.of(context).textTheme.headlineMedium!.copyWith(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                height: 0.5,
+                              ),
                     );
                   },
                 ),
@@ -55,13 +56,17 @@ class Chart extends StatelessWidget {
   List<PieChartSectionData> _buildPieChartSelectionData(BuildContext context) {
     final DataProvider dataProvider = Provider.of<DataProvider>(context);
 
-
     int totalOrder = context.dataProvider.calculateOrdersWithStatus();
-    int pendingOrder = context.dataProvider.calculateOrdersWithStatus(status: 'pending');
-    int processingOrder =context.dataProvider.calculateOrdersWithStatus(status: 'processing');
-    int cancelledOrder = context.dataProvider.calculateOrdersWithStatus(status: 'cancelled');
-    int shippedOrder = context.dataProvider.calculateOrdersWithStatus(status: 'shipped');
-    int deliveredOrder = context.dataProvider.calculateOrdersWithStatus(status: 'delivered');
+    int pendingOrder =
+        context.dataProvider.calculateOrdersWithStatus(status: 'pending');
+    int processingOrder =
+        context.dataProvider.calculateOrdersWithStatus(status: 'processing');
+    int cancelledOrder =
+        context.dataProvider.calculateOrdersWithStatus(status: 'cancelled');
+    int shippedOrder =
+        context.dataProvider.calculateOrdersWithStatus(status: 'shipped');
+    int deliveredOrder =
+        context.dataProvider.calculateOrdersWithStatus(status: 'delivered');
 
     List<PieChartSectionData> pieChartSelectionData = [
       PieChartSectionData(
@@ -99,4 +104,3 @@ class Chart extends StatelessWidget {
     return pieChartSelectionData;
   }
 }
-

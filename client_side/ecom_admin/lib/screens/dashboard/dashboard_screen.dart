@@ -1,4 +1,4 @@
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import '../../utility/constants.dart';
@@ -7,6 +7,8 @@ import 'components/add_product_form.dart';
 import 'components/order_details_section.dart';
 import 'components/product_list_section.dart';
 import 'components/product_summery_section.dart';
+import 'package:provider/provider.dart';
+import '../../core/data/data_provider.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -14,16 +16,38 @@ class DashboardScreen extends StatefulWidget {
 }
 
 class _DashboardScreenState extends State<DashboardScreen> {
-  bool _initialized = false;
-
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (!_initialized) {
-      context.dataProvider;
-      // context.dataProvider.getAllProduct(showSnack: false);
-      _initialized = true;
-    }
+  void initState() {
+    super.initState();
+    Future.microtask(() async {
+      final dataProvider = Provider.of<DataProvider>(context, listen: false);
+      await dataProvider.getAllProduct();
+      await dataProvider.getAllOrders();
+      await dataProvider.getAllCategory();
+      await dataProvider.getAllSubCategory();
+      await dataProvider.getAllBrands();
+      await dataProvider.getAllVariantType();
+      await dataProvider.getAllVariant();
+      await dataProvider.getAllPosters();
+      await dataProvider.getAllCoupons();
+      await dataProvider.getAllNotifications();
+    });
+  }
+
+  Future<void> _refreshDashboard(BuildContext context) async {
+    final dataProvider = Provider.of<DataProvider>(context, listen: false);
+    await Future.wait([
+      dataProvider.getAllProduct(),
+      dataProvider.getAllOrders(),
+      dataProvider.getAllCategory(),
+      dataProvider.getAllSubCategory(),
+      dataProvider.getAllBrands(),
+      dataProvider.getAllVariantType(),
+      dataProvider.getAllVariant(),
+      dataProvider.getAllPosters(),
+      dataProvider.getAllCoupons(),
+      dataProvider.getAllNotifications(),
+    ]);
   }
 
   @override
@@ -31,109 +55,98 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return SafeArea(
       child: LayoutBuilder(
         builder: (context, constraints) {
-          return SingleChildScrollView(
-            padding: EdgeInsets.all(defaultPadding),
-            child: Column(
-              children: [
-                DashBoardHeader(),
-                Gap(defaultPadding),
-                if (constraints.maxWidth > 800) // Desktop view
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        flex: 5,
-                        child: Column(
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    "My Products",
-                                    style:
-                                        Theme.of(context).textTheme.titleMedium,
-                                  ),
-                                ),
-                                ElevatedButton.icon(
-                                  style: TextButton.styleFrom(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: defaultPadding * 1.5,
-                                      vertical: defaultPadding,
+          return RefreshIndicator(
+            onRefresh: () => _refreshDashboard(context),
+            child: SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: EdgeInsets.all(defaultPadding),
+              child: Column(
+                children: [
+                  DashBoardHeader(),
+                  Gap(defaultPadding),
+                  if (constraints.maxWidth > 800) // Desktop view
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(
+                          flex: 5,
+                          child: Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      "My Products",
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
                                     ),
                                   ),
-                                  onPressed: () {
-                                    showAddProductForm(context, null);
-                                  },
-                                  icon: Icon(Icons.add),
-                                  label: Text("Add New"),
-                                ),
-                                Gap(20),
-                                IconButton(
+                                  ElevatedButton.icon(
+                                    style: TextButton.styleFrom(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: defaultPadding * 1.5,
+                                        vertical: defaultPadding,
+                                      ),
+                                    ),
                                     onPressed: () {
-                                      context.dataProvider
-                                          .getAllProduct(showSnack: true);
+                                      showAddProductForm(context, null);
                                     },
-                                    icon: Icon(Icons.refresh)),
-                              ],
-                            ),
-                            Gap(defaultPadding),
-                            ProductSummerySection(),
-                            Gap(defaultPadding),
-                            ProductListSection(),
-                          ],
-                        ),
-                      ),
-                      SizedBox(width: defaultPadding),
-                      Expanded(
-                        flex: 2,
-                        child: OrderDetailsSection(),
-                      ),
-                    ],
-                  )
-                else // Mobile view
-                  Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "My Products",
-                              style: Theme.of(context).textTheme.titleMedium,
-                            ),
+                                    icon: Icon(Icons.add),
+                                    label: Text("Add New"),
+                                  ),
+                                ],
+                              ),
+                              Gap(defaultPadding),
+                              ProductSummerySection(),
+                              Gap(defaultPadding),
+                              ProductListSection(),
+                            ],
                           ),
-                          ElevatedButton.icon(
-                            style: TextButton.styleFrom(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: defaultPadding * 1.5,
-                                vertical: defaultPadding,
+                        ),
+                        SizedBox(width: defaultPadding),
+                        Expanded(flex: 2, child: OrderDetailsSection()),
+                      ],
+                    )
+                  else // Mobile view
+                    Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "My Products",
+                                style: Theme.of(context).textTheme.titleMedium,
                               ),
                             ),
-                            onPressed: () {
-                              showAddProductForm(context, null);
-                            },
-                            icon: Icon(Icons.add),
-                            label: Text("Add New"),
-                          ),
-                          Gap(20),
-                          IconButton(
+                            ElevatedButton.icon(
+                              style: TextButton.styleFrom(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: defaultPadding * 1.5,
+                                  vertical: defaultPadding,
+                                ),
+                              ),
                               onPressed: () {
-                                context.dataProvider
-                                    .getAllProduct(showSnack: true);
+                                showAddProductForm(context, null);
                               },
-                              icon: Icon(Icons.refresh)),
-                        ],
-                      ),
-                      Gap(defaultPadding),
-                      ProductSummerySection(),
-                      Gap(defaultPadding),
-                      ProductListSection(),
-                      Gap(defaultPadding),
-                      OrderDetailsSection(),
-                    ],
-                  ),
-              ],
+                              icon: Icon(Icons.add),
+                              label: Text("Add New"),
+                            ),
+                          ],
+                        ),
+                        Gap(defaultPadding),
+                        ProductSummerySection(),
+                        Gap(defaultPadding),
+                        ProductListSection(),
+                        Gap(defaultPadding),
+                        OrderDetailsSection(),
+                      ],
+                    ),
+                ],
+              ),
             ),
           );
         },

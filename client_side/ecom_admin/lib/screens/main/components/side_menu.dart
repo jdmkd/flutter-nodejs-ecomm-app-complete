@@ -1,5 +1,5 @@
-import 'package:ecom_admin/screens/main/provider/main_screen_provider.dart';
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/screens/main/provider/main_screen_provider.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get.dart';

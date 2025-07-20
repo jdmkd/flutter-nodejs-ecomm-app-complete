@@ -1,7 +1,7 @@
 import 'dart:developer';
 
-import 'package:ecom_admin/screens/dashboard/provider/dash_board_provider.dart';
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/screens/dashboard/provider/dash_board_provider.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 import '../../../core/data/data_provider.dart';
 import '../../../models/product.dart';
 import 'add_product_form.dart';

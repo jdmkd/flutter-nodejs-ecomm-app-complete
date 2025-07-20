@@ -68,8 +68,12 @@ class _MainScreenState extends State<MainScreen> {
           AnimatedPositioned(
             duration: Duration(milliseconds: 500),
             curve: Curves.easeInOut,
-            top: isMobile ? 60 : 20,
-            left: isCollapsed ? 15 : 270,
+            top: isMobile ? 60 : 60,
+            left: isCollapsed
+                ? isMobile
+                      ? 17
+                      : 55
+                : 270,
             child: GestureDetector(
               onTap: toggleMenu,
               child: AnimatedContainer(

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 import '../../../core/data/data_provider.dart';
 import '../../../utility/constants.dart';
 
