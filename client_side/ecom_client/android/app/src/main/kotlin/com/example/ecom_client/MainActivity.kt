@@ -1,4 +1,4 @@
-package com.example.ecom_client
+package com.example.ecotte
 
 import android.content.ContentResolver
 import android.net.Uri
