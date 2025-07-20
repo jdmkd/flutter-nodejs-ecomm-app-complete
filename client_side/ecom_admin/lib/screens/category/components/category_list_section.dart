@@ -1,4 +1,4 @@
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 
 import '../../../core/data/data_provider.dart';
 import 'package:flutter/material.dart';

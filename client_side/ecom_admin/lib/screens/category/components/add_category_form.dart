@@ -8,23 +8,38 @@ import '../../../utility/constants.dart';
 import '../../../widgets/category_image_card.dart';
 import '../../../widgets/custom_text_field.dart';
 
-class CategorySubmitForm extends StatelessWidget {
+// class CategorySubmitForm extends StatelessWidget {
+//   final Category? category;
+
+//   const CategorySubmitForm({super.key, this.category});
+class CategorySubmitForm extends StatefulWidget {
   final Category? category;
 
-  const CategorySubmitForm({super.key, this.category});
+  const CategorySubmitForm({Key? key, this.category}) : super(key: key);
+
+  @override
+  State<CategorySubmitForm> createState() => _CategorySubmitFormState();
+}
+
+class _CategorySubmitFormState extends State<CategorySubmitForm> {
+  @override
+  void initState() {
+    super.initState();
+    context.categoryProvider.setDataForUpdateCategory(widget.category);
+  }
 
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
-
-    context.categoryProvider.setDataForUpdateCategory(category);
+    final screenWidth = MediaQuery.of(context).size.width;
+    // context.categoryProvider.setDataForUpdateCategory(category);
 
     return SingleChildScrollView(
       child: Form(
         key: context.categoryProvider.addCategoryFormKey,
         child: Container(
           padding: EdgeInsets.all(defaultPadding),
-          width: size.width * 0.3,
+          width: size.width,
           decoration: BoxDecoration(
             color: bgColor,
             borderRadius: BorderRadius.circular(12.0),
@@ -33,12 +48,25 @@ class CategorySubmitForm extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Gap(defaultPadding),
+              // Title at the top
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12.0),
+                child: Text(
+                  (widget.category == null ? 'ADD' : 'UPDATE') + ' Product',
+                  style: TextStyle(
+                    color: primaryColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              Gap(defaultPadding),
               Consumer<CategoryProvider>(
                 builder: (context, catProvider, child) {
                   return CategoryImageCard(
                     labelText: "Category",
                     imageFile: catProvider.selectedImage,
-                    imageUrlForUpdateImage: category?.image,
+                    imageUrlForUpdateImage: widget.category?.image,
                     onTap: () {
                       catProvider.pickImage();
                     },
@@ -80,10 +108,14 @@ class CategorySubmitForm extends StatelessWidget {
                     onPressed: () {
                       // Validate and save the form
                       if (context
-                          .categoryProvider.addCategoryFormKey.currentState!
+                          .categoryProvider
+                          .addCategoryFormKey
+                          .currentState!
                           .validate()) {
                         context
-                            .categoryProvider.addCategoryFormKey.currentState!
+                            .categoryProvider
+                            .addCategoryFormKey
+                            .currentState!
                             .save();
                         context.categoryProvider.submitCategory();
                         // Navigator.of(context).pop();
@@ -103,23 +135,29 @@ class CategorySubmitForm extends StatelessWidget {
 
 // How to show the category popup
 void showAddCategoryForm(BuildContext context, Category? category) {
-  showDialog(
+  final formWidget = CategorySubmitForm(
+    key: const ValueKey("AddCategoryForm"),
+    category: category,
+  );
+
+  showModalBottomSheet(
     context: context,
-    barrierDismissible: false,
+    isScrollControlled: true,
+    backgroundColor: bgColor,
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+    ),
     builder: (BuildContext context) {
       final screenHeight = MediaQuery.of(context).size.height;
-      final dialogHeight = screenHeight * 0.8; // 80% of screen height
-
-      return AlertDialog(
-        backgroundColor: bgColor,
-        contentPadding: EdgeInsets.zero,
-        title: Center(
-          child: Text(
-            (category == null ? 'ADD' : 'UPDATE') + ' Category'.toUpperCase(),
-            style: TextStyle(color: primaryColor),
-          ),
+      return Container(
+        height: screenHeight * 0.8,
+        padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
-        content: CategorySubmitForm(category: category),
+        // child: SingleChildScrollView(
+        //   child: CategorySubmitForm(category: category),
+        // ),
+        child: SingleChildScrollView(child: formWidget),
       );
     },
   );

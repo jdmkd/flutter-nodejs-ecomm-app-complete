@@ -1,4 +1,4 @@
-import 'package:ecom_admin/utility/extensions.dart';
+import 'package:ecotte_admin/utility/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../utility/constants.dart';
