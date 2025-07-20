@@ -20,36 +20,51 @@ import 'utility/constants.dart';
 import 'utility/extensions.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-  void main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await requestNotificationPermission();
 
-  runApp(MultiProvider(providers: [
-    ChangeNotifierProvider(create: (context) => DataProvider()),
-    ChangeNotifierProvider(create: (context) => MainScreenProvider()),
-    ChangeNotifierProvider(
-        create: (context) => CategoryProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => SubCategoryProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => BrandProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => VariantsTypeProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => VariantsProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        lazy: false,
-        create: (context) => DashBoardProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => CouponCodeProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => PosterProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => OrderProvider(context.dataProvider)),
-    ChangeNotifierProvider(
-        create: (context) => NotificationProvider(context.dataProvider)),
-  ], child: MyApp()));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => DataProvider()),
+        ChangeNotifierProvider(create: (context) => MainScreenProvider()),
+        ChangeNotifierProvider(
+          create: (context) => CategoryProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => SubCategoryProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => BrandProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VariantsTypeProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => VariantsProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          lazy: false,
+          create: (context) => DashBoardProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => CouponCodeProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => PosterProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => OrderProvider(context.dataProvider),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => NotificationProvider(context.dataProvider),
+        ),
+      ],
+      child: MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -57,13 +72,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Admin Panel',
+      title: 'Ecotte Admin',
       theme: ThemeData.dark().copyWith(
-        scaffoldBackgroundColor: bgColor,
-        textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
-            .apply(bodyColor: Colors.white),
-        canvasColor: secondaryColor,
+        scaffoldBackgroundColor: Colors.black,
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme,
+        ).apply(bodyColor: Colors.white),
+        canvasColor: Colors.black54,
       ),
+      // theme: ThemeData.dark().copyWith(
+      //   scaffoldBackgroundColor: bgColor,
+      //   textTheme: GoogleFonts.poppinsTextTheme(Theme.of(context).textTheme)
+      //       .apply(bodyColor: Colors.white),
+      //   canvasColor: secondaryColor,
+      // ),
       initialRoute: AppPages.HOME,
       unknownRoute: GetPage(name: '/notFount', page: () => MainScreen()),
       defaultTransition: Transition.cupertino,
